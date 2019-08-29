@@ -1,0 +1,20 @@
+= link_to 'Back', new_user_session_path, class: 'govuk-back-link'
+
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  - if alert
+    = render 'shared/errors'
+
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+      %h1.govuk-heading-l Reset password
+      %p Enter your email to reset your password.
+      = form_for(User.new, url: send_confirmation_code_passwords_path, method: :post, html: { autocomplete: "off" }) do |f|
+        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
+          =f.label :username, 'Email', class: 'govuk-label'
+          %span#govuk-error-message.govuk-error-message
+            - if alert
+              %span.govuk-visually-hidden Error:
+              = alert
+          =f.text_field :username, class: "govuk-input #{'govuk-input--error' if alert}"
+        %br
+        = f.submit 'Reset password', class: 'govuk-button', 'data-module': 'govuk-button'

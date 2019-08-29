@@ -1,0 +1,11 @@
+#global-cookie-message.global-cookie-message{style: 'display: none;'}
+  .govuk-width-container
+    %p
+      = service_name
+      uses cookies to make the site simpler.
+
+    .cookie-banner__buttons
+      .cookie-banner__button.cookie-banner__button-accept
+        %a.button.govuk-button.govuk-link{href: nil, role: 'button', id: 'close-banner'} Accept cookies
+      .cookie-banner__button.cookie-banner__button-settings
+        %a.button.govuk-button.govuk-link{href: cookies_path, role: 'button'} Cookie settings

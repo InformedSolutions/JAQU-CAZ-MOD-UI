@@ -1,0 +1,14 @@
+default: &default
+  adapter: nulldb
+
+development:
+  <<: *default
+
+test: &test
+  <<: *default
+
+production:
+  <<: *default
+
+cucumber:
+  <<: *test

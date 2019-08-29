@@ -1,0 +1,22 @@
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+      .govuk-panel.govuk-panel--confirmation
+        %h1.govuk-panel__title
+          Password updated
+        .govuk-panel__body
+          We have successfully updated you password
+      %h2.govuk-heading-m What happens next
+      -if user_signed_in?
+        %p
+          You can now
+          = link_to 'submit CSV', upload_index_path
+          with Taxi/PHV data
+      -else
+        %p
+          You can now
+          = link_to 'log in', new_user_session_path
+          using your new password
+      %p
+        = link_to('What did you think of this service?', Rails.configuration.x.feedback_url, target: '_blank')
+        (takes 30 seconds)

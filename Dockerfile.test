@@ -1,0 +1,35 @@
+FROM ruby:2.6.3-alpine3.9
+
+# Set correct environment variables.
+ENV SECRET_KEY_BASE=randomsecret
+
+RUN apk add --no-cache --update build-base \
+  linux-headers \
+  tzdata \
+  nodejs \
+  openssh \
+  libxml2-dev \
+  libxslt-dev \
+  yarn \
+  curl-dev \
+  sqlite-dev \
+  git \
+ && PACKAGES="ca-certificates procps curl pcre libstdc++ libexecinfo" \
+ && BUILD_PACKAGES="pcre-dev libexecinfo-dev" \
+ && apk add --update $PACKAGES $BUILD_PACKAGES \
+ && rm -rf /var/cache/apk/*
+
+# Install bundle of gems
+RUN mkdir -p /home/app
+WORKDIR /home/app
+COPY Gemfile Gemfile.lock package.json yarn.lock /home/app/
+RUN gem install bundler && bundle config force_ruby_platform true \
+ && bundle install && yarn install --frozen-lockfile --non-interactive
+
+# Install node packages and precompile assets
+COPY . /home/app
+
+# Copy example env variables
+RUN cp .env.example .env
+
+CMD ["rspec"]

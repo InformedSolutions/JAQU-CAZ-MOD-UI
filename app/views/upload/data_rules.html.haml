@@ -1,0 +1,82 @@
+= # TODO: define rules and change this file
+
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+      %h1.govuk-heading-l MOD Vehicles Data Rules
+      %p This service allows you to upload your mod vehicles data.
+      %h2.govuk-heading-m File naming rules
+      %p
+        The file must be named according to the following format:
+      %p
+        CAZ-yyyy-mm-dd-#.csv
+      %p
+        where:
+        %ul.govuk-list-govuk-list--bullet
+          %li
+            %p yyyy-mm-dd represents the date the file was generated
+          %li
+            %p # is the  total number of records included in the file
+      %p
+        For example, CAZ-2019-06-18-4242.csv
+      %h2.govuk-heading-m Data rules
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p No header row is included
+        %li
+          %p No trailing row is included
+        %li
+          %p There is no trailing comma for the last field
+        %li
+          %p All characters comply with the 'accepted characters' below
+        %li
+          %p No field contains a newline character
+        %li
+          %p A field containing a comma or double quite must be quoted in double quotes ("...")
+        %li
+          %p Double quotes that form part of a field must be escaped with a double quote (i.e. a single " in a field becomes "")
+        %li
+          %p No spaces should be used between field values and separating commas
+        %li
+          %p No padding should be applied to fields, unless leading or trailing space is a legitimate part of the field's value
+        %li
+          %p Each record is separated by a newline (ASCII carriage return)
+        %li
+          %p Optional fields with no values with be separated by a comma
+      %h2.govuk-heading-m
+        Data values
+      %table.govuk-table
+        %thead.govuk-table__head
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'col', class: 'govuk-!-width-one-quarter'}
+              Column name
+            %th.govuk-table__header{scope: 'col', class: 'govuk-!-width-one-quarter'}
+              Requirement
+            %th.govuk-table__header{scope: 'col', class: 'govuk-!-width-one-quarter'}
+              Format
+            %th.govuk-table__header{scope: 'col', class: 'govuk-!-width-one-quarter'}
+              Example value
+        %tbody.govuk-table__body
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'row'} VRM
+            %td.govuk-table__cell Mandatory
+            %td.govuk-table__cell String, 2-7 digits
+            %td.govuk-table__cell OI64EFO
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'row'} Vehicle category
+            %td.govuk-table__cell Optional
+            %td.govuk-table__cell String
+            %td.govuk-table__cell category-1
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'row'} Model
+            %td.govuk-table__cell Optional
+            %td.govuk-table__cell String
+            %td.govuk-table__cell model-1
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'row'} Date of mod
+            %td.govuk-table__cell Mandatory
+            %td.govuk-table__cell ISO-8601 Date
+            %td.govuk-table__cell 2019-08-16
+
+
+

@@ -1,0 +1,11 @@
+.govuk-error-summary{'aria-labelledby': 'error-summary-title',
+                     'data-module': 'govuk-error-summary',
+                     role: 'alert',
+                     tabindex: '-1'}
+  %h2#error-summary-title.govuk-error-summary__title
+    There was a problem
+  .govuk-error-summary__body
+    %ul.govuk-list.govuk-error-summary__list
+      - @job_errors.each do |error|
+        %li.custom-csv-error
+          = error

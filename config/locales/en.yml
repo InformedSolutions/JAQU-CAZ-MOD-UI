@@ -1,0 +1,54 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# The following keys must be escaped otherwise they will not be retrieved by
+# the default I18n backend:
+#
+# true, false, on, off, yes, no
+#
+# Instead, surround them with single quotes.
+#
+# en:
+#   'true': 'foo'
+#
+# To learn more, please read the Rails Internationalization guide
+# available at https://guides.rubyonrails.org/i18n.html.
+
+en:
+  email:
+    errors:
+      invalid_format: 'The email is in an invalid format'
+      required: 'Email is required'
+      too_long: 'The email exceeds the limit of 45 characters'
+  password:
+    errors:
+      complexity: 'Password must be at least 8 characters long, include at least one upper case letter and a number'
+      code_mismatch: 'Provided confirmation code does not match or is expired'
+      code_required: 'Confirmation code is required'
+      passwords_required: 'Password and password confirmation are required'
+      confirmation_required: 'Password confirmation is required'
+      password_required: 'Password is required'
+      password_equality: 'Password and password confirmation must be the same'
+      password_unchanged: 'New password must be different than your temporary one'
+  expired_session: 'Your session has expired'
+  csv:
+    errors:
+      base: 'The selected file could not be uploaded – try again'
+      no_file: 'Select a CSV'
+      invalid_ext: 'The selected file must be a CSV'
+      invalid_name: 'The selected file must be named correctly'

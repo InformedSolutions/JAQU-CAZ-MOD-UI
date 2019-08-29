@@ -1,0 +1,166 @@
+kind: pipeline
+name: ci
+
+steps:
+
+  # Clean agent images and containers to prevent disk space overuse
+  - name: clean agent
+    image: docker
+    commands:
+    - docker system prune -f
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Build docker images
+  - name: build
+    image: docker
+    commands:
+    - docker build -f Dockerfile.test -t test-mod-frontend:latest .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Trigger unit tests
+  - name: unit tests
+    image: test-mod-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - bundle install
+      - yarn install
+      - cp .env.example .env
+      - rspec -f d
+
+  # Execute integration/scenario tests
+  - name: integration tests
+    image: test-mod-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - cucumber
+
+  # Invoke static code analysis through Ruby libraries
+  - name: static code analysis (Ruby)
+    image: test-mod-frontend
+    pull: never
+    commands:
+      - rubocop
+      - govuk-lint-sass app/javascript
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Invoke security analysis through Ruby libraries
+  - name: security tests (Ruby)
+    image: test-mod-frontend
+    pull: never
+    commands:
+       - bundle audit check --update
+       - yarn audit
+       - brakeman
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+        
+  # Invoke sonar scan
+  - name: sonar scan
+    image: aosapps/drone-sonar-plugin
+    environment:
+      sonar_host:
+        from_secret: sonar_host
+      sonar_token:
+        from_secret: sonar_token
+      sonar.ruby.coverage.reportPaths: coverage/.resultset.json
+    commands:
+      - sonar-scanner 
+        -Dsonar.projectKey=${DRONE_REPO}
+        -Dsonar.projectName=${DRONE_REPO}
+        -Dsonar.host.url=$sonar_host
+        -Dsonar.login=$sonar_token
+        -Dproject.settings=./sonar-project.properties
+        
+  # Invoke terraform scripts to ensure ecr is available for deploy step.
+  - name: initialise ecr
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - git clone https://github.com/InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC/terraform/projects/mod-web/environments/dev
+      - terraform init
+      - terraform workspace select dev || terraform workspace new dev
+      - terraform apply -target=module.ecr -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+    when:
+      event:
+        exclude:
+        - pull_request
+
+  # Push built image to ECR registry
+  - name: publish image to ecr
+    image: plugins/ecr
+    settings:
+      access_key:
+        from_secret: aws_access_key_id
+      secret_key:
+        from_secret: aws_secret_access_key
+      repo: 018330602464.dkr.ecr.eu-west-2.amazonaws.com/mod-web
+      registry: 018330602464.dkr.ecr.eu-west-2.amazonaws.com
+      dockerfile: Dockerfile.build
+      region: eu-west-2
+      tags:
+        - latest
+        - ${DRONE_BUILD_NUMBER}
+      build_args:
+        - secret_key_base=${DRONE_COMMIT}
+    when:
+      event:
+        exclude:
+        - pull_request
+
+  # Invoke terraform scripts with tagged image number
+#  - name: deploy
+#    image: hashicorp/terraform:0.12.3
+#    commands:
+#      - cd JAQU-CAZ-IAC/terraform/projects/mod-web/environments/dev
+#      - terraform init
+#      - terraform workspace select dev
+#      - terraform apply -auto-approve
+#    environment:
+#      TF_VAR_access_key:
+#        from_secret: aws_access_key_id
+#      TF_VAR_secret_key:
+#        from_secret: aws_secret_access_key
+#      TF_VAR_s3_aws_access_key_id:
+#        from_secret: aws_access_key_id
+#      TF_VAR_s3_aws_secret_access_key:
+#        from_secret: aws_secret_access_key
+#      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+#      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+#      TF_VAR_google_analytics_id: UA-144774549-1
+#      TF_VAR_session_timeout: 15
+#      TF_VAR_mod_api_url: https://hrby06c2q5.execute-api.eu-west-2.amazonaws.com/dev
+#      TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
+#    when:
+#      event:
+#        exclude:
+#        - pull_request
+
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
+trigger:
+  branch:
+  - develop
+  event:
+  - pull_request
+  - push

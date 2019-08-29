@@ -1,0 +1,29 @@
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  %fieldset.govuk-fieldset
+    %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
+      %h1.govuk-heading-l Sign In
+      - if alert
+        = render 'shared/errors'
+
+      %p
+        If you do not have an account, please email us at
+        = mail_to Rails.configuration.x.contact_email
+
+      = form_for(resource, as: resource_name, url: session_path(resource_name)) do |f|
+        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
+          = f.label :username, 'Email', class: 'govuk-label'
+          %span#govuk-error-message.govuk-error-message
+            - if alert
+              %span.govuk-visually-hidden Error:
+              = alert
+          = f.text_field :username, autofocus: true, autocomplete: 'username', class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+        .govuk-form-group{class: ('govuk-form-group--error' if alert)}
+          = f.label :password, class: 'govuk-label'
+          %span.govuk-error-message
+            - if alert
+              %span.govuk-visually-hidden Error:
+              Enter your password
+          = f.password_field :password, autocomplete: 'current-password', class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+        .govuk-form-group
+          = f.submit 'Continue', class: 'govuk-button', 'data-module': 'govuk-button'
+          %p= link_to 'Forgot your password?', reset_passwords_path, class: 'govuk-link', id: 'forgot-password'

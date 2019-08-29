@@ -1,0 +1,6 @@
+.govuk-form-group.govuk-form-group--error
+  = form.label field, class: 'govuk-label'
+  %span.govuk-error-message
+    %span.govuk-visually-hidden Error:
+    = @error[field]
+  = form.password_field field, class: 'govuk-input govuk-!-width-two-thirds'

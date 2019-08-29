@@ -1,0 +1,84 @@
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  .govuk-grid-row
+    .govuk-grid-column-full
+      %h1.govuk-heading-l
+        Details about cookies on
+        = service_name
+      %p
+        = service_name
+        puts small files (known as ‘cookies’) onto your computer to collect information about how you browse the site.
+        Find out more about the cookies we use, what they’re for and when they expire.
+      %h2.govuk-heading-m Cookies that measure website usage
+      %p
+        We use Google Analytics software (Universal Analytics) to collect anonymised information about how you use
+        = succeed "." do
+          = service_name
+        We do this to help make sure the site is meeting the needs of its users and to help us make improvements.
+      %br
+      %p Google Analytics stores information about:
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p how you got to the site
+        %li
+          %p
+            the pages you visit on
+            = service_name
+            and how long you spend on them
+        %li
+          %p what you click on while you’re visiting the site
+      %p Google Analytics sets the following cookies.
+
+      %table.govuk-table
+        %caption.govuk-table__caption
+        %thead.govuk-table__head
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'col'} Name
+            %th.govuk-table__header{scope: 'col'} Purpose
+            %th.govuk-table__header{scope: 'col'} Expires
+        %tbody.govuk-table__body
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'row'} _ga
+            %td.govuk-table__cell
+              This helps us count how many people visit
+              = service_name
+              by tracking if you’ve visited before
+            %td.govuk-table__cell 2 years
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'row'} _gid
+            %td.govuk-table__cell
+              This helps us count how many people visit
+              = service_name
+              by tracking if you’ve visited before
+            %td.govuk-table__cell 24 hours
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'row'} _gat
+            %td.govuk-table__cell Used to manage the rate at which page view requests are made
+            %td.govuk-table__cell 10 minutes
+
+      %h2.govuk-heading-m Cookies that keep you logged in
+      %table.govuk-table
+        %caption.govuk-table__caption
+        %thead.govuk-table__head
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'col'} Name
+            %th.govuk-table__header{scope: 'col'} Purpose
+            %th.govuk-table__header{scope: 'col'} Expires
+        %tbody.govuk-table__body
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'row'} _csv_uploader_session
+            %td.govuk-table__cell This helps us to keep you logged in
+            %td.govuk-table__cell 15 minutes
+
+      %h2.govuk-heading-m Cookies that lets us know that you’ve seen our cookie message
+      %table.govuk-table
+        %caption.govuk-table__caption
+        %thead.govuk-table__head
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'col'} Name
+            %th.govuk-table__header{scope: 'col'} Purpose
+            %th.govuk-table__header{scope: 'col'} Expires
+        %tbody.govuk-table__body
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'row'} seen_cookie_message
+            %td.govuk-table__cell Lets us know that you’ve seen our cookie message
+            %td.govuk-table__cell 1 year
