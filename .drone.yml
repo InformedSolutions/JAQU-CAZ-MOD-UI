@@ -128,7 +128,7 @@ steps:
   # Invoke terraform scripts with tagged image number
   - name: deploy
     image: hashicorp/terraform:0.12.3
-   commands:
+    commands:
       - cd JAQU-CAZ-IAC/terraform/projects/mod-web/environments/dev
       - terraform init
       - terraform workspace select dev
