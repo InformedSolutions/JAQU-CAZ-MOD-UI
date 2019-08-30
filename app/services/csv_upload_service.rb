@@ -57,7 +57,7 @@ class CsvUploadService < BaseService
   end
 
   def file_metadata
-    { 'uploader-id': user.sub, 'csv-content-type': 'RETROFIT_LIST' }
+    { 'uploader-id': user.sub, 'csv-content-type': 'MOD_LIST' }
   end
 
   def bucket_name
