@@ -89,7 +89,8 @@ steps:
     image: hashicorp/terraform:0.12.3
     commands:
       - mkdir /root/.ssh
-      - echo -n "$SSH_KEY" > /root/.ssh/id_rsa.pub
+      - echo -n "$GIT_PRIVATE_SSH" > /root/.ssh/id_rsa
+      - echo -n "$GIT_PUBLIC_SSH" > /root/.ssh/id_rsa.pub
       - chmod 600 /root/.ssh/id_rsa.pub
       - touch /root/.ssh/known_hosts
       - chmod 600 /root/.ssh/known_hosts
@@ -104,8 +105,10 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_secret_key:
         from_secret: aws_secret_access_key
-      SSH_KEY:
-        from_secret: github_ssh_key
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+      GIT_PUBLIC_SSH:
+        from_secret: github_public_key
     when:
       event:
         exclude:
@@ -200,10 +203,17 @@ name: sonar_token
 get:
   path: /secrets/drone.global
   name: sonarToken
+
+---
+kind: secret
+name: github_private_key
+get:
+  path: /secrets/drone.global
+  name: githubPrivateKey
   
 ---
 kind: secret
-name: github_ssh_key
+name: github_public_key
 get:
   path: /secrets/drone.global
-  name: githubSSH
+  name: githubPublicKey
