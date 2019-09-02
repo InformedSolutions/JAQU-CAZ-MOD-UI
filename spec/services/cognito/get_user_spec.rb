@@ -9,12 +9,17 @@ RSpec.describe Cognito::GetUser do
   let(:cognito_response) do
     OpenStruct.new(username: username, user_attributes: [
                      OpenStruct.new(name: 'email', value: email),
-                     OpenStruct.new(name: 'sub', value: sub)
+                     OpenStruct.new(name: 'sub', value: sub),
+                     OpenStruct.new(
+                       name: 'custom:authorized-list-type',
+                       value: authorized_list_type
+                     )
                    ])
   end
   let(:email) { 'test@example.com' }
   let(:username) { 'wojtek' }
   let(:sub) { SecureRandom.uuid }
+  let(:authorized_list_type) { 'green' }
 
   before do
     allow(COGNITO_CLIENT).to receive(:get_user)
@@ -44,5 +49,9 @@ RSpec.describe Cognito::GetUser do
 
   it 'sets sub' do
     expect(service_call.sub).to eq(sub)
+  end
+
+  it 'sets authorized_list_type' do
+    expect(service_call.authorized_list_type).to eq(authorized_list_type)
   end
 end

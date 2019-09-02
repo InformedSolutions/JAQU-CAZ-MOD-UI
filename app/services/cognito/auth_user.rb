@@ -40,15 +40,27 @@ module Cognito
 
     def update_challenged_user(auth_response)
       challenge_parameters = auth_response.challenge_parameters
-      user.username = challenge_parameters['USER_ID_FOR_SRP']
-      user.email = JSON.parse(challenge_parameters['userAttributes'])['email']
-      user.aws_status = 'FORCE_NEW_PASSWORD'
-      user.aws_session = auth_response.session
-      user.hashed_password = Digest::MD5.hexdigest(password)
+
+      user.tap do |u|
+        u.username = challenge_parameters['USER_ID_FOR_SRP']
+        u.email = parsed_attr(challenge_parameters, 'email')
+        u.aws_status = 'FORCE_NEW_PASSWORD'
+        u.aws_session = auth_response.session
+        u.hashed_password = Digest::MD5.hexdigest(password)
+        u.authorized_list_type = parsed_attr(challenge_parameters, authorized_list_type).downcase
+      end
+    end
+
+    def authorized_list_type
+      'custom:authorized-list-type'
     end
 
     def update_unchallenged_user(access_token)
       @user = Cognito::GetUser.call(access_token: access_token)
+    end
+
+    def parsed_attr(challenge_parameters, attr)
+      JSON.parse(challenge_parameters['userAttributes'])[attr]
     end
   end
 end

@@ -20,6 +20,7 @@ module Cognito
       user.username = user_data.username
       user.email = extract_attr('email')
       user.sub = extract_attr('sub')
+      user.authorized_list_type = extract_attr('custom:authorized-list-type').downcase
       user.aws_status = 'OK'
     end
 

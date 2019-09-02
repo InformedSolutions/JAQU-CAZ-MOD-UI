@@ -44,7 +44,27 @@
         %li
           %p Optional fields with no values with be separated by a comma
       %h2.govuk-heading-m
-        Data values
+        Data values for white list of MOD vehicles.
+      %table.govuk-table
+        %thead.govuk-table__head
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'col', class: 'govuk-!-width-one-quarter'}
+              Column name
+            %th.govuk-table__header{scope: 'col', class: 'govuk-!-width-one-quarter'}
+              Requirement
+            %th.govuk-table__header{scope: 'col', class: 'govuk-!-width-one-quarter'}
+              Format
+            %th.govuk-table__header{scope: 'col', class: 'govuk-!-width-one-quarter'}
+              Example value
+        %tbody.govuk-table__body
+          %tr.govuk-table__row
+            %th.govuk-table__header{scope: 'row'} VRM
+            %td.govuk-table__cell Mandatory
+            %td.govuk-table__cell String, 2-7 digits
+            %td.govuk-table__cell OI64EFO
+
+      %h2.govuk-heading-m
+        Data values for green list of MOD vehicles.
       %table.govuk-table
         %thead.govuk-table__head
           %tr.govuk-table__row
@@ -63,20 +83,8 @@
             %td.govuk-table__cell String, 2-7 digits
             %td.govuk-table__cell OI64EFO
           %tr.govuk-table__row
-            %th.govuk-table__header{scope: 'row'} Vehicle category
-            %td.govuk-table__cell Optional
-            %td.govuk-table__cell String
-            %td.govuk-table__cell category-1
-          %tr.govuk-table__row
-            %th.govuk-table__header{scope: 'row'} Model
-            %td.govuk-table__cell Optional
-            %td.govuk-table__cell String
-            %td.govuk-table__cell model-1
-          %tr.govuk-table__row
-            %th.govuk-table__header{scope: 'row'} Date of mod
+            %th.govuk-table__header{scope: 'row'} Military VRM
             %td.govuk-table__cell Mandatory
-            %td.govuk-table__cell ISO-8601 Date
-            %td.govuk-table__cell 2019-08-16
-
-
+            %td.govuk-table__cell String, 2-7 digits
+            %td.govuk-table__cell ZC62OMB
 

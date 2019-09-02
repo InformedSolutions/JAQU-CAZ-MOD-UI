@@ -39,10 +39,15 @@ RSpec.describe Cognito::AuthUser do
   context 'when user did not change the password' do
     let(:email) { 'test@example.com' }
     let(:session_key) { SecureRandom.uuid }
+    let(:authorized_list_type) { 'green' }
     let(:auth_response) do
       OpenStruct.new(challenge_parameters: {
                        'USER_ID_FOR_SRP' => username,
-                       'userAttributes' => { 'email' => email }.to_json
+                       'userAttributes' =>
+                         {
+                           'email' => email,
+                           'custom:authorized-list-type' => authorized_list_type
+                         }.to_json
                      }, session: session_key)
     end
 
@@ -68,6 +73,10 @@ RSpec.describe Cognito::AuthUser do
 
     it 'sets hashed password' do
       expect(service_call.hashed_password).to eq(Digest::MD5.hexdigest(password))
+    end
+
+    it 'sets authorized_list_type' do
+      expect(service_call.authorized_list_type).to eq(authorized_list_type)
     end
   end
 end

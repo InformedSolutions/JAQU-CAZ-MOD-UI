@@ -11,7 +11,7 @@ describe UploadController, type: :request do
   end
 
   before :each do
-    sign_in User.new
+    sign_in new_user(authorized_list_type: 'green')
   end
 
   describe 'GET #index' do

@@ -33,10 +33,11 @@ def challenged_cognito_user
 end
 
 def cognito_user
-  user = User.new
-  user.username = 'user'
-  user.email = 'user@example.com'
-  user
+  User.new.tap do |u|
+    u.username = 'user'
+    u.email = 'user@example.com'
+    u.authorized_list_type = 'green'
+  end
 end
 
 Then('I should see {string}') do |string|

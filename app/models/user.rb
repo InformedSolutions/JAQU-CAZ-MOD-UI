@@ -10,7 +10,7 @@ class User
   devise :remote_authenticatable, :timeoutable
 
   attr_accessor :email, :username, :aws_status, :aws_session, :sub,
-                :confirmation_code, :hashed_password
+                :confirmation_code, :hashed_password, :authorized_list_type
 
   # Latest devise(v4.6.2) tries to initialize this class with values
   # ignore it for now
@@ -29,7 +29,8 @@ class User
       aws_status: aws_status,
       aws_session: aws_session,
       sub: sub,
-      hashed_password: hashed_password
+      hashed_password: hashed_password,
+      authorized_list_type: authorized_list_type
     }
   end
 end

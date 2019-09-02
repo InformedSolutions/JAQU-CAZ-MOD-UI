@@ -57,7 +57,15 @@ class CsvUploadService < BaseService
   end
 
   def file_metadata
-    { 'uploader-id': user.sub, 'csv-content-type': 'MOD_LIST' }
+    { 'uploader-id': user.sub, 'csv-content-type': adjusted_list_type }
+  end
+
+  def adjusted_list_type
+    if user.authorized_list_type == 'green'
+      'MOD_GREEN_LIST'
+    else
+      'MOD_WHITE_LIST'
+    end
   end
 
   def bucket_name
