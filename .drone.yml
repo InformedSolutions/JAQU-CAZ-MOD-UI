@@ -90,6 +90,7 @@ steps:
     commands:
       - mkdir /root/.ssh
       - echo -n "$GIT_PRIVATE_SSH" > /root/.ssh/id_rsa
+      - chmod 600 /root/.ssh/id_rsa
       - echo -n "$GIT_PUBLIC_SSH" > /root/.ssh/id_rsa.pub
       - chmod 600 /root/.ssh/id_rsa.pub
       - touch /root/.ssh/known_hosts
