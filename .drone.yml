@@ -88,6 +88,12 @@ steps:
   - name: initialise ecr
     image: hashicorp/terraform:0.12.3
     commands:
+      - mkdir /root/.ssh
+      - echo -n "$SSH_KEY" > /root/.ssh/id_rsa
+      - chmod 600 /root/.ssh/id_rsa
+      - touch /root/.ssh/known_hosts
+      - chmod 600 /root/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone https://github.com/InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC/terraform/projects/mod-web/environments/dev
       - terraform init
@@ -98,6 +104,8 @@ steps:
         from_secret: aws_access_key_id
       TF_VAR_secret_key:
         from_secret: aws_secret_access_key
+      SSH_KEY:
+        from_secret: github_ssh_key
     when:
       event:
         exclude:
