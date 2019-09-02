@@ -91,8 +91,6 @@ steps:
       - mkdir /root/.ssh
       - echo -n "$GIT_PRIVATE_SSH" > /root/.ssh/id_rsa
       - chmod 600 /root/.ssh/id_rsa
-      - echo -n "$GIT_PUBLIC_SSH" > /root/.ssh/id_rsa.pub
-      - chmod 600 /root/.ssh/id_rsa.pub
       - touch /root/.ssh/known_hosts
       - chmod 600 /root/.ssh/known_hosts
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
@@ -211,10 +209,3 @@ name: github_private_key
 get:
   path: /secrets/drone.global
   name: githubPrivateKey
-  
----
-kind: secret
-name: github_public_key
-get:
-  path: /secrets/drone.global
-  name: githubPublicKey
