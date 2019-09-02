@@ -89,8 +89,8 @@ steps:
     image: hashicorp/terraform:0.12.3
     commands:
       - mkdir /root/.ssh
-      - echo -n "$SSH_KEY" > /root/.ssh/id_rsa
-      - chmod 600 /root/.ssh/id_rsa
+      - echo -n "$SSH_KEY" > /root/.ssh/id_rsa.pub
+      - chmod 600 /root/.ssh/id_rsa.pub
       - touch /root/.ssh/known_hosts
       - chmod 600 /root/.ssh/known_hosts
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
@@ -172,3 +172,38 @@ trigger:
   event:
   - pull_request
   - push
+  
+---
+kind: secret
+name: aws_access_key_id
+get:
+  path: /secrets/drone.global
+  name: awsAccessKeyId
+  
+---
+kind: secret
+name: aws_secret_access_key
+get:
+  path: /secrets/drone.global
+  name: awsSecretAccessKey
+  
+---
+kind: secret
+name: sonar_host
+get:
+  path: /secrets/drone.global
+  name: sonarHost
+  
+---
+kind: secret
+name: sonar_token
+get:
+  path: /secrets/drone.global
+  name: sonarToken
+  
+---
+kind: secret
+name: github_ssh_key
+get:
+  path: /secrets/drone.global
+  name: githubSSH
