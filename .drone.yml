@@ -177,33 +177,33 @@ trigger:
 kind: secret
 name: aws_access_key_id
 get:
-  path: /secrets/drone.global
+  path: /secret/drone.global
   name: awsAccessKeyId
   
 ---
 kind: secret
 name: aws_secret_access_key
 get:
-  path: /secrets/drone.global
+  path: /secret/drone.global
   name: awsSecretAccessKey
   
 ---
 kind: secret
 name: sonar_host
 get:
-  path: /secrets/drone.global
+  path: /secret/drone.global
   name: sonarHost
   
 ---
 kind: secret
 name: sonar_token
 get:
-  path: /secrets/drone.global
+  path: /secret/drone.global
   name: sonarToken
 
 ---
 kind: secret
 name: github_private_key
 get:
-  path: /secrets/drone.global
+  path: /secret/drone.global
   name: githubPrivateKey
