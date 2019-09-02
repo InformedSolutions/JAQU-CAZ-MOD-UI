@@ -88,11 +88,11 @@ steps:
   - name: initialise ecr
     image: hashicorp/terraform:0.12.3
     commands:
-      - mkdir /root/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > /root/.ssh/id_rsa
-      - chmod 600 /root/.ssh/id_rsa
-      - touch /root/.ssh/known_hosts
-      - chmod 600 /root/.ssh/known_hosts
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
       - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC/terraform/projects/mod-web/environments/dev
@@ -105,9 +105,7 @@ steps:
       TF_VAR_secret_key:
         from_secret: aws_secret_access_key
       GIT_PRIVATE_SSH:
-        from_secret: github_private_key
-      GIT_PUBLIC_SSH:
-        from_secret: github_public_key
+        from_secret: github_private_key        
     when:
       event:
         exclude:
