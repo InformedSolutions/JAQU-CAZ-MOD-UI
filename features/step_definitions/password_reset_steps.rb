@@ -1,5 +1,9 @@
 # frozen_string_literal: true
 
+def username
+  'wojtek@example.com'
+end
+
 Given('I am on the forgotten password page') do
   visit reset_passwords_path
 end
@@ -15,17 +19,21 @@ When('I enter my username') do
 end
 
 Then("I am taken to the 'Reset link sent' page") do
-  expect(page.current_url).to eq(confirm_reset_passwords_url(username: 'wojtek'))
+  expect(page.current_url).to eq(confirm_reset_passwords_url)
 end
 
 Given("I am on the 'Reset link sent' page") do
   # visit reset_password to get token
   visit reset_passwords_path
-  visit confirm_reset_passwords_url(username: 'wojtek')
+  # fill the form to get username in session
+  allow(Cognito::ForgotPassword).to receive(:call).and_return(true)
+  fill_in('user[username]', with: username)
+  click_button 'Reset password'
+  # expect proper page
+  expect(page).to have_current_path(confirm_reset_passwords_path)
 end
 
 When('I enter valid code and passwords') do
-  username = 'wojtek'
   password = 'password'
   code = '123456'
   allow(Cognito::ConfirmForgotPassword)
@@ -40,8 +48,7 @@ When('I enter valid code and passwords') do
 end
 
 When('I enter invalid email') do
-  username = 'wojtek'
-  fill_in('user[username]', with: username)
+  fill_in('user[username]', with: 'wojtek')
   click_button 'Reset password'
 end
 

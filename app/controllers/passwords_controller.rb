@@ -31,13 +31,18 @@ class PasswordsController < ApplicationController
 
   def send_confirmation_code
     Cognito::ForgotPassword.call(username: username)
-    redirect_to confirm_reset_passwords_path(username: username)
+    session[:password_reset_username] = username
+    redirect_to confirm_reset_passwords_path
   rescue Cognito::CallException => e
     redirect_to e.path, alert: e.message
   end
 
   def confirm_reset
-    @username = params[:username]
+    unless session[:password_reset_username]
+      return redirect_to new_user_session_path, alert: 'Email is missing'
+    end
+
+    @username = session[:password_reset_username]
   end
 
   def change
@@ -45,7 +50,7 @@ class PasswordsController < ApplicationController
       username: username, password: password, code: code,
       password_confirmation: password_confirmation
     )
-    session[:password_reset_token] = nil
+    %w[token username].each { |attr| session["password_reset_#{attr}".to_sym] = nil }
     redirect_to success_passwords_path
   rescue Cognito::CallException => e
     redirect_to e.path, alert: e.message

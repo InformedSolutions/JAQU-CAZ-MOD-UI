@@ -21,7 +21,10 @@ describe 'PasswordsController - POST #change', type: :request do
 
   context 'with password_reset_token set' do
     before do
-      inject_session(password_reset_token: SecureRandom.uuid)
+      inject_session(
+        password_reset_token: SecureRandom.uuid,
+        password_reset_username: username
+      )
       allow(Cognito::ConfirmForgotPassword)
         .to receive(:call)
         .with(username: username,
@@ -39,6 +42,11 @@ describe 'PasswordsController - POST #change', type: :request do
     it 'clears password_reset_token' do
       http_request
       expect(session[:password_reset_token]).to be_nil
+    end
+
+    it 'clears password_reset_username' do
+      http_request
+      expect(session[:password_reset_username]).to be_nil
     end
 
     context 'when service raises exception' do
