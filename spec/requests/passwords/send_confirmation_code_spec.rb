@@ -19,7 +19,12 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
 
     it 'redirects to confirm reset' do
       http_request
-      expect(response).to redirect_to(confirm_reset_passwords_path(username: username))
+      expect(response).to redirect_to(confirm_reset_passwords_path)
+    end
+
+    it 'sets username in session' do
+      http_request
+      expect(session[:password_reset_username]).to eq(username)
     end
 
     context 'when service raises `ServiceError` exception' do
@@ -47,7 +52,7 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
       end
 
       it 'redirects to confirm reset' do
-        expect(response).to redirect_to(confirm_reset_passwords_path(username: username))
+        expect(response).to redirect_to(confirm_reset_passwords_path)
       end
     end
   end
