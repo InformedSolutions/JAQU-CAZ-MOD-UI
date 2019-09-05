@@ -68,10 +68,6 @@ When('I want go to processing page') do
   visit processing_upload_index_path
 end
 
-Then('I am redirected to the root page') do
-  expect(page).to have_current_path(root_path)
-end
-
 def empty_csv_file(filename)
   File.join('spec', 'fixtures', 'files', 'csv', 'empty', filename)
 end
