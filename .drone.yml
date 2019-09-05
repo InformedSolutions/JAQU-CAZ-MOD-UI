@@ -155,7 +155,7 @@ steps:
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
       TF_VAR_mod_api_url: https://denplj6xoa.execute-api.eu-west-2.amazonaws.com/dev
-      TF_VAR_feedback_url: https://www.surveymonkey.com/r/NXXPW3G
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
     when:
       event:
         exclude:
