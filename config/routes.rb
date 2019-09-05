@@ -6,7 +6,7 @@ Rails.application.routes.draw do
   authenticated(:user) { root 'upload#index', as: :authenticated_root }
   devise_scope(:user) { root to: 'devise/sessions#new' }
 
-  resources :upload, only: %i[index] do
+  resources :upload, only: %i[] do
     collection do
       post :import
       get :processing

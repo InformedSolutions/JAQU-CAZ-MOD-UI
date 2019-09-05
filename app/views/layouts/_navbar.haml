@@ -6,8 +6,8 @@
 %nav
   %ul#navigation.govuk-header__navigation{'aria-label': 'Top Level Navigation'}
     - if user_signed_in?
-      %li.govuk-header__navigation-item{class: current_path?(upload_index_path)}
-        %a.govuk-header__link{href: upload_index_path, id: 'upload'}
+      %li.govuk-header__navigation-item{class: current_path?(authenticated_root_path)}
+        %a.govuk-header__link{href: authenticated_root_path, id: 'upload'}
           Upload
       %li.govuk-header__navigation-item{class: current_path?(data_rules_upload_index_path)}
         %a.govuk-header__link{href: data_rules_upload_index_path, id: 'data-rules'}

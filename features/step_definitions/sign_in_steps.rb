@@ -8,11 +8,7 @@ end
 
 # Scenario: View upload page with cookie that has not expired
 When('I navigate to a Upload page') do
-  visit upload_index_path
-end
-
-Then('I am redirected to the Sign in page') do
-  expect(page).to have_current_path(user_session_path)
+  visit authenticated_root_path
 end
 
 Then('I should enter valid credentials and press the Continue') do
@@ -34,8 +30,12 @@ When('I have authentication cookie that has not expired') do
   expect(cookie[:expires] > Time.current).to be true
 end
 
-Then('I am redirected to the Upload page') do
-  expect(page).to have_current_path(upload_index_path)
+Then('I am redirected to the Sign in page') do
+  expect(page).to have_current_path(new_user_session_path)
+end
+
+Then('I am redirected to the unauthenticated root page') do
+  expect(page).to have_current_path('/')
 end
 
 # Scenario: Sign in with invalid credentials
@@ -80,14 +80,6 @@ end
 # Scenario: Sign in with invalid email format
 When('I enter invalid email format') do
   fill_in('user_username', with: 'user.example.com')
-  fill_in('user_password', with: '12345678')
-
-  click_button 'Continue'
-end
-
-# Scenario: Sign in with too long email address
-When('I enter too long email address') do
-  fill_in('user_username', with: "#{SecureRandom.alphanumeric(36)}@email.com")
   fill_in('user_password', with: '12345678')
 
   click_button 'Continue'

@@ -15,7 +15,7 @@ describe UploadController, type: :request do
   end
 
   describe 'GET #index' do
-    subject(:http_request) { get upload_index_path }
+    subject(:http_request) { get authenticated_root_path }
 
     it 'returns a success response' do
       http_request
@@ -132,7 +132,7 @@ describe UploadController, type: :request do
         let(:job_status) { 'FAILURE' }
 
         it 'returns a redirect to upload page' do
-          expect(response).to redirect_to(upload_index_path)
+          expect(response).to redirect_to(authenticated_root_path)
         end
 
         it 'does not clear job from session' do

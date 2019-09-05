@@ -25,7 +25,7 @@ class UploadController < ApplicationController
       session[:job] = nil
       redirect_to success_upload_index_path
     else
-      redirect_to upload_index_path, alert: 'Uploaded file is not valid'
+      redirect_to authenticated_root_path, alert: 'Uploaded file is not valid'
     end
   end
 

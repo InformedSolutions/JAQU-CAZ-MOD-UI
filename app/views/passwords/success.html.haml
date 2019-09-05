@@ -5,13 +5,13 @@
         %h1.govuk-panel__title
           Password updated
         .govuk-panel__body
-          We have successfully updated you password
+          We have successfully updated your password
       %h2.govuk-heading-m What happens next
       -if user_signed_in?
         %p
           You can now
-          = link_to 'submit CSV', upload_index_path
-          with Taxi/PHV data
+          = link_to 'submit CSV', authenticated_root_path
+          with MOD vehicle data
       -else
         %p
           You can now

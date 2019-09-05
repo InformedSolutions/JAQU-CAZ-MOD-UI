@@ -6,7 +6,7 @@ Feature: Sign In
   Scenario: View upload page without cookie
     Given I have no authentication cookie
     When I navigate to a Upload page
-    Then I am redirected to the Sign in page
+    Then I am redirected to the unauthenticated root page
       And I should see "Sign In"
       And I should see "National Register of MOD Vehicles" title
       And I should not see "Upload" link
@@ -26,7 +26,8 @@ Feature: Sign In
   Scenario: View upload page with cookie that has expired
     Given I have authentication cookie that has expired
     When I navigate to a Upload page
-    Then I am redirected to the Sign in page
+      And I should not see "Upload" link
+    Then I am redirected to the unauthenticated root page
       And I should see "Sign In"
 
   Scenario: Sign in with invalid credentials
@@ -34,23 +35,20 @@ Feature: Sign In
     When I enter invalid credentials
     Then I remain on the current page
       And I should see "The email or password you entered is incorrect"
+      And I should see "Enter your email"
+      And I should see "Enter your password"
 
   Scenario: Sign out
     Given I am signed in
     When I request to sign out
     Then I am redirected to the Sign in page
     When I navigate to a Upload page
-    Then I am redirected to the Sign in page
+    Then I am redirected to the unauthenticated root page
       And I should see "Sign In"
 
   Scenario: Sign in with invalid email format
     Given I am on the Sign in page
     When I enter invalid email format
     Then I remain on the current page
+      And I should see "The email or password you entered is incorrect"
       And I should see "The email is in an invalid format"
-
-  Scenario: Sign in with too long email address
-    Given I am on the Sign in page
-    When I enter too long email address
-    Then I remain on the current page
-      And I should see "The email exceeds the limit of 45 characters"

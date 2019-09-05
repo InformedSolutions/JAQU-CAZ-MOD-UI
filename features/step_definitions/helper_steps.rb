@@ -69,8 +69,16 @@ Given('I am on the Sign in page') do
   visit new_user_session_path
 end
 
+Then('I am redirected to the root page') do
+  expect(page).to have_current_path('/')
+end
+
 Then('I should see {string} link') do |string|
   expect(page).to have_link(string)
+end
+
+Then('I am redirected to the Upload page') do
+  expect(page).to have_current_path(authenticated_root_path)
 end
 
 Then('I should not see {string} link') do |string|

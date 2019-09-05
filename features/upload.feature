@@ -25,12 +25,13 @@ Feature: Upload
     When I press refresh page link when api response not running or finished
     Then I am redirected to the Upload page
       And I should see "There was a problem"
+      And I should see "Uploaded file is not valid"
 
   Scenario: Upload a csv file whose name is not compliant with the naming rules
     Given I am on the Upload page
     When I upload a csv file whose name format is invalid
     Then I should see "The selected file must be named correctly"
-#
+
   Scenario: Upload a csv file format that is not .csv or .CSV
     Given I am on the Upload page
     When I upload a csv file whose format that is not .csv or .CSV
