@@ -39,7 +39,8 @@ module Cognito
     rescue Aws::CognitoIdentityProvider::Errors::CodeMismatchException,
            Aws::CognitoIdentityProvider::Errors::ExpiredCodeException
       raise CallException.new(I18n.t('password.errors.code_mismatch'), error_path)
-    rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException
+    rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException,
+           Aws::CognitoIdentityProvider::Errors::InvalidParameterException
       raise CallException.new(I18n.t('password.errors.complexity'), error_path)
     rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
       Rails.logger.error e
