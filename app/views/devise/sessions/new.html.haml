@@ -3,16 +3,7 @@
     %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
       %h1.govuk-heading-l Sign In
       - if alert
-        .govuk-error-summary{'aria-labelledby': 'error-summary-title',
-                     'data-module': 'govuk-error-summary',
-                     role: 'alert',
-                     tabindex: '-1'}
-          %h2#error-summary-title.govuk-error-summary__title
-            There was a problem
-          .govuk-error-summary__body
-            %ul.govuk-list.govuk-error-summary__list
-              %li
-                = link_to('The email or password you entered is incorrect', '#govuk-error-message', id: 'error-message')
+        = render 'shared/errors'
 
       %p
         If you do not have an account, please email us at
@@ -24,13 +15,13 @@
           %span#govuk-error-message.govuk-error-message
             - if alert
               %span.govuk-visually-hidden Error:
-              = alert
+              Enter your email
           = f.email_field :username,
-            autofocus: true,
-            autocomplete: 'username',
-            maxlength: 45,
-            spellcheck: false,
-            class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
+                          autofocus: true,
+                          autocomplete: 'username',
+                          maxlength: 45,
+                          spellcheck: false,
+                          class: "govuk-input govuk-!-width-two-thirds #{'govuk-input--error' if alert}"
 
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
           = f.label :password, class: 'govuk-label'

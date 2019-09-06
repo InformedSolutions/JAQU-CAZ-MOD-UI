@@ -24,17 +24,19 @@ module Cognito
       form = ResetPasswordForm.new(username)
       return if form.valid?
 
+      Rails.logger.error "[#{self.class.name}] Invalid params - #{form.message}"
       raise CallException.new(form.message, error_path)
     end
 
     def cognito_call
-      Rails.logger.info "[Cognito] Forgot password call by a user: #{username}"
+      log_action "Forgot password call by a user: #{username}"
       COGNITO_CLIENT.forgot_password(
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         username: username
       )
+      log_action 'The call was successful'
     rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
-      Rails.logger.error "[Cognito] #{e.class}: { username: #{username}, error: #{e}}"
+      log_error e
     end
   end
 end
