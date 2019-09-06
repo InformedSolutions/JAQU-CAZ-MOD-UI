@@ -43,9 +43,7 @@ When('I enter invalid credentials') do
   fill_in('user_username', with: 'user@example.com')
   fill_in('user_password', with: 'invalid-password')
 
-  allow(Cognito::AuthUser).to receive(:call).and_raise(
-    Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', '')
-  )
+  allow(Cognito::AuthUser).to receive(:call).and_return(false)
 
   click_button 'Continue'
 end

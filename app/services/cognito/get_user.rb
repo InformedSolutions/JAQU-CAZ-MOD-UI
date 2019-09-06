@@ -29,8 +29,10 @@ module Cognito
     end
 
     def user_data
-      Rails.logger.info "[Cognito] Getting user: #{user.username}"
+      log_action "Getting user: #{user.username}"
       @user_data ||= COGNITO_CLIENT.get_user(access_token: access_token)
+      log_action 'The call was successful'
+      @user_data
     end
   end
 end

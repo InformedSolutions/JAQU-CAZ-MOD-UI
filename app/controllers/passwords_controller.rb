@@ -53,7 +53,7 @@ class PasswordsController < ApplicationController
     %w[token username].each { |attr| session["password_reset_#{attr}".to_sym] = nil }
     redirect_to success_passwords_path
   rescue Cognito::CallException => e
-    redirect_to e.path, alert: e.message
+    redirect_to confirm_reset_passwords_path, alert: e.message
   end
 
   private

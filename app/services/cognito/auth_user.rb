@@ -13,21 +13,23 @@ module Cognito
     def call
       update_user(auth_user)
       user
+    rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
+      log_error e
+      false
     end
 
     private
 
     def auth_user
-      Rails.logger.info "[Cognito] Authenticating user: #{username}"
-      COGNITO_CLIENT.initiate_auth(
+      log_action "Authenticating user: #{username}"
+      result = COGNITO_CLIENT.initiate_auth(
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         auth_flow: 'USER_PASSWORD_AUTH',
         auth_parameters:
-          {
-            'USERNAME' => username,
-            'PASSWORD' => password
-          }
+          { 'USERNAME' => username, 'PASSWORD' => password }
       )
+      log_action 'The call was successful'
+      result
     end
 
     def update_user(auth_response)

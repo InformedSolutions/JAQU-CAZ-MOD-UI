@@ -25,6 +25,7 @@ module Cognito
       )
       return if form.valid?
 
+      Rails.logger.error "[#{self.class.name}] Invalid form params"
       raise NewPasswordException, form.error_object
     end
 
@@ -33,25 +34,25 @@ module Cognito
     end
 
     def respond_to_auth
-      Rails.logger.info "[Cognito] Respond to auth call by a user: #{user.username}"
       call_cognito
-    rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException
+    rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException => e
+      log_error e
       raise NewPasswordException, self.class.password_complexity_error
     rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
-      Rails.logger.error e
+      log_error e
       raise CallException, I18n.t('expired_session')
     end
 
     def call_cognito
-      COGNITO_CLIENT.respond_to_auth_challenge(
+      log_action "[Cognito] Respond to auth call by a user: #{user.username}"
+      result = COGNITO_CLIENT.respond_to_auth_challenge(
         challenge_name: 'NEW_PASSWORD_REQUIRED',
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         session: user.aws_session,
-        challenge_responses: {
-          'NEW_PASSWORD' => password,
-          'USERNAME' => user.username
-        }
+        challenge_responses: { 'NEW_PASSWORD' => password, 'USERNAME' => user.username }
       )
+      log_action 'The call was successful'
+      result
     end
 
     class << self

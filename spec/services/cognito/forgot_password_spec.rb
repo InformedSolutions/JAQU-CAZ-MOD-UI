@@ -55,7 +55,7 @@ RSpec.describe Cognito::ForgotPassword do
           client_id: anything,
           username: username
         ).and_raise(
-          Aws::CognitoIdentityProvider::Errors::ServiceError.new('', '')
+          Aws::CognitoIdentityProvider::Errors::ServiceError.new('', 'error')
         )
       end
 
@@ -70,7 +70,7 @@ RSpec.describe Cognito::ForgotPassword do
           client_id: anything,
           username: username
         ).and_raise(
-          Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', '')
+          Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', 'error')
         )
       end
 
