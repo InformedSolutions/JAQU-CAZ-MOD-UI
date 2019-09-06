@@ -82,3 +82,12 @@ When('I enter invalid email format') do
 
   click_button 'Continue'
 end
+
+# Sign in with invalid authorized list type
+When('I enter valid credentials but with invalid authorized user type') do
+  user = User.new.tap do |u|
+    u.authorized_list_type = 'black'
+  end
+  allow(Cognito::AuthUser).to receive(:call).and_return(user)
+  basic_sign_in
+end

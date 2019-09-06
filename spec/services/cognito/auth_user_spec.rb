@@ -32,7 +32,7 @@ RSpec.describe Cognito::AuthUser do
       end
 
       it 'calls Cognito::GetUser' do
-        expect(Cognito::GetUser).to receive(:call).with(access_token: token)
+        expect(Cognito::GetUser).to receive(:call).with(access_token: token, username: username)
         service_call
       end
     end

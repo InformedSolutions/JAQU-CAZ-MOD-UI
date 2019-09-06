@@ -3,7 +3,6 @@
 class UploadController < ApplicationController
   before_action :authenticate_user!
   before_action :redirect_to_new_password_path
-  before_action :check_authorized_list_type
   before_action :check_job_data, only: %i[processing]
 
   def import
@@ -68,13 +67,6 @@ class UploadController < ApplicationController
     if session[:job].nil?
       Rails.logger.error 'Job identifier is missing'
       redirect_to root_path
-    end
-  end
-
-  def check_authorized_list_type
-    unless %w[green white].include?(current_user.authorized_list_type)
-      sign_out current_user
-      redirect_to root_path, alert: 'Invalid authorized list type'
     end
   end
 end

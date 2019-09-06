@@ -49,7 +49,7 @@ module Cognito
         u.aws_status = 'FORCE_NEW_PASSWORD'
         u.aws_session = auth_response.session
         u.hashed_password = Digest::MD5.hexdigest(password)
-        u.authorized_list_type = parsed_attr(challenge_parameters, authorized_list_type).downcase
+        u.authorized_list_type = parsed_attr(challenge_parameters, authorized_list_type)&.downcase
       end
     end
 
@@ -58,7 +58,7 @@ module Cognito
     end
 
     def update_unchallenged_user(access_token)
-      @user = Cognito::GetUser.call(access_token: access_token)
+      @user = Cognito::GetUser.call(access_token: access_token, username: username)
     end
 
     def parsed_attr(challenge_parameters, attr)

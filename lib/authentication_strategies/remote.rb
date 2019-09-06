@@ -37,9 +37,23 @@ module AuthenticationStrategies
       #
       # resource = resource.authentication(auth_params)
       if validate(resource) { resource = resource.authentication(auth_params) }
-        success!(resource)
+        validate_authorized_list_type(resource)
       else
         fail!(:invalid)
+      end
+    end
+
+    # Validates the authorized list type. It must be the `green` or `white`.
+    #
+    # @param user [User]
+    #
+    # @return [Symbol] - :success or :failure
+    def validate_authorized_list_type(user)
+      if %w[green white].include?(user.authorized_list_type)
+        success!(user)
+      else
+        Rails.logger.error "[#{self.class.name}] Invalid authorized list type"
+        fail!('Invalid authorized list type')
       end
     end
   end

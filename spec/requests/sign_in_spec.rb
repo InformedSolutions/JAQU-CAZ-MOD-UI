@@ -56,7 +56,8 @@ describe 'User singing in', type: :request do
 
     context 'when correct credentials given' do
       before do
-        expect(Cognito::AuthUser).to receive(:call).and_return(User.new)
+        user_with_list_type = new_user(authorized_list_type: 'green')
+        expect(Cognito::AuthUser).to receive(:call).and_return(user_with_list_type)
       end
 
       it 'logs user in' do
