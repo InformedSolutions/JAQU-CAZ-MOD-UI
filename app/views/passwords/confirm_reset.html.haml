@@ -19,26 +19,26 @@
           %p Include at least one number
       = form_for(User.new, url: change_passwords_path, method: :post, html: {autocomplete: 'off'}) do |f|
         =f.hidden_field(:username, value: @username)
-        .govuk-form-group{class: ('govuk-form-group--error' if alert&.include?('code'))}
+        .govuk-form-group{class: ('govuk-form-group--error' if alert&.downcase&.include?('code'))}
           =f.label :confirmation_code, class: 'govuk-label'
           %span#govuk-error-message.govuk-error-message
-            - if alert && alert.downcase.include?('code')
+            - if alert&.downcase&.include?('code')
               %span.govuk-visually-hidden Error:
               = alert
-          =f.text_field :confirmation_code, class: "govuk-input #{'govuk-input--error' if alert&.include?('code')}"
-        .govuk-form-group{class: ('govuk-form-group--error' if alert&.include?('password'))}
+          =f.text_field :confirmation_code, class: "govuk-input #{'govuk-input--error' if alert&.downcase&.include?('code')}"
+        .govuk-form-group{class: ('govuk-form-group--error' if alert&.downcase&.include?('password'))}
           =f.label :password, class: 'govuk-label'
           %span.govuk-error-message
-            - if alert && alert.downcase.include?('password')
+            - if alert&.downcase&.include?('password')
               %span.govuk-visually-hidden Error:
               = alert
-          =f.password_field :password, class: "govuk-input #{'govuk-input--error' if alert&.include?('password')}"
-        .govuk-form-group{class: ('govuk-form-group--error' if alert&.include?('password'))}
+          =f.password_field :password, class: "govuk-input #{'govuk-input--error' if alert&.downcase&.include?('password')}"
+        .govuk-form-group{class: ('govuk-form-group--error' if alert&.downcase&.include?('password'))}
           =f.label :password_confirmation, class: 'govuk-label'
           %span.govuk-error-message
-            - if alert && alert.downcase.include?('password')
+            - if alert&.downcase&.include?('password')
               %span.govuk-visually-hidden Error:
               = alert
-          =f.password_field :password_confirmation, class: "govuk-input #{'govuk-input--error' if alert&.include?('password')}"
+          =f.password_field :password_confirmation, class: "govuk-input #{'govuk-input--error' if alert&.downcase&.include?('password')}"
         %br
         = f.submit 'Update password', class: 'govuk-button', 'data-module': 'govuk-button'

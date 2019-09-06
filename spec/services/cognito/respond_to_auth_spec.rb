@@ -65,7 +65,7 @@ RSpec.describe Cognito::RespondToAuthChallenge do
 
     before do
       allow(COGNITO_CLIENT).to receive(:respond_to_auth_challenge).and_raise(
-        Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', '')
+        Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', 'error')
       )
     end
 
@@ -79,7 +79,7 @@ RSpec.describe Cognito::RespondToAuthChallenge do
 
     before do
       allow(COGNITO_CLIENT).to receive(:respond_to_auth_challenge).and_raise(
-        Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', '')
+        Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', 'error')
       )
     end
 

@@ -11,13 +11,10 @@ module Devise
       #
       # If the authentication fails you should return false
       def authentication(params)
-        Cognito::AuthUser.call(username: params[:username], password: params[:password])
-      rescue Aws::CognitoIdentityProvider::Errors::NotAuthorizedException => e
-        Rails.logger.error e
-        false
-      rescue StandardError => e
-        Rails.logger.error e
-        false
+        Cognito::AuthUser.call(
+          username: params[:username],
+          password: params[:password]
+        )
       end
 
       module ClassMethods

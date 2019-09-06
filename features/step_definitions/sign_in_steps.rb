@@ -43,9 +43,7 @@ When('I enter invalid credentials') do
   fill_in('user_username', with: 'user@example.com')
   fill_in('user_password', with: 'invalid-password')
 
-  allow(Cognito::AuthUser).to receive(:call).and_raise(
-    Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', '')
-  )
+  allow(Cognito::AuthUser).to receive(:call).and_return(false)
 
   click_button 'Continue'
 end
@@ -83,4 +81,13 @@ When('I enter invalid email format') do
   fill_in('user_password', with: '12345678')
 
   click_button 'Continue'
+end
+
+# Sign in with invalid authorized list type
+When('I enter valid credentials but with invalid authorized user type') do
+  user = User.new.tap do |u|
+    u.authorized_list_type = 'black'
+  end
+  allow(Cognito::AuthUser).to receive(:call).and_return(user)
+  basic_sign_in
 end

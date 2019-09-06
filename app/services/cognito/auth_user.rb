@@ -13,21 +13,23 @@ module Cognito
     def call
       update_user(auth_user)
       user
+    rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
+      log_error e
+      false
     end
 
     private
 
     def auth_user
-      Rails.logger.info "[Cognito] Authenticating user: #{username}"
-      COGNITO_CLIENT.initiate_auth(
+      log_action "Authenticating user: #{username}"
+      result = COGNITO_CLIENT.initiate_auth(
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         auth_flow: 'USER_PASSWORD_AUTH',
         auth_parameters:
-          {
-            'USERNAME' => username,
-            'PASSWORD' => password
-          }
+          { 'USERNAME' => username, 'PASSWORD' => password }
       )
+      log_action 'The call was successful'
+      result
     end
 
     def update_user(auth_response)
@@ -47,7 +49,7 @@ module Cognito
         u.aws_status = 'FORCE_NEW_PASSWORD'
         u.aws_session = auth_response.session
         u.hashed_password = Digest::MD5.hexdigest(password)
-        u.authorized_list_type = parsed_attr(challenge_parameters, authorized_list_type).downcase
+        u.authorized_list_type = parsed_attr(challenge_parameters, authorized_list_type)&.downcase
       end
     end
 
@@ -56,7 +58,7 @@ module Cognito
     end
 
     def update_unchallenged_user(access_token)
-      @user = Cognito::GetUser.call(access_token: access_token)
+      @user = Cognito::GetUser.call(access_token: access_token, username: username)
     end
 
     def parsed_attr(challenge_parameters, attr)

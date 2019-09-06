@@ -2,11 +2,12 @@
 
 module Cognito
   class GetUser < BaseService
-    attr_reader :access_token, :user
+    attr_reader :access_token, :user, :username
 
-    def initialize(access_token:, user: User.new)
+    def initialize(access_token:, user: User.new, username:)
       @access_token = access_token
       @user = user
+      @username = username
     end
 
     def call
@@ -20,7 +21,7 @@ module Cognito
       user.username = user_data.username
       user.email = extract_attr('email')
       user.sub = extract_attr('sub')
-      user.authorized_list_type = extract_attr('custom:authorized-list-type').downcase
+      user.authorized_list_type = extract_attr('custom:authorized-list-type')&.downcase
       user.aws_status = 'OK'
     end
 
@@ -29,8 +30,13 @@ module Cognito
     end
 
     def user_data
-      Rails.logger.info "[Cognito] Getting user: #{user.username}"
-      @user_data ||= COGNITO_CLIENT.get_user(access_token: access_token)
+      unless defined? @user_data
+        log_action "Getting user: #{username}"
+        @user_data ||= COGNITO_CLIENT.get_user(access_token: access_token)
+        log_action 'The call was successful'
+      end
+
+      @user_data
     end
   end
 end
