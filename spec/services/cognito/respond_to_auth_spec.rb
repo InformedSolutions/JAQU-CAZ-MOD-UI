@@ -43,7 +43,7 @@ RSpec.describe Cognito::RespondToAuthChallenge do
       ).and_return(auth_response)
   end
 
-  it 'returns a cggnito user' do
+  it 'returns a cognito user' do
     expect(service_call).to eq(cognito_user)
   end
 
