@@ -134,7 +134,7 @@ steps:
         - pull_request
 
   # Invoke terraform scripts with tagged image number
-  - name: deploy
+  - name: deploy to dev
     image: hashicorp/terraform:0.12.3
     commands:
       - cd JAQU-CAZ-IAC/terraform/projects/mod-web/environments/dev
@@ -160,6 +160,36 @@ steps:
       event:
         exclude:
         - pull_request
+      branch: develop
+
+ # Invoke terraform scripts with tagged image number
+  - name: deploy to sit
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - cd JAQU-CAZ-IAC/terraform/projects/mod-web/environments/sit
+      - terraform init
+      - terraform workspace select sit
+      - terraform apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_google_analytics_id: UA-144774549-3
+      TF_VAR_session_timeout: 15
+      TF_VAR_mod_api_url: https://qfinialtdk.execute-api.eu-west-2.amazonaws.com/sit
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+    when:
+      event:
+        exclude:
+        - pull_request
+      branch: release/*
 
 volumes:
 - name: docker_sock
@@ -168,7 +198,8 @@ volumes:
 
 trigger:
   branch:
-  - develop
+    - develop
+    - release/*
   event:
   - pull_request
   - push
