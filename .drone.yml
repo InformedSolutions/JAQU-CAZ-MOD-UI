@@ -239,7 +239,7 @@ steps:
       LOCATION: browserstack
     commands:
       - cd JAQU-CAZ-QA-selenium
-      - cucumber -t @MOD
+      - cucumber -t @MOD --retry 3
     when:
       event:
         exclude:
