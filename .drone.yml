@@ -259,6 +259,7 @@ trigger:
   - pull_request
   - push
   
+  
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
 ---
 kind: secret
