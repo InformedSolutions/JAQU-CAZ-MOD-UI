@@ -239,7 +239,7 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_MOD: 'http://mod-web-dev-477973039.eu-west-2.elb.amazonaws.com/'
+      BASEURL_MOD: 'http://mod-alb-dev-1067373829.eu-west-2.elb.amazonaws.com/'
       WHITE_MOD_VALID_USERNAME: 'bradley.gee@informed.com'
       WHITE_MOD_VALID_PASSWORD: 'Edc123.,'
       VALID_USERNAME: 'edmond.chhung@informed.com'
