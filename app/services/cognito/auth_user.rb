@@ -22,14 +22,13 @@ module Cognito
 
     def auth_user
       log_action "Authenticating user: #{username}"
-      result = COGNITO_CLIENT.initiate_auth(
+      auth_response = COGNITO_CLIENT.initiate_auth(
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
         auth_flow: 'USER_PASSWORD_AUTH',
-        auth_parameters:
-          { 'USERNAME' => username, 'PASSWORD' => password }
+        auth_parameters: { 'USERNAME' => username, 'PASSWORD' => password }
       )
       log_action 'The call was successful'
-      result
+      auth_response
     end
 
     def update_user(auth_response)
