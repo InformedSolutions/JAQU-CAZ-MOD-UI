@@ -17,8 +17,8 @@
               %span.govuk-visually-hidden Error:
               = alert
           = f.email_field :username,
-            maxlength: 45,
-            spellcheck: false,
-            class: "govuk-input #{'govuk-input--error' if alert}"
+                          maxlength: 45,
+                          spellcheck: false,
+                          class: "govuk-input #{'govuk-input--error' if alert}"
         %br
         = f.submit 'Reset password', class: 'govuk-button', 'data-module': 'govuk-button'

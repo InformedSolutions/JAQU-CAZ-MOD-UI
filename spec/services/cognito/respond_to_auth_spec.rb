@@ -29,7 +29,7 @@ RSpec.describe Cognito::RespondToAuthChallenge do
 
   before do
     allow(Cognito::GetUser).to receive(:call)
-      .with(access_token: token, user: user)
+      .with(access_token: token, user: user, username: user.username)
       .and_return(cognito_user)
     allow(COGNITO_CLIENT).to receive(:respond_to_auth_challenge)
       .with(

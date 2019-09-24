@@ -42,12 +42,12 @@ class CsvUploadService < BaseService
   end
 
   def upload_to_s3
-    Rails.logger.info "[S3Upload] Uploading file to s3 by a user: #{user.username}"
+    log_action "Uploading file to s3 by a user: #{user.username}"
     return true if aws_call
 
     raise CsvUploadFailureException, I18n.t('csv.errors.base')
   rescue Aws::S3::Errors::ServiceError => e
-    Rails.logger.error e
+    log_error e
     raise CsvUploadFailureException, I18n.t('csv.errors.base')
   end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Cognito
-  class RespondToAuthChallenge < BaseService
+  class RespondToAuthChallenge < CognitoBaseService
     attr_reader :user, :password, :confirmation
 
     def initialize(user:, password:, confirmation:)
@@ -25,26 +25,30 @@ module Cognito
       )
       return if form.valid?
 
-      Rails.logger.error "[#{self.class.name}] Invalid form params"
+      Rails.logger.error "[#{self.class}] Invalid form params"
       raise NewPasswordException, form.error_object
     end
 
     def update_user(access_token)
-      @user = Cognito::GetUser.call(access_token: access_token, user: user)
+      @user = Cognito::GetUser.call(
+        access_token: access_token,
+        user: user,
+        username: user.username
+      )
     end
 
     def respond_to_auth
       call_cognito
-    rescue Aws::CognitoIdentityProvider::Errors::InvalidPasswordException => e
+    rescue AWS_ERROR::InvalidPasswordException => e
       log_error e
       raise NewPasswordException, self.class.password_complexity_error
-    rescue Aws::CognitoIdentityProvider::Errors::ServiceError => e
+    rescue AWS_ERROR::ServiceError => e
       log_error e
       raise CallException, I18n.t('expired_session')
     end
 
     def call_cognito
-      log_action "[Cognito] Respond to auth call by a user: #{user.username}"
+      log_action "Respond to auth call by a user: #{user.username}"
       result = COGNITO_CLIENT.respond_to_auth_challenge(
         challenge_name: 'NEW_PASSWORD_REQUIRED',
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Cognito
-  class AuthUser < BaseService
+  class AuthUser < CognitoBaseService
     attr_reader :username, :password, :user
 
     def initialize(username:, password:)

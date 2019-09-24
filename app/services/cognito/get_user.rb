@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Cognito
-  class GetUser < BaseService
+  class GetUser < CognitoBaseService
     attr_reader :access_token, :user, :username
 
     def initialize(access_token:, user: User.new, username:)
@@ -32,8 +32,8 @@ module Cognito
     def user_data
       unless defined? @user_data
         log_action "Getting user: #{username}"
-        @user_data ||= COGNITO_CLIENT.get_user(access_token: access_token)
-        log_action 'The call was successful'
+        @user_data = COGNITO_CLIENT.get_user(access_token: access_token)
+        log_successful_call
       end
 
       @user_data
