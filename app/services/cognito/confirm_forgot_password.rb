@@ -2,7 +2,8 @@
 
 module Cognito
   ##
-  # Class responsible for the second step of the password recovery process.
+  # Class responsible for the second step of the password recovery process using
+  # {ConfirmForgotPassword}[https://docs.aws.amazon.com/cognito-user-identity-pools/latest/APIReference/API_ConfirmForgotPassword.html].
   # Sets provided new password in Cognito.
   #
   # It requires Cognito::ForgotPassword to be called first
@@ -19,8 +20,7 @@ module Cognito
   #
   class ConfirmForgotPassword < CognitoBaseService
     ##
-    # Initializer method for the service. Used by class level method
-    # {call}[rdoc-ref:BaseService::call]
+    # Initializer method for the service. Used by class level method {call}[rdoc-ref:BaseService::call]
     #
     # ==== Attributes
     # * +username+ - string, user email address

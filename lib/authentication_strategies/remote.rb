@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
+##
+# Module used to wrap communication with Amazon Cognito
+#
+# Configuration of the client is done in config/initializers/cognito_client.rb and by ENV variables
+#
 module AuthenticationStrategies
+  ##
+  # Class responsible for validating user email and authenticating user.
+  #
   class Remote < Devise::Strategies::Authenticatable
     # For an example check:
     # https://github.com/plataformatec/devise/blob/master/lib/devise/strategies/database_authenticatable.rb
@@ -22,6 +30,7 @@ module AuthenticationStrategies
 
     private
 
+    # Returns a string, eg. 'user@example.com'
     def username
       authentication_hash[:username]
     end
