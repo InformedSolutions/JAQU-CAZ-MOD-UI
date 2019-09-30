@@ -8,8 +8,6 @@ ruby '2.6.3'
 gem 'rails', '~> 6.0'
 
 gem 'activerecord-nulldb-adapter'
-gem 'aws-sdk-cognitoidentityprovider'
-gem 'aws-sdk-s3'
 gem 'bootsnap', require: false
 gem 'brakeman'
 gem 'bundler-audit'
@@ -22,6 +20,10 @@ gem 'rubocop-rails'
 gem 'sass-rails'
 gem 'sdoc', require: false
 gem 'webpacker'
+
+gem 'aws-sdk-cognitoidentityprovider'
+gem 'aws-sdk-rails'
+gem 'aws-sdk-s3'
 
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
