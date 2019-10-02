@@ -10,9 +10,9 @@ describe UploadController, type: :request do
     )
   end
 
-  before :each do
-    sign_in new_user(authorized_list_type: 'green')
-  end
+  let(:user) { new_user(email: 'test@example.com', authorized_list_type: 'green') }
+
+  before { sign_in user }
 
   describe 'GET #index' do
     subject(:http_request) { get authenticated_root_path }
@@ -65,6 +65,10 @@ describe UploadController, type: :request do
       it 'sets job name in session' do
         expect(session[:job][:name]).to eq(job_name)
       end
+
+      it 'sets filename in session' do
+        expect(session[:job][:filename]).to eq(file_path.split('/').last)
+      end
     end
 
     context 'with invalid params' do
@@ -108,11 +112,6 @@ describe UploadController, type: :request do
         it 'returns a redirect to success page' do
           expect(response).to redirect_to(success_upload_index_path)
         end
-
-        it 'clears job from session' do
-          http_request
-          expect(session[:job]).to be_nil
-        end
       end
 
       context 'when job status is RUNNING' do
@@ -146,6 +145,55 @@ describe UploadController, type: :request do
       it 'returns a redirect to root page' do
         http_request
         expect(response).to redirect_to(root_path)
+      end
+    end
+  end
+
+  describe 'GET #success' do
+    subject(:http_request) { get success_upload_index_path }
+
+    context 'with empty session' do
+      it 'returns 200' do
+        http_request
+        expect(response).to be_successful
+      end
+
+      it 'does not call Ses::SendSuccessEmail' do
+        expect(Ses::SendSuccessEmail).not_to receive(:call)
+        http_request
+      end
+    end
+
+    context 'with job data is session' do
+      let(:filename) { 'name.csv' }
+      let(:time) { Time.current }
+      let(:job_data) do
+        {
+          name: 'name',
+          filename: filename,
+          correlation_id: SecureRandom.uuid,
+          submission_time: time
+        }
+      end
+
+      before do
+        inject_session(job: job_data)
+        allow(Ses::SendSuccessEmail).to receive(:call).and_return(true)
+      end
+
+      it 'returns 200' do
+        http_request
+        expect(response).to be_successful
+      end
+
+      it 'calls Ses::SendSuccessEmail' do
+        expect(Ses::SendSuccessEmail).to receive(:call).with(user: user, job_data: job_data)
+        http_request
+      end
+
+      it 'clears job data from the session' do
+        http_request
+        expect(session[:job]).to be_nil
       end
     end
   end

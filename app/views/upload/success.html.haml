@@ -7,6 +7,12 @@
         .govuk-panel__body
           = service_name
           has been successfully updated
+      - if @warning
+        .govuk-warning-text
+          %span.govuk-warning-text__icon{'aria-hidden' => true} !
+          %strong.govuk-warning-text__text
+            %span.govuk-warning-text__assistive Warning
+            = @warning
       %h2.govuk-heading-m What happens next
       %p
         We have saved your data to the

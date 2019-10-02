@@ -68,6 +68,14 @@ When('I want go to processing page') do
   visit processing_upload_index_path
 end
 
+Then('I should receive a success upload email') do
+  expect(ActionMailer::Base.deliveries.size).to eq(1)
+end
+
+Then('I should not receive a success upload email again') do
+  expect(ActionMailer::Base.deliveries.size).to eq(1)
+end
+
 def empty_csv_file(filename)
   File.join('spec', 'fixtures', 'files', 'csv', 'empty', filename)
 end

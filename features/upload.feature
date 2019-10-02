@@ -16,6 +16,9 @@ Feature: Upload
     When I press refresh page link
     Then I am redirected to the Success page
       And I should see "Upload successful"
+      And I should receive a success upload email
+    When I refresh the page
+    Then I should not receive a success upload email again
 
   Scenario: Upload a csv file and redirect to error page when api response not running or finished
     Given I am on the Upload page

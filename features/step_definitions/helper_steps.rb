@@ -84,3 +84,7 @@ end
 Then('I should not see {string} link') do |string|
   expect(page).not_to have_link(string)
 end
+
+When('I refresh the page') do
+  visit page.current_path
+end

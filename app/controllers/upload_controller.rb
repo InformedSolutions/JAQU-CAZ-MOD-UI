@@ -28,6 +28,8 @@ class UploadController < ApplicationController
     job_name = RegisterCheckerApi.register_job(file.original_filename, correlation_id)
     session[:job] = {
       name: job_name,
+      filename: file.original_filename,
+      submission_time: submission_time,
       correlation_id: correlation_id
     }
     redirect_to processing_upload_index_path
@@ -49,7 +51,6 @@ class UploadController < ApplicationController
     return if result == 'RUNNING'
 
     if result == 'SUCCESS'
-      session[:job] = nil
       redirect_to success_upload_index_path
     else
       redirect_to authenticated_root_path, alert: 'Uploaded file is not valid'
@@ -78,6 +79,29 @@ class UploadController < ApplicationController
   #
   def data_rules
     # renders static page
+  end
+
+  ##
+  # Renders page after successful CSV file processing.
+  # Sends {SuccessEmail}[rdoc-ref:Ses::SendSuccessEmail] when visited first time after submission.
+  #
+  # ==== Path
+  #    GET /upload/success
+  #
+  # ==== Attributes
+  # * +job+ - hash in session
+  #   * +name+ - UUID, job name received from backend API
+  #   * +correlation_id+ - UUID, unique identifier used to communicate with backend API
+  #   * +filename+ - string, name of the submitted file
+  #   * +submission_time+ - string, time of the file submission in a proper format
+  #
+  def success
+    return unless session[:job]
+
+    unless Ses::SendSuccessEmail.call(user: current_user, job_data: job_data)
+      @warning = I18n.t('upload.delivery_error')
+    end
+    session[:job] = nil
   end
 
   private
@@ -115,5 +139,10 @@ class UploadController < ApplicationController
       Rails.logger.error 'Job identifier is missing'
       redirect_to root_path
     end
+  end
+
+  # Returns current time in a proper format.
+  def submission_time
+    Time.current.strftime(Rails.configuration.x.time_format)
   end
 end

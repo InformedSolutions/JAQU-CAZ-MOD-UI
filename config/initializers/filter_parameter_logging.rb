@@ -5,6 +5,7 @@
 # Configure sensitive parameters which will be filtered from the log file.
 Rails.application.config.filter_parameters += %i[password confirmation_code]
 
+# :nocov:
 # https://github.com/aws/aws-sdk-ruby/issues/2122
 module Aws
   module Log

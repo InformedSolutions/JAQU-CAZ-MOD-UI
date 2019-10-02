@@ -5,10 +5,6 @@ require_relative 'boot'
 # This is not loaded in rails/all but inside active_record so add it if
 # you want your models work as expected
 require 'rails/all'
-# require 'active_record/railtie'
-# require 'action_controller/railtie'
-# require 'action_view/railtie'
-# require 'sprockets/railtie'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -33,5 +29,18 @@ module CsvUploader
 
     # https://mattbrictson.com/dynamic-rails-error-pages
     config.exceptions_app = routes
+
+    # email address for sending emails, eg 'from@example.com'
+    # TODO change it when final email address is decided
+    default_email = 'TaxiandPHVCentralised.Database@defra.gov.uk'
+    config.x.service_email = ENV.fetch('SES_FROM_EMAIL', default_email)
+
+    config.time_zone = 'London'
+    config.x.time_format = '%d %B %Y %H:%M:%S %Z'
+
+    # https://github.com/aws/aws-sdk-rails
+    config.action_mailer.delivery_method = :aws_sdk
+    # https://stackoverflow.com/questions/49086693/how-do-i-remove-mail-html-content-from-rails-logs
+    config.action_mailer.logger = nil
   end
 end

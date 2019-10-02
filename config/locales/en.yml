@@ -52,3 +52,5 @@ en:
       no_file: 'Select a CSV'
       invalid_ext: 'The selected file must be a CSV'
       invalid_name: 'The selected file must be named correctly'
+  upload:
+    delivery_error: 'There was an error sending your confirmation email. Your data has still been saved.'
