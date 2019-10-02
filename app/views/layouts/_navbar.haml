@@ -13,9 +13,8 @@
         %a.govuk-header__link{href: data_rules_upload_index_path, id: 'data-rules'}
           Data rules
     %li.govuk-header__navigation-item{class: current_path?(new_user_session_path)}
-      %a
-        - if user_signed_in?
-          = link_to('Sign Out', destroy_user_session_path,
-            method: :delete, class: 'govuk-header__link', id: 'sign-out')
-        - else
-          = link_to('Sign In', new_user_session_path, class: 'govuk-header__link', id: 'sign-in')
+      - if user_signed_in?
+        = link_to('Sign Out', destroy_user_session_path,
+          method: :delete, class: 'govuk-header__link', id: 'sign-out')
+      - else
+        = link_to('Sign In', new_user_session_path, class: 'govuk-header__link', id: 'sign-in')
