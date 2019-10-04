@@ -24,16 +24,12 @@ module CsvUploader
     config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://www.surveymonkey.co.uk/r/NXXPW3G')
     # name of service
     config.x.service_name = 'National Register of MOD Vehicles'
-    # email address for sending emails, eg 'from@example.com'
-    config.x.contact_email = 'Useraccount.Query@defra.gov.uk'
+    default_email = 'Useraccount.Query@defra.gov.uk'
+    config.x.contact_email = default_email
+    config.x.service_email = ENV.fetch('SES_FROM_EMAIL', default_email)
 
     # https://mattbrictson.com/dynamic-rails-error-pages
     config.exceptions_app = routes
-
-    # email address for sending emails, eg 'from@example.com'
-    # TODO change it when final email address is decided
-    default_email = 'TaxiandPHVCentralised.Database@defra.gov.uk'
-    config.x.service_email = ENV.fetch('SES_FROM_EMAIL', default_email)
 
     config.time_zone = 'London'
     config.x.time_format = '%d %B %Y %H:%M:%S %Z'
