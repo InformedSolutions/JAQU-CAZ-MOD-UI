@@ -435,7 +435,7 @@ steps:
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
     when:
       event:
-        - push
+        - pull_request
 
   - name: provisioning warning
     image: docker:git
