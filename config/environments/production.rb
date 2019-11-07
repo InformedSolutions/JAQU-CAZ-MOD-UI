@@ -30,7 +30,10 @@ Rails.application.configure do
   config.public_file_server.headers = {
     'Cache-Control' => 'public, s-maxage=31536000, max-age=15552000',
     'Expires' => 1.year.from_now.to_formatted_s(:rfc822).to_s,
-    'X-Content-Type-Options' => 'nosniff'
+    'X-Content-Type-Options' => 'nosniff',
+    'X-XSS-Protection' => '1; mode=block',
+    'Strict-Transport-Security' => 'max-age=31536000',
+    'Pragma' => 'no-cache'
   }
 
   # Compress CSS using a preprocessor.
@@ -45,6 +48,28 @@ Rails.application.configure do
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
+
+  # https://scotthelme.co.uk/a-new-security-header-feature-policy/
+  features = %w[
+    geolocation midi notifications push sync-xhr microphone camera
+    magnetometer gyroscope speaker vibrate fullscreen payment
+  ]
+  # https://edgeguides.rubyonrails.org/configuring.html#configuring-action-dispatch
+  config.action_dispatch.default_headers = {
+    # default
+    'X-Frame-Options' => 'SAMEORIGIN',
+    'X-XSS-Protection' => '1; mode=block',
+    'X-Content-Type-Options' => 'nosniff',
+    'X-Download-Options' => 'noopen',
+    'X-Permitted-Cross-Domain-Policies' => 'none',
+    'Referrer-Policy' => 'strict-origin-when-cross-origin',
+    # custom
+    'Strict-Transport-Security' => 'max-age=31536000',
+    'Pragma' => 'no-cache',
+    'Cache-Control' => 'public, s-maxage=31536000, max-age=15552000',
+    'Expires' => 1.year.from_now.to_formatted_s(:rfc822).to_s,
+    'Feature-Policy' => features.map { |f| "#{f} 'none'" }.join('; ')
+  }
 
   # Store uploaded files on the local file system (see config/storage.yml for options).
   # config.active_storage.service = :local

@@ -21,6 +21,7 @@ Metrics/BlockLength:
   ExcludedMethods: ['describe', 'context']
   Exclude:
     - 'config/routes.rb'
+    - 'config/environments/*.rb'
 
 Style/MixinUsage:
   Exclude:
