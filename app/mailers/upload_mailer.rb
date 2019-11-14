@@ -24,6 +24,6 @@ class UploadMailer < ApplicationMailer
   def success_upload(user, filename, submission_time)
     @filename = filename
     @submission_time = submission_time
-    mail(to: user.email, subject: 'Upload successful')
+    mail(to: user.email, subject: 'Your file upload confirmation email')
   end
 end

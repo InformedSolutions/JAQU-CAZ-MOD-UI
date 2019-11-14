@@ -16,7 +16,7 @@ gem 'haml'
 gem 'httparty'
 gem 'logstash-logger'
 gem 'puma'
-gem 'rubocop-rails'
+gem 'rubocop-govuk'
 gem 'sass-rails'
 gem 'sdoc', require: false
 gem 'webpacker'
@@ -28,11 +28,11 @@ gem 'aws-sdk-s3'
 group :development, :test do
   gem 'byebug', platforms: %i[mri mingw x64_mingw]
   gem 'dotenv-rails'
-  gem 'govuk-lint'
   gem 'haml-rails'
   gem 'pry-byebug'
   gem 'pry-rails'
   gem 'rspec-rails'
+  gem 'scss_lint-govuk', require: false
 end
 
 group :development do

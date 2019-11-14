@@ -166,7 +166,7 @@ steps:
     pull: never
     commands:
       - rubocop
-      - govuk-lint-sass app/javascript
+      - scss-lint app/javascript
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -382,7 +382,7 @@ steps:
     pull: never
     commands:
       - rubocop
-      - govuk-lint-sass app/javascript
+      - scss-lint app/javascript
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
