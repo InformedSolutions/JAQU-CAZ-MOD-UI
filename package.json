@@ -6,7 +6,7 @@
     "@rails/activestorage": "^6.0.1",
     "@rails/ujs": "^6.0.1",
     "@rails/webpacker": "^4.2.0",
-    "govuk-frontend": "^3.3.0",
+    "govuk-frontend": "^3.4.0",
     "rails-erb-loader": "^5.5.2"
   },
   "version": "0.1.0",
