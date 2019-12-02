@@ -79,7 +79,7 @@ steps:
       WHITE_MOD_VALID_PASSWORD: 'Edc123.,'
       VALID_USERNAME: 'edmond.chhung@informed.com'
       VALID_PASSWORD: 'Edc123.,'
-      BROWSER_SET: 'mid'
+      BROWSER_SET: 'min'
       SCREENSHOT_TYPE: 'base'
       VCCS_USER: 'vccsservice'
       VCCS_PASSWORD: 'Password001!'
