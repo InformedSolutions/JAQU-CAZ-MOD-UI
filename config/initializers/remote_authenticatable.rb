@@ -29,7 +29,7 @@ module Devise
         # Recreates a resource from session data
         def serialize_from_session(data, _salt)
           resource = new
-          resource.serializable_hash.keys.each do |key|
+          resource.serializable_hash.each_key do |key|
             resource.public_send("#{key}=", data[key.to_s])
           end
           resource

@@ -2,13 +2,10 @@ $govuk-global-styles: true;
 $govuk-assets-path: '/packs/media/';
 
 @import '~govuk-frontend/govuk/all';
+@import 'cookie_control';
 
 html {
   background-color: govuk-colour($colour: 'light-grey');
-}
-
-.global-cookie-message__hidden {
-  display: none !important;
 }
 
 .custom-csv-error {

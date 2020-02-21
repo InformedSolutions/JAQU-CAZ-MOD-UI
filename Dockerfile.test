@@ -1,7 +1,4 @@
-FROM ruby:2.6.5-alpine3.10
-
-# Set correct environment variables.
-ENV SECRET_KEY_BASE=randomsecret
+FROM ruby:2.6.5-alpine3.11
 
 RUN apk add --no-cache --update build-base \
   linux-headers \
@@ -28,8 +25,5 @@ RUN gem install bundler -v 2.0.2 && bundle config force_ruby_platform true \
 
 # Install node packages and precompile assets
 COPY . /home/app
-
-# Copy example env variables
-RUN cp .env.example .env
 
 CMD ["rspec"]

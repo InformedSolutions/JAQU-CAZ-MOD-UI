@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 ##
-# This class wraps calls being made to the NTR backend API.
-# The base URL for the calls is configured by +TAXI_PHV_REGISTER_API_URL+ environment variable.
+# This class wraps calls being made to the MOD backend API.
+# The base URL for the calls is configured by +MOD_API_URL+ environment variable.
 #
 # All calls have the correlation ID and JSON content type added to the header.
 #
 # All methods are on the class level, so there is no initializer method.
 class RegisterCheckerApi < BaseApi
-  base_uri ENV['MOD_API_URL'] + '/v1/mod/register-csv-from-s3'
+  API_URL = ENV.fetch('MOD_API_URL', 'localhost:3001').freeze
+  base_uri API_URL + '/v1/mod/register-csv-from-s3'
 
   class << self
     ##
@@ -113,7 +114,7 @@ class RegisterCheckerApi < BaseApi
     def register_body(file_name)
       {
         "filename": file_name,
-        "s3Bucket": ENV['S3_AWS_BUCKET']
+        "s3Bucket": ENV.fetch('S3_AWS_BUCKET', 'S3_AWS_BUCKET')
       }.to_json
     end
 

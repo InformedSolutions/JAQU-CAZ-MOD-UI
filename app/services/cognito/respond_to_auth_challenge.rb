@@ -54,7 +54,7 @@ module Cognito
       @user = Cognito::GetUser.call(
         access_token: access_token,
         user: user,
-        username: user.username
+        username: user.username&.downcase
       )
     end
 

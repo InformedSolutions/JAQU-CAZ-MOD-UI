@@ -28,7 +28,7 @@ module Cognito
     # * +password_confirmation+ - string, password confirmation submitted by the user
     # * +code+ - 6 digit string of numbers, code sent to user
     def initialize(username:, password:, code:, password_confirmation:)
-      @username = username
+      @username = username&.downcase
       @password = password
       @password_confirmation = password_confirmation
       @code = code

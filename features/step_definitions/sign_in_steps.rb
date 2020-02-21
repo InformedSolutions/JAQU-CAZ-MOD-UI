@@ -2,7 +2,7 @@
 
 # Scenario: View upload page without cookie
 When('I have no authentication cookie') do
-  cookie = get_me_the_cookie('_csv_uploader_session')
+  cookie = get_me_the_cookie('_mod_uploader_session')
   expect(cookie).to be_nil
 end
 
@@ -16,7 +16,7 @@ Then('I should enter valid credentials and press the Continue') do
 end
 
 And('Cookie is created for my session') do
-  cookie = get_me_the_cookie('_csv_uploader_session')
+  cookie = get_me_the_cookie('_mod_uploader_session')
   expect(cookie).to_not be_nil
 end
 
@@ -25,7 +25,7 @@ When('I have authentication cookie that has not expired') do
   visit new_user_session_path
   sign_in_user
 
-  cookie = get_me_the_cookie('_csv_uploader_session')
+  cookie = get_me_the_cookie('_mod_uploader_session')
   expect(cookie).to_not be_nil
   expect(cookie[:expires] > Time.current).to be true
 end
@@ -61,7 +61,7 @@ Given('I have authentication cookie that has expired') do
     sign_in_user
   end
 
-  cookie = get_me_the_cookie('_csv_uploader_session')
+  cookie = get_me_the_cookie('_mod_uploader_session')
   expect(cookie).to_not be_nil
   expect(cookie[:expires] < Time.current).to be true
 end

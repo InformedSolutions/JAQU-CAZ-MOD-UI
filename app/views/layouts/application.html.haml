@@ -7,29 +7,28 @@
     = csrf_meta_tags
     = csp_meta_tag
 
-    = render 'layouts/google_analytics'
-    = javascript_pack_tag 'google_analytics'
-    = stylesheet_pack_tag 'application', media: 'all'
+    - if Rails.env.production? && ENV['COOKIE_CONTROL_API_KEY'] && ENV['COOKIE_CONTROL_PRODUCT']
+      %script{src: 'https://cc.cdn.civiccomputing.com/8/cookieControl-8.x.min.js', type: 'text/javascript'}
+      = render 'layouts/cookie_control'
+
+    = stylesheet_pack_tag 'application', media: 'all', defer: true
     = javascript_pack_tag 'application', defer: true
 
     %meta{name: 'viewport', content:'width=device-width, initial-scale=1, viewport-fit=cover'}
     %meta{name: 'theme-color', content: '#0b0c0c'}
     %meta{'http-equiv': 'X-UA-Compatible', content: 'IE=edge'}
+    %meta{content: asset_pack_url('media/images/govuk-opengraph-image.png'), property: 'og:image'}
 
-    %link{rel: 'shortcut icon', sizes: '16x16 32x32 48x48', href: asset_pack_url('media/images/favicon.ico'), type: 'image/x-icon'}/
-    %link{rel: 'mask-icon', href: asset_pack_url('media/images/govuk-mask-icon.svg'), color: '#0b0c0c'}/
-    %link{rel: 'apple-touch-icon', sizes: '180x180', href: asset_pack_url('media/images/govuk-apple-touch-icon-180x180.png')}/
-    %link{rel: 'apple-touch-icon', sizes: '167x167', href: asset_pack_url('media/images/govuk-apple-touch-icon-167x167.png')}/
-    %link{rel: 'apple-touch-icon', sizes: '152x152', href: asset_pack_url('media/images/govuk-apple-touch-icon-152x152.png')}/
-    %link{rel: 'apple-touch-icon', href: asset_pack_url('media/images/govuk-apple-touch-icon.png')}/
+    %link{rel: 'shortcut icon', sizes: '16x16 32x32 48x48', href: asset_pack_url('media/images/favicon.ico'), type: 'image/x-icon'}
+    %link{rel: 'mask-icon', href: asset_pack_url('media/images/govuk-mask-icon.svg'), color: '#0b0c0c'}
+    %link{rel: 'apple-touch-icon', sizes: '180x180', href: asset_pack_url('media/images/govuk-apple-touch-icon-180x180.png')}
+    %link{rel: 'apple-touch-icon', sizes: '167x167', href: asset_pack_url('media/images/govuk-apple-touch-icon-167x167.png')}
+    %link{rel: 'apple-touch-icon', sizes: '152x152', href: asset_pack_url('media/images/govuk-apple-touch-icon-152x152.png')}
+    %link{rel: 'apple-touch-icon', href: asset_pack_url('media/images/govuk-apple-touch-icon.png')}
 
-    %meta{content: asset_pack_url('media/images/govuk-opengraph-image.png'), property: 'og:image'}/
-
-  // Set ga variable before assets:precompile
-  %body.govuk-template__body{ data: { ga: ENV['GOOGLE_ANALYTICS_ID'] } }
+  %body.govuk-template__body
     :javascript
       document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
-    = render 'layouts/cookies_banner'
     = render 'layouts/header'
     .govuk-width-container
       = render 'layouts/feedback_section'

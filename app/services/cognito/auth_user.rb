@@ -26,7 +26,7 @@ module Cognito
     # * +password+ - string, password submitted by the user
     #
     def initialize(username:, password:)
-      @username = username
+      @username = username&.downcase
       @password = password
       @user = User.new
     end
@@ -58,7 +58,7 @@ module Cognito
     def auth_user
       log_action "Authenticating user: #{username}"
       auth_response = COGNITO_CLIENT.initiate_auth(
-        client_id: ENV['AWS_COGNITO_CLIENT_ID'],
+        client_id: ENV.fetch('AWS_COGNITO_CLIENT_ID', 'AWS_COGNITO_CLIENT_ID'),
         auth_flow: 'USER_PASSWORD_AUTH',
         auth_parameters: { 'USERNAME' => username, 'PASSWORD' => password }
       )

@@ -145,9 +145,7 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
     commands:
-      - bundle install
       - yarn install
-      - cp .env.example .env
       - rspec -f d
 
   # Execute integration/scenario tests
@@ -361,9 +359,7 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
     commands:
-      - bundle install
       - yarn install
-      - cp .env.example .env
       - rspec -f d
 
   # Execute integration/scenario tests

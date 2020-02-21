@@ -18,7 +18,7 @@ module Cognito
     def initialize(access_token:, user: User.new, username:)
       @access_token = access_token
       @user = user
-      @username = username
+      @username = username&.downcase
     end
 
     ##

@@ -115,7 +115,7 @@ class CsvUploadService < BaseService
   #
   # Returns a string.
   def bucket_name
-    ENV['S3_AWS_BUCKET']
+    ENV.fetch('S3_AWS_BUCKET', 'S3_AWS_BUCKET')
   end
 
   # Attributes used internally to save values.

@@ -15,7 +15,7 @@ module Cognito
     # ==== Attributes
     # * +username+ - string, user email address
     def initialize(username:)
-      @username = username
+      @username = username&.downcase
     end
 
     ##
