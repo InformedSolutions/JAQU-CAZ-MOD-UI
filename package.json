@@ -1,5 +1,5 @@
 {
-  "name": "jaqu-caz-csv",
+  "name": "jaqu-caz-mod-ui",
   "private": true,
   "dependencies": {
     "@rails/actioncable": "^6.0.2",
