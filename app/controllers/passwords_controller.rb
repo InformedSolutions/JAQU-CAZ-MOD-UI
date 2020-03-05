@@ -13,6 +13,8 @@ class PasswordsController < ApplicationController
   # prevent browser page caching if a password_reset_token is present
   before_action :validate_password_reset_token,
                 only: %i[send_confirmation_code confirm_reset change]
+  # assign back button path
+  before_action :assign_back_button_url, only: %i[reset confirm_reset]
 
   ##
   # Renders the password change page.

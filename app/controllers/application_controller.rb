@@ -47,4 +47,9 @@ class ApplicationController < ActionController::Base
   def after_sign_out_path_for(_resource_or_scope)
     user_session_path
   end
+
+  # Assign back button url
+  def assign_back_button_url
+    @back_button_url = request.referer || root_path
+  end
 end

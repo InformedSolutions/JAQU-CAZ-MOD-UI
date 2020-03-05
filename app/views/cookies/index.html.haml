@@ -1,13 +1,25 @@
+- title_and_header = 'Cookies'
+- content_for(:title, title_and_header)
+
+= link_to 'Back', @back_button_url, class: 'govuk-back-link'
+
 %main.govuk-main-wrapper#main-content{role: 'main'}
   .govuk-grid-row
-    .govuk-grid-column-full
-      %h1.govuk-heading-l
-        Details about cookies on
-        = service_name
+    .govuk-grid-column-two-thirds
+      %h1.govuk-heading-xl
+        = title_and_header
       %p
-        = service_name
-        puts small files (known as ‘cookies’) onto your computer to collect information about how you browse the site.
-        Find out more about the cookies we use, what they’re for and when they expire.
+        A cookie is a small piece of data that’s stored on your computer, tablet, or phone when you
+        visit a website. Most websites need cookies to work properly.
+      %p How cookies are used in this service:
+      %ul.govuk-list-govuk-list--bullet
+        %li
+          %p measure how you use the service so it can be improved
+        %li
+          %p temporarily store the answers you give
+      %p
+        Find out more about
+        = external_link_to('how to manage cookies', 'https://www.aboutcookies.org', id: 'manage-cookies-link')
       = render 'ga'
       = render 'session'
       = render 'cookie_control'

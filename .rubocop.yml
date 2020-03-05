@@ -21,7 +21,7 @@ Style/HashTransformKeys:
 Style/HashTransformValues:
   Enabled: true
 
-Metrics/LineLength:
+Layout/LineLength:
   Max: 99
   IgnoredPatterns: ['(\A|\s)#']
 

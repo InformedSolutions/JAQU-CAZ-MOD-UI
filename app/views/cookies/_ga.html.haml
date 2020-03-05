@@ -1,21 +1,29 @@
-%h2.govuk-heading-m Cookies that measure website usage
+%h2.govuk-heading-m Cookies used to measure website usage
 %p
-  We use Google Analytics software (Universal Analytics) to collect anonymised information about how you use
-  = succeed '.' do
-    = service_name
-  We do this to help make sure the site is meeting the needs of its users and to help us make improvements.
+  We use Google Analytics software to collect information about how you use this service.
+  We do this to help make sure the service is meeting the needs of its users and to help us
+  make improvements, for example improving site search.
 %br
 %p Google Analytics stores information about:
 %ul.govuk-list-govuk-list--bullet
   %li
-    %p how you got to the site
+    %p the pages you visit
   %li
-    %p
-      the pages you visit on
-      = service_name
-      and how long you spend on them
+    %p how long you spend on each page
   %li
-    %p what you click on while you’re visiting the site
+    %p how you got to the service
+  %li
+    %p what you click on while you’re visiting the service
+%p
+  We allow Google to use or share our analytics data. You can find out more about how Google
+  use this information in their
+  = external_link_to('Privacy Policy',
+                     'https://policies.google.com/technologies/partner-sites',
+                     id: 'privacy-policy-link')
+%p
+  You can turn Analytical Cookies on or off  depending on whether you want Google to have access
+  to your information.
+
 %p Google Analytics sets the following cookies.
 %table.govuk-table
   = render 'table_head'
@@ -23,18 +31,13 @@
     %tr.govuk-table__row
       %th.govuk-table__header{scope: 'row'} _ga
       %td.govuk-table__cell
-        This helps us count how many people visit
-        = service_name
-        by tracking if you’ve visited before
+        This helps us count how many people visit the service by tracking if you’ve visited before
       %td.govuk-table__cell 2 years
-    %tr.govuk-table__row
-      %th.govuk-table__header{scope: 'row'} _gid
-      %td.govuk-table__cell
-        This helps us count how many people visit
-        = service_name
-        by tracking if you’ve visited before
-      %td.govuk-table__cell 24 hours
     %tr.govuk-table__row
       %th.govuk-table__header{scope: 'row'} _gat
       %td.govuk-table__cell Used to manage the rate at which page view requests are made
-      %td.govuk-table__cell 10 minutes
+      %td.govuk-table__cell 1 minute
+    %tr.govuk-table__row
+      %th.govuk-table__header{scope: 'row'} _gid
+      %td.govuk-table__cell Identifies you to the service
+      %td.govuk-table__cell 24 hours

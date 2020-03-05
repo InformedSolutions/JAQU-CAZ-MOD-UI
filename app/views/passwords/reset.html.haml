@@ -1,4 +1,7 @@
-= link_to 'Back', new_user_session_path, class: 'govuk-back-link'
+- title_and_header = 'Reset password'
+- content_for(:title, title_and_header)
+
+= link_to 'Back', @back_button_url, class: 'govuk-back-link'
 
 %main.govuk-main-wrapper#main-content{role: 'main'}
   - if alert
@@ -6,7 +9,8 @@
 
   .govuk-grid-row
     .govuk-grid-column-two-thirds
-      %h1.govuk-heading-l Reset password
+      %h1.govuk-heading-l
+        = title_and_header
       %p Enter your email to reset password
       = form_for(User.new, url: send_confirmation_code_passwords_path, method: :post,
         html: {autocomplete: 'off', novalidate: 'novalidate'}) do |f|
