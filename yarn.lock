@@ -3435,6 +3435,11 @@ import-local@2.0.0, import-local@^2.0.0:
     pkg-dir "^3.0.0"
     resolve-cwd "^2.0.0"
 
+improved-yarn-audit@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/improved-yarn-audit/-/improved-yarn-audit-1.1.1.tgz#72078e146726f332eaafb7cfd8af928e335a846c"
+  integrity sha512-pZ1hrKuOy1bk7LDPWv3By3B0gdO5WPbkTfLf3K52DxxfvpbQR7aiZhBs2Ps9jRi8dI63DKW07Sx/0EMB5PG07g==
+
 imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
