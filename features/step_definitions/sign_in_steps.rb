@@ -91,3 +91,7 @@ When('I enter valid credentials but with invalid authorized user type') do
   allow(Cognito::AuthUser).to receive(:call).and_return(user)
   basic_sign_in
 end
+
+Then('I should be on the login page') do
+  expect(page).to have_current_path(new_user_session_path)
+end

@@ -49,3 +49,9 @@ Feature: Upload
     Given I am on the Upload page
     When I want go to processing page
     Then I am redirected to the root page
+
+Scenario: User wants to upload CSV using different IP address
+  Given I am on the Upload page
+  Then I change my IP
+    And I upload a valid csv file
+  Then I should be on the login page

@@ -13,7 +13,8 @@ module Devise
       def authentication(params)
         Cognito::AuthUser.call(
           username: params[:username],
-          password: params[:password]
+          password: params[:password],
+          login_ip: params[:login_ip]
         )
       end
 

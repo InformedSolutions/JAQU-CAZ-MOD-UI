@@ -52,4 +52,19 @@ class ApplicationController < ActionController::Base
   def assign_back_button_url
     @back_button_url = request.referer || root_path
   end
+
+  # Adds checking IP to default Devise :authenticate_user!
+  def authenticate_user!
+    super
+    check_ip!
+  end
+
+  # Checks if request's remote IP matches the one set for the user during login
+  # If not, it logs out user and redirects to the login page
+  def check_ip!
+    return if current_user.login_ip == request.remote_ip
+
+    sign_out current_user
+    redirect_to new_user_session_path
+  end
 end

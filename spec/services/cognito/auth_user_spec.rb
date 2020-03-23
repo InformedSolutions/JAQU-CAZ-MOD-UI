@@ -3,10 +3,13 @@
 require 'rails_helper'
 
 RSpec.describe Cognito::AuthUser do
-  subject(:service_call) { described_class.call(username: username, password: password) }
+  subject(:service_call) do
+    described_class.call(username: username, password: password, login_ip: remote_ip)
+  end
 
-  let(:username) { 'wojtek' }
+  let(:username) { 'wojtek@example.com' }
   let(:password) { 'password' }
+  let(:remote_ip) { '1.2.3.4' }
 
   context 'with successful call' do
     before do
@@ -32,7 +35,9 @@ RSpec.describe Cognito::AuthUser do
       end
 
       it 'calls Cognito::GetUser' do
-        expect(Cognito::GetUser).to receive(:call).with(access_token: token, username: username)
+        expect(Cognito::GetUser)
+          .to receive(:call)
+          .with(access_token: token, username: username, user: an_instance_of(User))
         service_call
       end
     end
@@ -40,15 +45,10 @@ RSpec.describe Cognito::AuthUser do
     context 'when user did not change the password' do
       let(:email) { 'test@example.com' }
       let(:session_key) { SecureRandom.uuid }
-      let(:authorized_list_type) { 'green' }
       let(:auth_response) do
         OpenStruct.new(challenge_parameters: {
                          'USER_ID_FOR_SRP' => username,
-                         'userAttributes' =>
-                           {
-                             'email' => email,
-                             'custom:authorized-list-type' => authorized_list_type
-                           }.to_json
+                         'userAttributes' => { 'email' => email }.to_json
                        }, session: session_key)
       end
 
@@ -76,8 +76,8 @@ RSpec.describe Cognito::AuthUser do
         expect(service_call.hashed_password).to eq(Digest::MD5.hexdigest(password))
       end
 
-      it 'sets authorized_list_type' do
-        expect(service_call.authorized_list_type).to eq(authorized_list_type)
+      it 'sets login_ip' do
+        expect(service_call.login_ip).to eq(remote_ip)
       end
     end
   end

@@ -54,4 +54,17 @@ RSpec.describe Cognito::GetUser do
   it 'sets authorized_list_type' do
     expect(service_call.authorized_list_type).to eq(authorized_list_type)
   end
+
+  context 'when the initial user is given' do
+    subject(:service_call) do
+      described_class.call(access_token: token, username: username, user: user)
+    end
+
+    let(:user) { User.new(login_ip: remote_ip) }
+    let(:remote_ip) { '1.2.3.4' }
+
+    it 'does not override login_ip' do
+      expect(service_call.login_ip).to eq(remote_ip)
+    end
+  end
 end

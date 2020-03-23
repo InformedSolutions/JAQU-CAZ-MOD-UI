@@ -17,10 +17,14 @@ class User
 
   # Attribute that is being used to authorize a user and use it in csv uploading.
   attr_accessor :email, :username, :aws_status, :aws_session, :sub,
-                :confirmation_code, :hashed_password, :authorized_list_type
+                :confirmation_code, :hashed_password, :authorized_list_type, :login_ip
 
   # Overrides default initializer for compliance with Devise Gem.
-  def initialize(options = {}); end
+  def initialize(options = {})
+    options.each do |key, value|
+      public_send("#{key}=", value) if respond_to?(key)
+    end
+  end
 
   # Used in devise and should return nil when the object is not persisted.
   def to_key
@@ -42,7 +46,8 @@ class User
       aws_session: aws_session,
       sub: sub,
       hashed_password: hashed_password,
-      authorized_list_type: authorized_list_type
+      authorized_list_type: authorized_list_type,
+      login_ip: login_ip
     }
   end
 end

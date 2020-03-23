@@ -76,6 +76,12 @@ Then('I should not receive a success upload email again') do
   expect(ActionMailer::Base.deliveries.size).to eq(1)
 end
 
+Then('I change my IP') do
+  allow_any_instance_of(ActionDispatch::Request)
+    .to receive(:remote_ip)
+    .and_return('4.3.2.1')
+end
+
 def empty_csv_file(filename)
   File.join('spec', 'fixtures', 'files', 'csv', 'empty', filename)
 end

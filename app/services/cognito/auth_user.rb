@@ -24,11 +24,12 @@ module Cognito
     #
     # * +username+ - string, username submitted by the user
     # * +password+ - string, password submitted by the user
+    # * +login_ip+ = IP address, IP of the login request
     #
-    def initialize(username:, password:)
+    def initialize(username:, password:, login_ip:)
       @username = username&.downcase
       @password = password
-      @user = User.new
+      @user = User.new(login_ip: login_ip)
     end
 
     ##
@@ -100,7 +101,7 @@ module Cognito
     # Performs {next call}[rdoc-ref:Cognito::GetUser.call] to get user data of unchallenged user.
     # Passes username and access_token received from the previous call.
     def update_unchallenged_user(access_token)
-      @user = Cognito::GetUser.call(access_token: access_token, username: username)
+      @user = Cognito::GetUser.call(access_token: access_token, username: username, user: user)
     end
 
     # Returns a string.
