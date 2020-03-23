@@ -309,8 +309,8 @@ steps:
       AWS_SECRET_ACCESS_KEY:
         from_secret: aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
-      APPLICATION_NAME: vccs-codedeploy-service-dev
-      DEPLOYMENT_GROUP: vccs-codedeploy-service-dev
+      APPLICATION_NAME: mod-codedeploy-service-dev
+      DEPLOYMENT_GROUP: mod-codedeploy-service-dev
       PROJECT: mod
       DEPLOY_ENVIRONMENT: dev
       LAMBDA_BUCKET: jaqu-projects-lambda-bucket
