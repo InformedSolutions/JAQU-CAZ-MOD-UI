@@ -10,7 +10,7 @@ concurrency:
 volumes:
 - name: docker_sock
   host:
-    path: /var/run/docker.sock 
+    path: /var/run/docker.sock
 
 services:
   - name: zap
@@ -111,7 +111,7 @@ trigger:
     - push
 concurrency:
   limit: 1
-  
+
 volumes:
 - name: docker_sock
   host:
@@ -245,7 +245,7 @@ steps:
         from_secret: sonar_token
       sonar.ruby.coverage.reportPaths: coverage/.resultset.json
     commands:
-      - sonar-scanner 
+      - sonar-scanner
         -Dsonar.projectKey=${DRONE_REPO}
         -Dsonar.projectName=${DRONE_REPO}
         -Dsonar.host.url=$SONAR_HOST
@@ -294,8 +294,46 @@ steps:
       event:
         - push
 
-  ################################################# End Development Only #######################################################      
-  
+
+  - name: codedeploy ui dev
+    image: golang:alpine
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: mod-codedeploy-service-dev
+      DEPLOYMENT_GROUP: mod-codedeploy-service-dev
+      PROJECT: mod
+      DEPLOY_ENVIRONMENT: dev
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: https://dev.partner.datauploadportal.co.uk/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+  ################################################# End Development Only #######################################################
+
 ---
 
 
@@ -326,7 +364,7 @@ trigger:
     - push
 concurrency:
   limit: 1
-  
+
 volumes:
 - name: docker_sock
   host:
@@ -522,8 +560,7 @@ steps:
       event:
         - push
 
-  ################################################# End SIT Only #######################################################      
-  
+  ################################################# End SIT Only #######################################################
 
 
 
@@ -537,8 +574,9 @@ steps:
 
 
 
-  ################################################ Secrets #########################################################  
-  
+
+  ################################################ Secrets #########################################################
+
 # Note the below values are pulled from AWS Secrets Manager via the aws-secrets Drone plugin
 ---
 kind: secret
@@ -546,21 +584,21 @@ name: aws_access_key_id
 get:
   path: /secret/drone.global
   name: awsAccessKeyId
-  
+
 ---
 kind: secret
 name: aws_secret_access_key
 get:
   path: /secret/drone.global
   name: awsSecretAccessKey
-  
+
 ---
 kind: secret
 name: sonar_host
 get:
   path: /secret/drone.global
   name: sonarHost
-  
+
 ---
 kind: secret
 name: sonar_token
