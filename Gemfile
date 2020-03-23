@@ -5,7 +5,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby '2.6.5'
 
-gem 'rails', '~> 6.0.2.1'
+gem 'rails', '~> 6.0.2.2'
 
 gem 'activerecord-nulldb-adapter'
 gem 'bootsnap', require: false
@@ -30,7 +30,7 @@ group :development, :test do
   gem 'haml-rails'
   gem 'pry-byebug'
   gem 'pry-rails'
-  gem 'rspec-rails', '~> 4.0.0.beta'
+  gem 'rspec-rails', '~> 4.0.0.rc1'
   gem 'scss_lint-govuk', require: false
 end
 

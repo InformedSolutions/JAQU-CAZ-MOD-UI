@@ -5,8 +5,8 @@
     "@rails/actioncable": "^6.0.2",
     "@rails/activestorage": "^6.0.2",
     "@rails/ujs": "^6.0.2",
-    "@rails/webpacker": "^4.2.2",
-    "govuk-frontend": "^3.5.0",
+    "@rails/webpacker": "^5.0.0",
+    "govuk-frontend": "^3.6.0",
     "improved-yarn-audit": "^1.1.1",
     "rails-erb-loader": "^5.5.2"
   },
