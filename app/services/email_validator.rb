@@ -14,7 +14,7 @@ class EmailValidator < BaseService
   #
   # * +email+ - string, eg. 'example@email.com'
   def initialize(email:)
-    @email = email
+    @email = email&.downcase
   end
 
   # The caller method for the service. It invokes validating.
