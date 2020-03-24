@@ -18,13 +18,13 @@ class RegisterCheckerApi < BaseApi
     #
     # ==== Attributes
     #
-    # * +file_name+ - Csv file name, eg. 'CAZ-2020-01-08-5'
+    # * +file_name+ - Csv file name, eg. 'CAZ-2020-01-08'
     # * +correlation_id+ - Correlation id, eg '98faf123-d201-48cb-8fd5-4b30c1f80918'
     #
     # ==== Example
     #
     #    RegisterCheckerApi.register_job(
-    #     'CAZ-2020-01-08-5',
+    #     'CAZ-2020-01-08',
     #     '98faf123-d201-48cb-8fd5-4b30c1f80918'
     #    )
     #
@@ -104,12 +104,12 @@ class RegisterCheckerApi < BaseApi
     #
     # ==== Attributes
     #
-    # * +file_name+ - Csv file name,  eg. 'CAZ-2020-01-08-5'
+    # * +file_name+ - Csv file name,  eg. 'CAZ-2020-01-08'
     #
     # ==== Result
     #
     # Returns a json,
-    #   eg. "{\"filename\":\"CAZ-2020-01-08-5\",\"s3Bucket\":\"test-update-server\"}".
+    #   eg. "{\"filename\":\"CAZ-2020-01-08\",\"s3Bucket\":\"test-update-server\"}".
     #
     def register_body(file_name)
       {

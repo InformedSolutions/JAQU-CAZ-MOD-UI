@@ -6,7 +6,7 @@ describe UploadController, type: :request do
   let(:file_path) do
     File.join(
       'spec',
-      'fixtures', 'files', 'csv', 'CAZ-2020-01-08-5.csv'
+      'fixtures', 'files', 'csv', 'CAZ-2020-01-08.csv'
     )
   end
 
@@ -87,7 +87,7 @@ describe UploadController, type: :request do
 
     context 'with invalid params' do
       let(:file_path) do
-        File.join('spec', 'fixtures', 'files', 'csv', 'empty', 'CAZ-2020-01-08.csv')
+        File.join('spec', 'fixtures', 'files', 'csv', 'empty', 'CAZ-2020-01-08-.csv')
       end
 
       it 'returns error' do

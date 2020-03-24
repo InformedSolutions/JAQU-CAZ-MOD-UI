@@ -13,13 +13,13 @@ When('I upload a valid csv file') do
   allow(SecureRandom).to receive(:uuid).and_return(correlation_id)
   allow(CsvUploadService).to receive(:call).and_return(true)
   allow(RegisterCheckerApi).to receive(:register_job)
-    .with('CAZ-2020-01-08-5.csv', correlation_id)
+    .with('CAZ-2020-01-08.csv', correlation_id)
     .and_return(job_name)
 
   allow(RegisterCheckerApi).to receive(:job_status)
     .with(job_name, correlation_id).and_return('RUNNING')
 
-  attach_file(:file, csv_file('CAZ-2020-01-08-5.csv'))
+  attach_file(:file, csv_file('CAZ-2020-01-08.csv'))
   click_button 'Upload'
 end
 
@@ -45,13 +45,13 @@ end
 
 #  Scenario: Upload a csv file whose name is not compliant with the naming rules
 When('I upload a csv file whose name format is invalid') do
-  attach_file(:file, empty_csv_file('CAZ-2020-01-08.csv'))
+  attach_file(:file, empty_csv_file('CAZ-2020-01-08-.csv'))
   click_button 'Upload'
 end
 
 # Scenario: Upload a csv file format that is not .csv or .CSV
 When('I upload a csv file whose format that is not .csv or .CSV') do
-  attach_file(:file, empty_csv_file('CAZ-2020-01-08-4321.xlsx'))
+  attach_file(:file, empty_csv_file('CAZ-2020-01-08.xlsx'))
   click_button 'Upload'
 end
 
@@ -59,7 +59,7 @@ end
 When('I upload a csv file during error on S3') do
   allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(false)
 
-  attach_file(:file, csv_file('CAZ-2020-01-08-5.csv'))
+  attach_file(:file, csv_file('CAZ-2020-01-08.csv'))
   click_button 'Upload'
 end
 
