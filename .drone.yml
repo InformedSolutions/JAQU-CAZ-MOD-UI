@@ -286,7 +286,8 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_secret_key_base:
+        from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
@@ -810,7 +811,8 @@ steps:
       TF_VAR_s3_aws_secret_access_key:
         from_secret: aws_secret_access_key
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
-      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_secret_key_base:
+        from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
@@ -884,5 +886,12 @@ name: browserstack_username
 get:
   path: /secret/drone.global
   name: browserStackUsername
+
+---
+kind: secret
+name: mod_ruby_secret
+get:
+  path: /secret/drone.global
+  name: modRubySecret
 
   ################################################ End Secrets #########################################################
