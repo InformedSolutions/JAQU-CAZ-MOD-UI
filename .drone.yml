@@ -984,6 +984,11 @@ steps:
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
     when:
       event:
         - pull_request
@@ -1045,6 +1050,11 @@ steps:
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
     when:
       event:
         - push
