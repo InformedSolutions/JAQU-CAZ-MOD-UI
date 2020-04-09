@@ -905,6 +905,315 @@ steps:
   ################################################# End SIT Only #######################################################
 
 
+---
+
+
+
+
+
+
+
+
+
+
+
+#################################################### UAT Steps ############################################################
+
+
+kind: pipeline
+type: docker
+name: mod-web-uat
+trigger:
+  branch:
+    - uat/*
+concurrency:
+  limit: 1
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
+steps:
+
+  # Clean agent images and containers to prevent disk space overuse
+  - name: clean agent
+    image: docker
+    commands:
+    - docker system prune -f
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Build docker image
+  - name: build
+    image: docker
+    commands:
+    - docker build -f Dockerfile.test -t test-mod-frontend:latest .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Trigger unit tests
+  - name: unit tests
+    image: test-mod-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - yarn install
+      - rspec -f d
+
+  # Execute integration/scenario tests
+  - name: integration tests
+    image: test-mod-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - cucumber
+
+  # Invoke static code analysis through Ruby libraries
+  - name: static code analysis (Ruby)
+    image: test-mod-frontend
+    pull: never
+    commands:
+      - rubocop
+      - scss-lint app/javascript
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Invoke security analysis through Ruby libraries
+  - name: security tests (Ruby)
+    image: test-mod-frontend
+    pull: never
+    commands:
+       - bundle audit check --update
+       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+       - yarn run improved-yarn-audit --exclude '1488, 1179' --retry-on-network-failure
+       - brakeman
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+ # Push built image to ECR registry
+  - name: publish image to ecr
+    image: plugins/ecr
+    settings:
+      access_key:
+        from_secret: aws_access_key_id
+      secret_key:
+        from_secret: aws_secret_access_key
+      repo: 018330602464.dkr.ecr.eu-west-2.amazonaws.com/mod-web
+      registry: 018330602464.dkr.ecr.eu-west-2.amazonaws.com
+      dockerfile: Dockerfile.build
+      region: eu-west-2
+      tags:
+        - release
+        - hotfix
+        - ${DRONE_BUILD_NUMBER}
+      build_args:
+        - secret_key_base=${DRONE_COMMIT}
+    when:
+      event:
+        - push
+
+  - name: plan terraform updates in uat
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout uat
+      - cd terraform/projects/mod/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf plan
+      - cd ../02.backends
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf plan
+      - cd ../04.web
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf plan
+    environment:
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      TF_VAR_secret_key_base:
+        from_secret: mod_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-1
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      environment: uat
+    when:
+      event:
+        - pull_request
+
+  - name: provisioning warning
+    image: docker:git
+    commands:
+      - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
+    when:
+      status:
+        - failure
+
+  - name: deploy to uat
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout uat
+      - cd terraform/projects/mod/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf apply -auto-approve
+      - cd ../02.backends
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf apply -auto-approve
+      - cd ../04.web
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      TF_VAR_secret_key_base:
+        from_secret: mod_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-3
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      environment: uat
+    when:
+      event:
+        - push
+
+  - name: codedeploy ui uat
+    image: golang:alpine
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=mod/$DEPLOY_ENVIRONMENT/appspec.yaml
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: mod-codedeploy-service-uat
+      DEPLOYMENT_GROUP: mod-codedeploy-service-uat
+      PROJECT: mod
+      DEPLOY_ENVIRONMENT: uat
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: docker
+    environment:
+      build_id_url: https://uat.partner.datauploadportal.co.uk/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
+  - name: build testing tools image
+    image: docker:git
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - mkdir ~/.ssh
+      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-QA-selenium.git
+      - cd JAQU-CAZ-QA-selenium
+      - docker build -t test-tools-image .
+    environment:
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+
+    # Run end to end tests
+  - name: run end to end tests
+    image: selenium-jaqu
+    pull: never
+    environment:
+      BS_USERNAME:
+        from_secret: browserstack_username
+      BS_AUTHKEY:
+        from_secret: browserstack_auth_key
+      BASEURL_MOD: 'https://uat.partner.datauploadportal.co.uk/'
+      WHITE_MOD_VALID_USERNAME: 'edmond.chhung@informed.com'
+      WHITE_MOD_VALID_PASSWORD: 'Tester123..'
+      VALID_USERNAME: 'tester@informed.com'
+      VALID_PASSWORD: 'Tester123..'
+      BROWSER_SET: 'min'
+      SCREENSHOT_TYPE: 'base'
+      VCCS_USER: 'vccsservice'
+      VCCS_PASSWORD: 'Password001!'
+      BUILD: MOD-UI-${DRONE_BUILD_NUMBER}
+      SPECTRE: false
+      LOCATION: browserstack
+    commands:
+      - cd JAQU-CAZ-QA-selenium
+      - cucumber -t @MOD --retry 3 --guess
+
+  ################################################# End UAT Steps ############################################################
+
 
 
 ---
