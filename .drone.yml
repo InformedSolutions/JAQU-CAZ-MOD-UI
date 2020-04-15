@@ -1127,7 +1127,7 @@ type: docker
 name: mod-web-prod
 trigger:
   branch:
-    - staging
+    - master
   event:
     - pull_request
     - push
