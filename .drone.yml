@@ -1286,7 +1286,7 @@ steps:
   - name: await ecs rollout
     image: golang:alpine
     environment:
-      build_id_url: https://prod.partner.datauploadportal.co.uk/build_id
+      build_id_url: https://partner.drive-clean-air-zone.service.gov.uk/build_id
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
