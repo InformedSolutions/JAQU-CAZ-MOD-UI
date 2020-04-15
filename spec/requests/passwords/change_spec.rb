@@ -21,7 +21,10 @@ describe 'PasswordsController - POST #change', type: :request do
 
   context 'with password_reset_token set' do
     before do
-      inject_session(password_reset_token: SecureRandom.uuid)
+      inject_session(
+        password_reset_token: SecureRandom.uuid,
+        password_reset_username: username
+      )
       allow(Cognito::ConfirmForgotPassword)
         .to receive(:call)
         .with(username: username,
@@ -41,18 +44,21 @@ describe 'PasswordsController - POST #change', type: :request do
       expect(session[:password_reset_token]).to be_nil
     end
 
-    context 'when service raises exception' do
-      let(:fallback_path) { reset_passwords_path }
+    it 'clears password_reset_username' do
+      http_request
+      expect(session[:password_reset_username]).to be_nil
+    end
 
+    context 'when service raises exception' do
       before do
         allow(Cognito::ConfirmForgotPassword)
           .to receive(:call)
-          .and_raise(Cognito::CallException.new('Error', fallback_path))
+          .and_raise(Cognito::CallException.new('Error'))
       end
 
-      it 'returns redirect to fallback path' do
+      it 'returns redirect to confirm_reset_passwords_path' do
         http_request
-        expect(response).to redirect_to(fallback_path)
+        expect(response).to redirect_to(confirm_reset_passwords_path)
       end
     end
   end

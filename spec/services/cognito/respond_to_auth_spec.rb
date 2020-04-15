@@ -29,7 +29,7 @@ RSpec.describe Cognito::RespondToAuthChallenge do
 
   before do
     allow(Cognito::GetUser).to receive(:call)
-      .with(access_token: token, user: user)
+      .with(access_token: token, user: user, username: user.username)
       .and_return(cognito_user)
     allow(COGNITO_CLIENT).to receive(:respond_to_auth_challenge)
       .with(
@@ -43,7 +43,7 @@ RSpec.describe Cognito::RespondToAuthChallenge do
       ).and_return(auth_response)
   end
 
-  it 'returns a cggnito user' do
+  it 'returns a cognito user' do
     expect(service_call).to eq(cognito_user)
   end
 
@@ -65,7 +65,7 @@ RSpec.describe Cognito::RespondToAuthChallenge do
 
     before do
       allow(COGNITO_CLIENT).to receive(:respond_to_auth_challenge).and_raise(
-        Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', '')
+        Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', 'error')
       )
     end
 
@@ -79,7 +79,7 @@ RSpec.describe Cognito::RespondToAuthChallenge do
 
     before do
       allow(COGNITO_CLIENT).to receive(:respond_to_auth_challenge).and_raise(
-        Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', '')
+        Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', 'error')
       )
     end
 

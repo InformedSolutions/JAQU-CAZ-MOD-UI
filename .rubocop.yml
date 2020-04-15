@@ -1,8 +1,7 @@
-require: rubocop-rails
 inherit_from: ./lib/rubocop/blacklist.yml
 
 AllCops:
-  TargetRubyVersion: 2.6.3
+  TargetRubyVersion: 2.6.5
 
 Style/Documentation:
   Enabled: false
@@ -13,14 +12,24 @@ Style/GuardClause:
 Style/IfUnlessModifier:
   Enabled: false
 
-Metrics/LineLength:
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Layout/LineLength:
   Max: 99
-  IgnoredPatterns: ['\A#']
+  IgnoredPatterns: ['(\A|\s)#']
 
 Metrics/BlockLength:
   ExcludedMethods: ['describe', 'context']
   Exclude:
     - 'config/routes.rb'
+    - 'config/environments/*.rb'
 
 Style/MixinUsage:
   Exclude:

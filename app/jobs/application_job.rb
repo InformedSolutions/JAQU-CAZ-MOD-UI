@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+##
+# Base class for async jobs, generated automatically during new application creation
+#
 class ApplicationJob < ActiveJob::Base
   # Automatically retry jobs that encountered a deadlock
   # retry_on ActiveRecord::Deadlocked

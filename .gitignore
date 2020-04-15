@@ -48,4 +48,6 @@ config/ssl/
 
 # Ignore envs
 .env
+
 .vagrant/
+/doc

@@ -71,7 +71,7 @@ RSpec.describe Cognito::ConfirmForgotPassword do
 
     describe 'Aws::CognitoIdentityProvider::Errors::CodeMismatchException' do
       let(:exception) do
-        Aws::CognitoIdentityProvider::Errors::CodeMismatchException.new('', '')
+        Aws::CognitoIdentityProvider::Errors::CodeMismatchException.new('', 'error')
       end
 
       it 'raises exception with proper params' do
@@ -84,7 +84,7 @@ RSpec.describe Cognito::ConfirmForgotPassword do
 
     describe 'Aws::CognitoIdentityProvider::Errors::CodeMismatchException' do
       let(:exception) do
-        Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', '')
+        Aws::CognitoIdentityProvider::Errors::InvalidPasswordException.new('', 'error')
       end
 
       it 'raises exception with proper params' do
@@ -97,7 +97,7 @@ RSpec.describe Cognito::ConfirmForgotPassword do
 
     describe 'other error' do
       let(:exception) do
-        Aws::CognitoIdentityProvider::Errors::InternalErrorException.new('', '')
+        Aws::CognitoIdentityProvider::Errors::InternalErrorException.new('', 'error')
       end
 
       it 'raises exception with proper params' do

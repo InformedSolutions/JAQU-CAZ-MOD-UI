@@ -6,7 +6,7 @@ Feature: Password reset
   Scenario: Go to forgotten password page
     Given I am on the Sign in page
     When I press "Forgot your password?" link
-    Then I should see "Enter your email to reset your password."
+    Then I should see "Enter your email to reset password"
 
   Scenario: Go to update password page
     Given I am on the forgotten password page
@@ -24,8 +24,10 @@ Feature: Password reset
     Then I remain on the update password page
       And I should see "The email is in an invalid format"
 
-  Scenario: Filling too long email address
+  Scenario: Filling only confirmation code
     Given I am on the forgotten password page
-    When I enter too long email
-    Then I remain on the update password page
-      And I should see "The email exceeds the limit of 45 characters"
+      And I should see "Enter your email to reset password"
+    When I enter my username
+      And I should see "Update your password"
+    Then I enter only confirmation code
+      And I should see "Password is required"

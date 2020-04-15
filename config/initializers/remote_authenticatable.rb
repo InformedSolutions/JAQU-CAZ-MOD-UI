@@ -11,13 +11,11 @@ module Devise
       #
       # If the authentication fails you should return false
       def authentication(params)
-        Cognito::AuthUser.call(username: params[:username], password: params[:password])
-      rescue Aws::CognitoIdentityProvider::Errors::NotAuthorizedException => e
-        Rails.logger.error e
-        false
-      rescue StandardError => e
-        Rails.logger.error e
-        false
+        Cognito::AuthUser.call(
+          username: params[:username],
+          password: params[:password],
+          login_ip: params[:login_ip]
+        )
       end
 
       module ClassMethods
@@ -32,7 +30,7 @@ module Devise
         # Recreates a resource from session data
         def serialize_from_session(data, _salt)
           resource = new
-          resource.serializable_hash.keys.each do |key|
+          resource.serializable_hash.each_key do |key|
             resource.public_send("#{key}=", data[key.to_s])
           end
           resource

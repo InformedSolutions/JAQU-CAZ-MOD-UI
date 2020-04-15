@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
+##
+# Module used to wrap communication with Amazon Cognito
+#
+# Configuration of the client is done in config/initializers/cognito_client.rb and by ENV variables
+#
 module AuthenticationStrategies
+  ##
+  # Class responsible for validating user email and authenticating user.
+  #
   class Remote < Devise::Strategies::Authenticatable
     # For an example check:
     # https://github.com/plataformatec/devise/blob/master/lib/devise/strategies/database_authenticatable.rb
@@ -12,6 +20,8 @@ module AuthenticationStrategies
       # authentication_hash doesn't include the password
       auth_params = authentication_hash
       auth_params[:password] = password
+      # add request IP for security reasons
+      auth_params[:login_ip] = request.remote_ip
 
       # mapping.to is a wrapper over the resource model
       resource = mapping.to.new
@@ -22,6 +32,7 @@ module AuthenticationStrategies
 
     private
 
+    # Returns a string, eg. 'user@example.com'
     def username
       authentication_hash[:username]
     end
@@ -37,9 +48,23 @@ module AuthenticationStrategies
       #
       # resource = resource.authentication(auth_params)
       if validate(resource) { resource = resource.authentication(auth_params) }
-        success!(resource)
+        validate_authorized_list_type(resource)
       else
         fail!(:invalid)
+      end
+    end
+
+    # Validates the authorized list type. It must be the `green` or `white`.
+    #
+    # @param user [User]
+    #
+    # @return [Symbol] - :success or :failure
+    def validate_authorized_list_type(user)
+      if %w[green white].include?(user.authorized_list_type)
+        success!(user)
+      else
+        Rails.logger.error "[#{self.class.name}] Invalid authorized list type"
+        fail!('Invalid authorized list type')
       end
     end
   end

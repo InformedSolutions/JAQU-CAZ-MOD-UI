@@ -5,10 +5,6 @@ require_relative 'boot'
 # This is not loaded in rails/all but inside active_record so add it if
 # you want your models work as expected
 require 'rails/all'
-# require 'active_record/railtie'
-# require 'action_controller/railtie'
-# require 'action_view/railtie'
-# require 'sprockets/railtie'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
@@ -22,15 +18,25 @@ module CsvUploader
     config.autoload_paths << Rails.root.join('lib')
     config.eager_load_paths << Rails.root.join('lib')
 
-    config.x.session_timeout_in_min = (ENV['SESSION_TIMEOUT'].presence || 15).to_i
-
-    feedback_url_default = 'https://www.surveymonkey.com/r/NXXPW3G'
-    config.x.feedback_url = (ENV['FEEDBACK_URL'].presence || feedback_url_default)
-
+    # timeout the user session without activity.
+    config.x.session_timeout_in_min = ENV.fetch('SESSION_TIMEOUT', 15).to_i
+    # link to feedback page.
+    config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://www.surveymonkey.co.uk/r/NXXPW3G')
+    # name of service
     config.x.service_name = 'National Register of MOD Vehicles'
-    config.x.contact_email = 'Useraccount.Query@defra.gov.uk'
+    default_email = 'Useraccount.Query@defra.gov.uk'
+    config.x.contact_email = default_email
+    config.x.service_email = ENV.fetch('SES_FROM_EMAIL', default_email)
 
     # https://mattbrictson.com/dynamic-rails-error-pages
     config.exceptions_app = routes
+
+    config.time_zone = 'London'
+    config.x.time_format = '%d %B %Y %H:%M:%S %Z'
+
+    # https://github.com/aws/aws-sdk-rails
+    config.action_mailer.delivery_method = :aws_sdk
+    # https://stackoverflow.com/questions/49086693/how-do-i-remove-mail-html-content-from-rails-logs
+    config.action_mailer.logger = nil
   end
 end

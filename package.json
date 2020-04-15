@@ -1,16 +1,17 @@
 {
-  "name": "jaqu-caz-csv",
+  "name": "jaqu-caz-mod-ui",
   "private": true,
   "dependencies": {
-    "@rails/actioncable": "^6.0.0",
-    "@rails/activestorage": "^6.0.0",
-    "@rails/ujs": "^6.0.0",
-    "@rails/webpacker": "^4.0.7",
-    "govuk-frontend": "^3.0.0",
+    "@rails/actioncable": "^6.0.2",
+    "@rails/activestorage": "^6.0.2",
+    "@rails/ujs": "^6.0.2",
+    "@rails/webpacker": "^5.0.0",
+    "govuk-frontend": "^3.6.0",
+    "improved-yarn-audit": "^1.1.1",
     "rails-erb-loader": "^5.5.2"
   },
   "version": "0.1.0",
   "devDependencies": {
-    "webpack-dev-server": "^3.8.0"
+    "webpack-dev-server": "^3.10.3"
   }
 }

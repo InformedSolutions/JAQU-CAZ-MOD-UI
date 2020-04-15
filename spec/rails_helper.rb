@@ -8,7 +8,7 @@ require File.expand_path('../config/environment', __dir__)
 abort('The Rails environment is running in production mode!') if Rails.env.production?
 require 'rspec/rails'
 # load support folder
-Dir[Rails.root.join('spec', 'support', '**', '*.rb')].each { |f| require f }
+Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 
 # stub connect to the AWS metadata server to get the AWS credentials.
 Aws.config.update(stub_responses: true)
@@ -18,6 +18,13 @@ RSpec.configure do |config|
   config.include InjectSession, type: :request
   config.include MockUser
   config.include CsvHelper
+
+  config.before(:each) do
+    @remote_ip = '1.2.3.4'
+    allow_any_instance_of(ActionDispatch::Request)
+      .to receive(:remote_ip)
+      .and_return(@remote_ip)
+  end
 
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"

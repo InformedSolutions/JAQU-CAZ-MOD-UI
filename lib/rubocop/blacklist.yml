@@ -8,3 +8,4 @@ AllCops:
     - 'node_modules/**/*'
     - 'script/**/*'
     - 'lib/tasks/cucumber.rake'
+    - 'jmeter/*'

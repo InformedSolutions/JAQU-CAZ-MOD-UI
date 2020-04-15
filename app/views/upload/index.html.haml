@@ -13,9 +13,14 @@
         = succeed "." do
           = link_to('data rules', data_rules_upload_index_path)
 
+      %p
+        Due to your account configuration, you will be submitting a
+        = current_user.authorized_list_type
+        list of MOD vehicles.
+
       = form_tag(import_upload_index_path, multipart: true) do
         .govuk-form-group{class: ('govuk-form-group--error' if alert)}
-          %label.govuk-label{for: "file-upload-1"}
+          %label.govuk-label{for: 'file-upload-1'}
             Upload a file
           - if alert
             %span#govuk-error-message.govuk-error-message
