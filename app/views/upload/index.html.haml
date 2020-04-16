@@ -7,11 +7,12 @@
       - elsif alert
         = render 'shared/errors'
       %p
-        Use this page to upload MOD vehicles data.
-        Your upload must be a CSV file with information in a specific format.
-        For information on this format see the
-        = succeed "." do
+        Use this page to upload MOD vehicle data.
+        Your data must be saved as a CSV file in a specific format.
+        = succeed '.' do
+          Read the
           = link_to('data rules', data_rules_upload_index_path)
+          before you upload a file to avoid any errors
 
       %p
         Due to your account configuration, you will be submitting a
