@@ -23,7 +23,7 @@ module CsvUploader
     # link to feedback page.
     config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://www.surveymonkey.co.uk/r/NXXPW3G')
     # name of service
-    config.x.service_name = 'National Register of MOD Vehicles'
+    config.x.service_name = 'Ministry of Defence Data Portal'
     default_email = 'Useraccount.Query@defra.gov.uk'
     config.x.contact_email = default_email
     config.x.service_email = ENV.fetch('SES_FROM_EMAIL', default_email)

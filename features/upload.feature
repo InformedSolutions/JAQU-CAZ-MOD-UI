@@ -6,7 +6,7 @@ Feature: Upload
   Scenario: Upload without file
     Given I am on the Upload page
     When I press "Upload" button
-    Then I should see "Select a CSV"
+    Then I should see "Select a CSV file to upload"
 
   Scenario: Upload a csv file and redirect to processing page
     Given I am on the Upload page
