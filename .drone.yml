@@ -75,7 +75,7 @@ steps:
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
       BASEURL_MOD: 'https://dev.partner.datauploadportal.co.uk/'
-      WHITE_MOD_VALID_USERNAME: 'bradley.gee@informed.com'
+      WHITE_MOD_VALID_USERNAME: 'Edmond.Chhung@informed.com'
       WHITE_MOD_VALID_PASSWORD: 'Edc123.,'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
