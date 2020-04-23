@@ -325,7 +325,7 @@ get:
 kind: secret
 name: mod_ruby_secret
 get:
-  path: /secret/drone.global
+  path: /build-tools/drone
   name: modRubySecret
 
   ################################################ End Secrets #########################################################
