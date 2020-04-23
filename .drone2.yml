@@ -309,17 +309,19 @@ get:
   path: /build-tools/drone
   name: githubPrivateKey
 ---
+
+---
 kind: secret
 name: browserstack_auth_key
 get:
-  path: /secret/drone.global
+  path: /build-tools/drone
   name: browserStackAuthKey
 
 ---
 kind: secret
 name: browserstack_username
 get:
-  path: /secret/drone.global
+  path: /build-tools/drone
   name: browserStackUsername
 
 ---
