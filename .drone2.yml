@@ -6,7 +6,7 @@ name: mod-web-dev
 
 trigger:
   branch:
-    - iac-restructure-baseline
+    - iac_restructure_baseline
   event:
     - pull_request
     - push
