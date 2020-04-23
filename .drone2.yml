@@ -179,6 +179,8 @@ steps:
         from_secret: jaqu_lower_aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
       TF_VAR_secret_key_base:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
