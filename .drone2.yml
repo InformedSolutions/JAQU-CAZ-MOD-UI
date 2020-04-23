@@ -308,7 +308,6 @@ name: jaqu_lower_github_private_key
 get:
   path: /build-tools/drone
   name: githubPrivateKey
----
 
 ---
 kind: secret
