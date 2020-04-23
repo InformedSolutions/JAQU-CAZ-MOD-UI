@@ -121,9 +121,9 @@ steps:
     image: aosapps/drone-sonar-plugin
     environment:
       SONAR_HOST:
-        from_secret: sonar_host
+        from_secret: jaqu_lower_sonar_host
       SONAR_TOKEN:
-        from_secret: sonar_token
+        from_secret: jaqu_lower_sonar_token
       sonar.ruby.coverage.reportPaths: coverage/.resultset.json
     commands:
       - sonar-scanner
