@@ -168,9 +168,9 @@ steps:
       TF_VAR_secret_key:
         from_secret: jaqu_lower_aws_secret_access_key
       TF_VAR_s3_aws_access_key_id:
-        from_secret: jaqu_lower_aws_access_key_id
+        from_secret: jaqu_lower_service_aws_access_key_id
       TF_VAR_s3_aws_secret_access_key:
-        from_secret: jaqu_lower_aws_secret_access_key
+        from_secret: jaqu_lower_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
