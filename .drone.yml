@@ -29,7 +29,7 @@ steps:
         path: /var/run/docker.sock
     commands:
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -75,8 +75,8 @@ steps:
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
       BASEURL_MOD: 'https://dev.partner.datauploadportal.co.uk/'
-      WHITE_MOD_VALID_USERNAME: 'bradley.gee@informed.com'
-      WHITE_MOD_VALID_PASSWORD: 'Edc123.,'
+      WHITE_MOD_VALID_USERNAME: 'Edmond.Chhung@informed.com'
+      WHITE_MOD_VALID_PASSWORD: 'Tester123..'
       VALID_USERNAME: 'tester@informed.com'
       VALID_PASSWORD: 'Tester123..'
       BROWSER_SET: 'min'
@@ -188,7 +188,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -453,7 +453,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -512,7 +512,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -603,7 +603,7 @@ steps:
         path: /var/run/docker.sock
     commands:
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -764,7 +764,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -820,7 +820,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -1025,7 +1025,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -1084,7 +1084,7 @@ steps:
     commands:
       - apk update && apk add bash
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -1184,6 +1184,7 @@ steps:
 
 
 
+
   #################################################### Pre-prod Steps ############################################################
 
 kind: pipeline
@@ -1209,7 +1210,7 @@ steps:
       - TASKDEF=`aws ecs describe-services --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -1274,7 +1275,7 @@ steps:
       - TASKDEF=`aws ecs describe-services --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
       - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - mkdir ~/.ssh
-      - echo -n "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
@@ -1373,6 +1374,208 @@ steps:
 
 
   ################################################# End Preprod Steps ############################################################
+
+
+
+
+
+
+
+
+
+
+
+
+  #################################################### Prod Steps ############################################################
+
+kind: pipeline
+type: docker
+name: mod-web-prod
+trigger:
+  branch:
+    - master
+  event:
+    - pull_request
+    - push
+concurrency:
+  limit: 1
+
+steps:
+
+
+  - name: plan updates in prod
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - TASKDEF=`aws ecs describe-services --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout master
+      - cd terraform/projects/mod/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select prod || tf workspace new prod
+      - tf plan
+      - cd ../02.backends
+      - tf init
+      - tf workspace select prod || tf workspace new prod
+      - tf plan
+      - cd ../04.web
+      - tf init
+      - tf workspace select prod || tf workspace new prod
+      - tf plan
+    environment:
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      TF_VAR_secret_key_base: ${DRONE_COMMIT}
+      TF_VAR_google_analytics_id: UA-144774549-3
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+    when:
+      event:
+        - pull_request
+
+  - name: provisioning warning
+    image: docker:git
+    commands:
+      - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
+    when:
+      status:
+        - failure
+
+  - name: deploy to prod
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - TASKDEF=`aws ecs describe-services --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout master
+      - cd terraform/projects/mod/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select prod || tf workspace new prod
+      - tf apply -auto-approve
+      - cd ../02.backends
+      - tf init
+      - tf workspace select prod || tf workspace new prod
+      - tf apply -auto-approve
+      - cd ../04.web
+      - tf init
+      - tf workspace select prod || tf workspace new prod
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_account_id:
+        from_secret: aws_account_id
+      GIT_PRIVATE_SSH:
+        from_secret: github_private_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: aws_secret_access_key
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      TF_VAR_secret_key_base:
+        from_secret: mod_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-3
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+    when:
+      event:
+        - push
+
+  - name: codedeploy ui prod
+    image: golang:alpine
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh .
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=jaqu-projects-lambda-bucket,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: mod-codedeploy-service-prod
+      DEPLOYMENT_GROUP: mod-codedeploy-service-prod
+      PROJECT: mod
+      DEPLOY_ENVIRONMENT: prod
+      LAMBDA_BUCKET: jaqu-projects-lambda-bucket
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: golang:alpine
+    environment:
+      build_id_url: https://partner.drive-clean-air-zone.service.gov.uk/build_id
+      AWS_ACCESS_KEY_ID:
+        from_secret: aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - TASKDEF=`aws ecs describe-services --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
+
+
+  ################################################# End Prod Steps ############################################################
+
 
 
 
