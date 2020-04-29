@@ -50,7 +50,7 @@ module Cognito
     # * +sub+ - UUID, eg '685f6373-75bc-4cb9-9a01-dbe1f9c383cf'
     def user_data
       unless defined? @user_data
-        log_action "Getting user: #{username}"
+        log_action 'Getting user'
         @user_data = COGNITO_CLIENT.get_user(access_token: access_token)
         log_successful_call
       end
