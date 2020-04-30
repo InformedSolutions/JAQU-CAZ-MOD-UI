@@ -80,7 +80,7 @@ class CsvUploadService < BaseService
   #
   # Returns a boolean.
   def upload_to_s3
-    log_action "Uploading file to s3 by a user: #{user.username}"
+    log_action 'Uploading file to S3'
     return true if aws_call
 
     raise CsvUploadFailureException, I18n.t('csv.errors.base')
