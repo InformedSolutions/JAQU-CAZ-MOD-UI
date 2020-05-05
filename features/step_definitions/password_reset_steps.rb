@@ -9,7 +9,7 @@ Given('I am on the forgotten password page') do
 end
 
 When('I enter my username') do
-  allow(Cognito::ForgotPassword)
+  allow(Cognito::ForgotPassword::Reset)
     .to receive(:call)
     .with(username: username)
     .and_return(true)
@@ -22,10 +22,9 @@ Then("I am taken to the 'Reset link sent' page") do
 end
 
 Given("I am on the 'Reset link sent' page") do
-  # visit reset_password to get token
+  allow(Cognito::ForgotPassword::Reset).to receive(:call).and_return(true)
+  allow(Cognito::ForgotPassword::UpdateUser).to receive(:call).and_return(true)
   visit reset_passwords_path
-  # fill the form to get username in session
-  allow(Cognito::ForgotPassword).to receive(:call).and_return(true)
   fill_in('user[username]', with: username)
   click_button 'Reset password'
   # expect proper page
@@ -35,7 +34,7 @@ end
 When('I enter valid code and passwords') do
   password = 'password'
   code = '123456'
-  allow(Cognito::ConfirmForgotPassword)
+  allow(Cognito::ForgotPassword::Confirm)
     .to receive(:call).with(
       username: username,
       password: password,

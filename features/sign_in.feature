@@ -8,7 +8,7 @@ Feature: Sign In
     When I navigate to a Upload page
     Then I am redirected to the unauthenticated root page
       And I should see "Sign In"
-      And I should see "National Register of MOD Vehicles" title
+      And I should see "Ministry of Defence Data Portal" title
       And I should not see "Upload" link
       And I should not see "Data rules" link
     Then I should enter valid credentials and press the Continue
