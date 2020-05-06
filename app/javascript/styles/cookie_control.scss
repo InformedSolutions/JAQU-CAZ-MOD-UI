@@ -1,6 +1,8 @@
 $cc-black: #000;
+$cc-white: #FFFFFF;
 
-.ccc-link {
-  color: $cc-black !important;
+.ccc-button-solid {
+  color: $cc-white !important;
   border-color: $cc-black !important;
+  background: $cc-black !important;
 }

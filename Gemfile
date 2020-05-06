@@ -14,7 +14,6 @@ gem 'bundler-audit'
 gem 'devise'
 gem 'haml'
 gem 'httparty'
-gem 'logstash-logger'
 gem 'puma'
 gem 'rubocop-rails'
 gem 'sdoc', require: false
@@ -25,12 +24,10 @@ gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
 
 group :development, :test do
-  gem 'byebug', platforms: %i[mri mingw x64_mingw]
+  gem 'byebug'
   gem 'dotenv-rails'
   gem 'haml-rails'
-  gem 'pry-byebug'
-  gem 'pry-rails'
-  gem 'rspec-rails', '~> 4.0.0.rc1'
+  gem 'rspec-rails'
   gem 'scss_lint-govuk', require: false
 end
 

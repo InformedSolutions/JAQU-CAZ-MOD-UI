@@ -1,0 +1,79 @@
+- title_and_header = 'Accessibility statement for Ministry of Defence Vehicle Data Portal'
+- content_for(:title, title_and_header)
+
+= link_to 'Back', @back_button_url, class: 'govuk-back-link'
+
+%main.govuk-main-wrapper#main-content{role: 'main'}
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
+      %h1.govuk-heading-xl
+        = title_and_header
+      %p
+        This website is run by the Joint Air Quality Unit (JAQU) supported by the Department of
+        Transport and Department for Environment, Food and Rural Affairs. We want as many people as
+        possible to be able to use this website.
+      %p
+        For example, that means you should be able to:
+        %ul.govuk-list-govuk-list--bullet
+          %li
+            %p
+              zoom in up to 300% without the text spilling off the screen.
+          %li
+            %p
+              navigate most of the website using just a keyboard.
+          %li
+            %p
+              navigate most of the website using speech recognition software.
+          %li
+            %p
+              listen to most of the website using a screen reader (including the most recent
+              versions of JAWS, NVDA and VoiceOver).
+      %p We've also made the website text as simple as possible to understand.
+      %p
+        = external_link_to('AbilityNet',
+                           'https://mcmw.abilitynet.org.uk/',
+                           id: 'ability-net-link')
+        has advice on making your device easier to use if you have a disability.
+
+      %h2.govuk-heading-m Reporting accessibility problems with this website
+      %p
+        We're always looking to improve the accessibility of this website. If you find any problems
+        that are not listed on this page or think we're not meeting accessibility requirements,
+        let us know using our
+        = external_link_to('feedback form',
+                           'https://vehiclecheck.drive-clean-air-zone.service.gov.uk/contact_forms',
+                           id: 'feedback-form-link')
+        (opens in a new tab).
+
+      %h2.govuk-heading-m Enforcement procedure
+      %p
+        The Equality and Human Rights Commission (EHRC) is responsible for enforcing the Public
+        Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018
+        (the 'accessibility regulations'). If you're not happy with how we respond to your
+        complaint,
+        = external_link_to('contact the Equality Advisory and Support Service (EASS).',
+                           'https://www.equalityadvisoryservice.com/',
+                           id: 'eass-link')
+
+      %h2.govuk-heading-m Technical information about this website's accessibility
+      %p
+        JAQU is committed to making its website accessible, in accordance with the Public Sector
+        Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018.
+      %p
+        This website is fully compliant with the
+        = external_link_to('Web Content Accessibility Guidelines version 2.1',
+                           'https://www.w3.org/TR/WCAG21/',
+                           id: 'guidelines-link')
+        AA standard.
+
+      %h2.govuk-heading-m How we tested this website
+      %p
+        This website was tested with
+        = external_link_to('WAVE Web Accessibility Evaluation Tool', 'https://wave.webaim.org/')
+        and is tested regularly with
+        = external_link_to('https://pa11y.org/',
+                           'https://pa11y.org/',
+                           id: 'tool-link')
+        tools by the team that maintains it and periodically by external bodies.
+      %p We test all routes through the service.
+      %p This statement was prepared on 8 April 2020.

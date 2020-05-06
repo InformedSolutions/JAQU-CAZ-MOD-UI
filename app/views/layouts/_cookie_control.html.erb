@@ -5,7 +5,7 @@
   var serviceName = '<%= service_name %>';
   var cookiesPath = '<%= cookies_path %>';
 
-  var introText = 'Cookies are files saved on your phone, tablet or computer when you visit a website. <p>We use cookies to store information about how you use the '
+  var introText = 'Cookies are files saved on your phone, tablet or computer when you visit a website. We use cookies to store information about how you use the '
                   + serviceName + ' website, such as the pages you visit.'
   var necessaryDescription = 'Necessary cookies enable core functionality. The website cannot function properly without these cookies, and they can only be deactivated by changing your browser preferences.'
   var cookiesDescription = "We use Google Analytics to measure how you use the website so we can improve it based on user needs. Google Analytics sets cookies that store anonymised information about how you got to the site, the pages you visit, how long you spend on each page and what you click on while you're visiting the site."
@@ -13,7 +13,9 @@
   // Remove 'Accept Recommended Settings' button from DOM
   function hideAcceptButton() {
 	  var recommendedSettingsButton = document.getElementById("ccc-button-holder");
-	  recommendedSettingsButton.parentNode.removeChild(recommendedSettingsButton);
+	  if (recommendedSettingsButton) {
+      recommendedSettingsButton.parentNode.removeChild(recommendedSettingsButton);
+    }
   }
 
   var config = {
@@ -22,6 +24,7 @@
     position: 'left',
     initialState: 'open',
     onLoad: hideAcceptButton,
+    sameSiteCookie: true,
     rejectButton: false,
     closeStyle: 'button',
     text: {
