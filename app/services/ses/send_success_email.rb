@@ -51,7 +51,6 @@ module Ses
     def validate_params
       return true if user.email.present? && filename.present? && submission_time.present?
 
-      Rails.logger.error "[#{self.class.name}] Params are invalid - #{display_params}"
       false
     end
 
