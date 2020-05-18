@@ -8,7 +8,10 @@
     = csp_meta_tag
 
     - if Rails.env.production? && ENV['COOKIE_CONTROL_API_KEY'] && ENV['COOKIE_CONTROL_PRODUCT']
-      %script{src: 'https://cc.cdn.civiccomputing.com/9/cookieControl-9.x.min.js', type: 'text/javascript'}
+      %script{crossorigin: 'anonymous',
+              integrity: 'sha384-tlcBmTFhUFp8zlr26InLQzyh5XMRRfp93VK7kNAYKI3S5tIdA5qHpP+Bm1rYj0Mu',
+              src: 'https://cc.cdn.civiccomputing.com/9/cookieControl-9.x.min.js',
+              type: 'text/javascript'}
       = render 'layouts/cookie_control'
 
     = stylesheet_pack_tag 'application', media: 'all', defer: true
