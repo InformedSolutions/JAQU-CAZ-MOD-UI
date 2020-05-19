@@ -27,7 +27,7 @@ When('I press refresh page link') do
   allow(RegisterCheckerApi).to receive(:job_status)
     .with(job_name, correlation_id).and_return('SUCCESS')
 
-  click_link 'click here.'
+  click_link 'click here'
 end
 
 Then('I am redirected to the Success page') do
@@ -40,7 +40,7 @@ When('I press refresh page link when api response not running or finished') do
     .with(job_name, correlation_id).and_return('FAILURE')
   allow(RegisterCheckerApi).to receive(:job_errors)
     .with(job_name, correlation_id).and_return(%w[error])
-  click_link 'click here.'
+  click_link 'click here'
 end
 
 #  Scenario: Upload a csv file whose name is not compliant with the naming rules

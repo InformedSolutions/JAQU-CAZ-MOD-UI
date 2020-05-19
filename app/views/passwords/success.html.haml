@@ -18,5 +18,7 @@
           = link_to 'log in', new_user_session_path
           using your new password
       %p
-        = link_to('What did you think of this service?', Rails.configuration.x.feedback_url, target: '_blank')
-        (takes 30 seconds)
+        = external_link_to('What did you think of this service?',
+                           Rails.configuration.x.feedback_url,
+                           id: 'feedback-link')
+        (takes 30 seconds).

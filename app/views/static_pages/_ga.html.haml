@@ -17,9 +17,10 @@
 %p
   We allow Google to use or share our analytics data. You can find out more about how Google
   use this information in their
-  = external_link_to('Privacy Policy',
-                     'https://policies.google.com/technologies/partner-sites',
-                     id: 'privacy-policy-link')
+  = succeed '.' do
+    = external_link_to('Privacy Policy',
+                       'https://policies.google.com/technologies/partner-sites',
+                       id: 'privacy-policy-link')
 %p
   You can turn Analytical Cookies on or off  depending on whether you want Google to have access
   to your information.
