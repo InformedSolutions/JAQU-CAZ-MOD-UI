@@ -12,4 +12,5 @@
 
       %p
         If the page does not refresh automatically in 30 seconds
-        = link_to "click here.", processing_upload_index_path
+        = succeed '.' do
+          = link_to 'click here', processing_upload_index_path

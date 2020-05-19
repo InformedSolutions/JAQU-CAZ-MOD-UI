@@ -51,15 +51,14 @@ module Ses
     def validate_params
       return true if user.email.present? && filename.present? && submission_time.present?
 
-      Rails.logger.error "[#{self.class.name}] Params are invalid - #{display_params}"
       false
     end
 
     # Calls the mailer class
     def send_email
-      log_action("Sending :success_upload with #{display_params}")
+      log_action 'Sending :success_upload'
       UploadMailer.success_upload(user, filename, submission_time).deliver
-      log_action('Email sent successfully')
+      log_action 'Email sent successfully'
     end
 
     # Helper used to display params in logs

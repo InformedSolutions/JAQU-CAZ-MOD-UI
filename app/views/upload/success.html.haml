@@ -20,5 +20,7 @@
           = service_name
       %p You will need to reupload updated document regularly.
       %p
-        = link_to 'What did you think of this service?', Rails.configuration.x.feedback_url, target: '_blank'
-        (takes 30 seconds)
+        = external_link_to('What did you think of this service?',
+                           Rails.configuration.x.feedback_url,
+                           id: 'feedback-link')
+        (takes 30 seconds).

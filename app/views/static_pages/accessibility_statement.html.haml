@@ -40,10 +40,10 @@
         We're always looking to improve the accessibility of this website. If you find any problems
         that are not listed on this page or think we're not meeting accessibility requirements,
         let us know using our
-        = external_link_to('feedback form',
-                           'http://vehiclecheck.drive-clean-air-zone.service.gov.uk/',
-                           id: 'feedback-form-link')
-        (opens in a new tab).
+        = succeed '.' do
+          = external_link_to('feedback form',
+                             'https://vehiclecheck.drive-clean-air-zone.service.gov.uk/contact_forms',
+                             id: 'feedback-form-link')
 
       %h2.govuk-heading-m Enforcement procedure
       %p
@@ -51,9 +51,10 @@
         Sector Bodies (Websites and Mobile Applications) (No. 2) Accessibility Regulations 2018
         (the 'accessibility regulations'). If you're not happy with how we respond to your
         complaint,
-        = external_link_to('contact the Equality Advisory and Support Service (EASS).',
-                           'https://www.equalityadvisoryservice.com/',
-                           id: 'eass-link')
+        = succeed '.' do
+          = external_link_to('contact the Equality Advisory and Support Service (EASS)',
+                             'https://www.equalityadvisoryservice.com/',
+                             id: 'eass-link')
 
       %h2.govuk-heading-m Technical information about this website's accessibility
       %p
@@ -68,7 +69,9 @@
 
       %h2.govuk-heading-m How we tested this website
       %p
-        This website is tested regularly with
+        This website was tested with
+        = external_link_to('WAVE Web Accessibility Evaluation Tool', 'https://wave.webaim.org/')
+        and is tested regularly with
         = external_link_to('https://pa11y.org/',
                            'https://pa11y.org/',
                            id: 'tool-link')

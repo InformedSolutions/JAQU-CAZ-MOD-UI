@@ -43,7 +43,6 @@ module Cognito
       )
       return if form.valid?
 
-      log_invalid_params(form.error_object[:base_message])
       raise NewPasswordException, form.error_object
     end
 
@@ -73,7 +72,7 @@ module Cognito
 
     # Sets a new user password on Cognito.
     def call_cognito
-      log_action "Respond to auth call by a user: #{user.username}"
+      log_action 'Respond to auth call'
       result = COGNITO_CLIENT.respond_to_auth_challenge(
         challenge_name: 'NEW_PASSWORD_REQUIRED',
         client_id: ENV['AWS_COGNITO_CLIENT_ID'],
