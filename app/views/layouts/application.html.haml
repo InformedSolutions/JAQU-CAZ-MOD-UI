@@ -9,8 +9,8 @@
 
     - if Rails.env.production? && ENV['COOKIE_CONTROL_API_KEY'] && ENV['COOKIE_CONTROL_PRODUCT']
       %script{crossorigin: 'anonymous',
-              integrity: 'sha384-tlcBmTFhUFp8zlr26InLQzyh5XMRRfp93VK7kNAYKI3S5tIdA5qHpP+Bm1rYj0Mu',
-              src: 'https://cc.cdn.civiccomputing.com/9/cookieControl-9.x.min.js',
+              integrity: 'sha384-haumt9gbJ+fovvOFiHUDUqdHb6Z0QbJvJP1JbZ6hrdv7NZJOFzbfNHvGkpLT0CLy',
+              src: 'https://cc.cdn.civiccomputing.com/9/cookieControl-9.1.min.js',
               type: 'text/javascript'}
       = render 'layouts/cookie_control'
 
