@@ -22,9 +22,10 @@ module ApplicationHelper
     html_options.symbolize_keys!.reverse_merge!(
       target: '_blank',
       class: 'govuk-link',
-      rel: 'noopener noreferrer',
-      'area-label': "#{html_options[:'area-label'] || text} - #{I18n.t('content.external_link')}"
+      rel: 'noopener',
+      'aria-label': "#{html_options[:'aria-label'] || text} (#{I18n.t('external_link')})"
     )
-    link_to text, url, html_options
+
+    link_to "#{text} (#{I18n.t('external_link')})", url, html_options
   end
 end
