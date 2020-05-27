@@ -43,7 +43,6 @@ module Cognito
       )
       return if form.valid?
 
-      log_invalid_params(form.error_object[:base_message])
       raise NewPasswordException, form.error_object
     end
 
