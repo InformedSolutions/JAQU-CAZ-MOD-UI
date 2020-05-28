@@ -4,5 +4,7 @@
       beta
     %span.govuk-phase-banner__text
       This is a new service – your
-      = link_to 'feedback', Rails.configuration.x.feedback_url, target: '_blank', class: 'govuk-link'
+      = external_link_to('feedback',
+                         Rails.configuration.x.feedback_url,
+                         id: 'feedback-link')
       will help us to improve it.

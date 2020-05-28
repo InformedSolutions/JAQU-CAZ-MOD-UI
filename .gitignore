@@ -50,4 +50,4 @@ config/ssl/
 .env
 
 .vagrant/
-/doc
+/doc/app

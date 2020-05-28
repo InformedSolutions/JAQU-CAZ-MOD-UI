@@ -25,6 +25,18 @@ Layout/LineLength:
   Max: 99
   IgnoredPatterns: ['(\A|\s)#']
 
+Lint/RaiseException:
+  Enabled: true
+
+Lint/StructNewOverride:
+  Enabled: true
+
+Layout/SpaceAroundMethodCallOperator:
+  Enabled: true
+
+Style/ExponentialNotation:
+  Enabled: true
+
 Metrics/BlockLength:
   ExcludedMethods: ['describe', 'context']
   Exclude:
