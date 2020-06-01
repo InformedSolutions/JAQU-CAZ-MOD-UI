@@ -45,7 +45,6 @@ module Cognito
         form = ResetPasswordForm.new(username)
         return if form.valid?
 
-        log_invalid_params(form.message)
         raise CallException.new(form.message, error_path)
       end
 

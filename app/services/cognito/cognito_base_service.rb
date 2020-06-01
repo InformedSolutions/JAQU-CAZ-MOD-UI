@@ -13,15 +13,6 @@ module Cognito
       log_action 'The call was successful'
     end
 
-    # Logs invalid form message on +error+ level
-    #
-    # ==== Attributes
-    # * +msg+ - Invalid form details message. May include information which field is invalid
-    #
-    def log_invalid_params(msg)
-      Rails.logger.error "[#{self.class.name}] Invalid form params - #{msg}"
-    end
-
     # Returns a string, eg. '/passwords/confirm_reset'
     def forgot_password_error_path
       Rails.application.routes.url_helpers.confirm_reset_passwords_path
