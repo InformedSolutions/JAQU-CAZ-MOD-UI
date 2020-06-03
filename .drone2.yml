@@ -179,6 +179,7 @@ steps:
       AWS_SECRET_ACCESS_KEY:
         from_secret: jaqu_lower_aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-lower
       TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
@@ -249,14 +250,14 @@ kind: secret
 name: jaqu_lower_aws_access_key_id
 get:
   path: /build-tools/drone
-  name: awsAccessKeyId
+  name: awsLowerAccessKeyId
 
 ---
 kind: secret
 name: jaqu_lower_aws_secret_access_key
 get:
   path: /build-tools/drone
-  name: awsSecretAccessKey
+  name: awsLowerSecretAccessKey
 
 
 ---
@@ -264,14 +265,14 @@ kind: secret
 name: jaqu_lower_service_aws_access_key_id
 get:
   path: /build-tools/drone
-  name: awsServiceAccessKeyId
+  name: awsLowerServiceAccessKeyId
 
 ---
 kind: secret
 name: jaqu_lower_service_aws_secret_access_key
 get:
   path: /build-tools/drone
-  name: awsServiceSecretAccessKey
+  name: awsLowerServiceSecretAccessKey
 
 ---
 kind: secret
