@@ -410,7 +410,7 @@ steps:
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
     when:
       event:
-        - push
+        - pull_request
 
   - name: provisioning warning
     image: docker:git
@@ -431,6 +431,7 @@ steps:
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - git checkout iac_restructure_controlled
       - cd terraform-iac/projects/mod/layers/01.networking
