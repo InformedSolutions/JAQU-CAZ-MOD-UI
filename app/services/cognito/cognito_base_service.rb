@@ -20,7 +20,7 @@ module Cognito
 
     # The user pool ID for the user pool where we want to update user attributes
     def user_pool_id
-      ENV['AWS_COGNITO_USER_POOL_ID']
+      ENV['AWS_COGNITO_USER_POOL_ID'].split('/').last
     end
   end
 end
