@@ -525,6 +525,15 @@ steps:
 
 
 
+
+
+
+
+
+
+
+
+
 ################################################### sit env Steps ########################################################
 
 kind: pipeline
@@ -546,17 +555,6 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:latest
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
@@ -635,7 +633,7 @@ steps:
       dockerfile: Dockerfile.build
       region: eu-west-2
       tags:
-        - latest
+        - release
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
@@ -700,7 +698,7 @@ steps:
       TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
     when:
       event:
-        - push
+        - pull_request
 
   - name: provisioning warning
     image: docker:git
@@ -721,6 +719,7 @@ steps:
       - touch ~/.ssh/known_hosts
       - chmod 600 ~/.ssh/known_hosts
       - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
       - cd JAQU-CAZ-IAC
       - git checkout iac_restructure_controlled
       - cd terraform-iac/projects/mod/layers/01.networking
