@@ -82,18 +82,18 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # Invoke security analysis through Ruby libraries
-  - name: security tests (Ruby)
-    image: test-mod-frontend
-    pull: never
-    commands:
-       - bundle audit check --update
-       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
-       - brakeman
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
+  # # Invoke security analysis through Ruby libraries
+  # - name: security tests (Ruby)
+  #   image: test-mod-frontend
+  #   pull: never
+  #   commands:
+  #      - bundle audit check --update
+  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - brakeman
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
 
 
   # Push built image to ECR registry
@@ -318,18 +318,18 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # Invoke security analysis through Ruby libraries
-  - name: security tests (Ruby)
-    image: test-mod-frontend
-    pull: never
-    commands:
-       - bundle audit check --update
-       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
-       - brakeman
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
+  # # Invoke security analysis through Ruby libraries
+  # - name: security tests (Ruby)
+  #   image: test-mod-frontend
+  #   pull: never
+  #   commands:
+  #      - bundle audit check --update
+  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - brakeman
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
 
 
   # Push built image to ECR registry
@@ -600,18 +600,18 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # Invoke security analysis through Ruby libraries
-  - name: security tests (Ruby)
-    image: test-mod-frontend
-    pull: never
-    commands:
-       - bundle audit check --update
-       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
-       - brakeman
-    volumes:
-      - name: docker_sock
-        path: /var/run/docker.sock
+  # # Invoke security analysis through Ruby libraries
+  # - name: security tests (Ruby)
+  #   image: test-mod-frontend
+  #   pull: never
+  #   commands:
+  #      - bundle audit check --update
+  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - brakeman
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
 
 
   # Push built image to ECR registry
@@ -878,7 +878,6 @@ steps:
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_DEFAULT_REGION: eu-west-2
       AWS_ACCOUNT_NAME: jaqu-staging
-      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
       TF_VAR_secret_key_base:
@@ -951,7 +950,6 @@ steps:
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_DEFAULT_REGION: eu-west-2
       AWS_ACCOUNT_NAME: jaqu-staging
-      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
       TF_VAR_secret_key_base:
@@ -993,10 +991,16 @@ steps:
     image: docker:19.03.11-git
     environment:
       build_id_url: https://preprod2.partner.datauploadportal.co.uk/build_id
-      build_id: ${DRONE_BUILD_NUMBER}
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
     commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
       - sh build_utils/check_build_number.sh
+
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
