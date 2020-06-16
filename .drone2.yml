@@ -816,7 +816,7 @@ name: mod-web-sit
 
 trigger:
   branch:
-    - iac_restructure_controlled_preprod
+    - iac_restructure_staging_preprod
   event:
     - pull_request
     - push
