@@ -812,7 +812,7 @@ steps:
 
 kind: pipeline
 type: docker
-name: mod-web-sit
+name: mod-web-preprod
 
 trigger:
   branch:
