@@ -1,5 +1,5 @@
 
-  ################################################### DEV Steps ########################################################
+  ################################################### DEV Environment Steps ########################################################
 
 kind: pipeline
 type: docker
@@ -21,7 +21,7 @@ volumes:
 
 steps:
   - name: secret test
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - echo ${JAQU_NEXUS_URL}
     environment:
@@ -34,7 +34,7 @@ steps:
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker system prune -f
     volumes:
@@ -43,7 +43,7 @@ steps:
 
   # Build docker images
   - name: build
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker build -f Dockerfile.test -t test-mod-frontend:latest .
     volumes:
@@ -193,7 +193,7 @@ steps:
         - push
 
   - name: codedeploy ui dev
-    image: golang:alpine
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -219,7 +219,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: docker:19.03.11-git
     environment:
       build_id_url: https://dev2.partner.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -232,10 +232,10 @@ steps:
     when:
       event:
         - push
-  ################################################# End Development Only #######################################################
+  ################################################# End of Dev Environment Steps #######################################################
 ---
 
-################################################### st env Steps ########################################################
+################################################### ST Environment Steps ########################################################
 
 kind: pipeline
 type: docker
@@ -257,7 +257,7 @@ volumes:
 
 steps:
   - name: secret test
-    image: alpine:latest
+    image: alpine:3.11.6
     commands:
       - echo ${JAQU_NEXUS_URL}
     environment:
@@ -270,7 +270,7 @@ steps:
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker system prune -f
     volumes:
@@ -279,7 +279,7 @@ steps:
 
   # Build docker images
   - name: build
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker build -f Dockerfile.test -t test-mod-frontend:latest .
     volumes:
@@ -413,7 +413,7 @@ steps:
         - pull_request
 
   - name: provisioning warning
-    image: docker:git
+    image: docker:19.03.11-git
     commands:
       - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
     when:
@@ -480,7 +480,7 @@ steps:
         - push
 
   - name: codedeploy ui st
-    image: golang:alpine
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -506,7 +506,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: docker:19.03.11-git
     environment:
       build_id_url: https://st2.partner.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -519,7 +519,7 @@ steps:
     when:
       event:
         - push
-  ################################################# End of ST environment  #######################################################
+  ################################################# End of ST Environment Steps  #######################################################
 
 ---
 
@@ -528,13 +528,7 @@ steps:
 
 
 
-
-
-
-
-
-
-################################################### sit env Steps ########################################################
+################################################### SIT Environment Steps ########################################################
 
 kind: pipeline
 type: docker
@@ -558,7 +552,7 @@ steps:
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker system prune -f
     volumes:
@@ -567,7 +561,7 @@ steps:
 
   # Build docker images
   - name: build
-    image: docker
+    image: docker:19.03.11-git
     commands:
     - docker build -f Dockerfile.test -t test-mod-frontend:latest .
     volumes:
@@ -701,7 +695,7 @@ steps:
         - pull_request
 
   - name: provisioning warning
-    image: docker:git
+    image: docker:19.03.11-git
     commands:
       - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
     when:
@@ -768,7 +762,7 @@ steps:
         - push
 
   - name: codedeploy ui sit
-    image: golang:alpine
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -794,7 +788,7 @@ steps:
         - push
 
   - name: await ecs rollout
-    image: docker
+    image: docker:19.03.11-git
     environment:
       build_id_url: https://sit2.partner.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
@@ -807,8 +801,209 @@ steps:
     when:
       event:
         - push
-  ################################################# End of SIT environment  #######################################################
+  ################################################# End of SIT Environment Steps  #######################################################
 
+
+
+---
+
+
+################################################### PREPROD Environment Steps ########################################################
+
+kind: pipeline
+type: docker
+name: mod-web-sit
+
+trigger:
+  branch:
+    - iac_restructure_controlled_preprod
+  event:
+    - pull_request
+    - push
+concurrency:
+  limit: 1
+
+
+steps:
+
+  - name: plan updates into preprod
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout iac_restructure_staging
+      - cd terraform-iac/projects/mod/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf plan
+      - cd ../02.backends
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf plan
+      - cd ../04.web
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf plan
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_service_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_service_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-staging
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+      TF_VAR_secret_key_base:
+        from_secret: mod_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-3
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+    when:
+      event:
+        - pull_request
+
+  - name: provisioning warning
+    image: docker:19.03.11-git
+    commands:
+      - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
+    when:
+      status:
+        - failure
+
+  # Invoke terraform scripts with tagged image number
+  - name: deploy to preprod
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
+      - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout iac_restructure_staging
+      - cd terraform-iac/projects/mod/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf apply -auto-approve
+      - cd ../02.backends
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf apply -auto-approve
+      - cd ../04.web
+      - tf init
+      - tf workspace select preprod || tf workspace new preprod
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_service_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_service_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-staging
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+      TF_VAR_secret_key_base:
+        from_secret: mod_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-3
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+    when:
+      event:
+        - push
+
+  - name: codedeploy ui preprod
+    image: golang:alpine
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh . --profile target_acc
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=$LAMBDA_BUCKET,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml --profile target_acc
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: mod-codedeploy-service-preprod
+      DEPLOYMENT_GROUP: mod-codedeploy-service-preprod
+      AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
+      PROJECT: mod
+      DEPLOY_ENVIRONMENT: preprod
+      LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: docker:19.03.11-git
+    environment:
+      build_id_url: https://preprod2.partner.datauploadportal.co.uk/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+  ################################################# End of PreProd Environment Steps #######################################################
 
 
 
