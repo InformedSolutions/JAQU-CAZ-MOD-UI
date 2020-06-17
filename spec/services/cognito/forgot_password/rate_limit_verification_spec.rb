@@ -18,7 +18,7 @@ RSpec.describe Cognito::ForgotPassword::RateLimitVerification do
   let(:reset_requested) { nil }
 
   before do
-    allow(COGNITO_CLIENT).to receive(:admin_get_user).with(
+    allow(Cognito::Client.instance).to receive(:admin_get_user).with(
       user_pool_id: anything,
       username: username
     ).and_return(admin_get_user_response)
@@ -67,10 +67,10 @@ RSpec.describe Cognito::ForgotPassword::RateLimitVerification do
     end
   end
 
-  context 'when `COGNITO_CLIENT.admin_get_user` call fails with proper params' do
+  context 'when `Cognito::Client.instance.admin_get_user` call fails with proper params' do
     context 'and service raises `ServiceError`' do
       before do
-        allow(COGNITO_CLIENT).to receive(:admin_get_user).with(
+        allow(Cognito::Client.instance).to receive(:admin_get_user).with(
           user_pool_id: anything,
           username: username
         ).and_raise(
@@ -85,7 +85,7 @@ RSpec.describe Cognito::ForgotPassword::RateLimitVerification do
 
     context 'and service raises `UserNotFoundException`' do
       before do
-        allow(COGNITO_CLIENT).to receive(:admin_get_user).with(
+        allow(Cognito::Client.instance).to receive(:admin_get_user).with(
           user_pool_id: anything,
           username: username
         ).and_raise(
