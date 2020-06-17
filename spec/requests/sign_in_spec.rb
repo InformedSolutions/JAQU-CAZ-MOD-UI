@@ -28,7 +28,7 @@ describe 'User singing in', type: :request do
 
     context 'when incorrect credentials given' do
       before do
-        expect(COGNITO_CLIENT).to receive(:initiate_auth)
+        expect(Cognito::Client.instance).to receive(:initiate_auth)
           .and_raise(
             Aws::CognitoIdentityProvider::Errors::NotAuthorizedException.new('', 'error')
           )
@@ -42,7 +42,7 @@ describe 'User singing in', type: :request do
 
     context 'when another error occurs' do
       before do
-        allow(COGNITO_CLIENT).to receive(:initiate_auth)
+        allow(Cognito::Client.instance).to receive(:initiate_auth)
           .and_raise(
             Aws::CognitoIdentityProvider::Errors::InternalErrorException.new('', 'error')
           )
