@@ -81,6 +81,9 @@ GEM
       aws-sdk-core (~> 3, >= 3.83.0)
       aws-sdk-kms (~> 1)
       aws-sigv4 (~> 1.1)
+    aws-sdk-secretsmanager (1.36.0)
+      aws-sdk-core (~> 3, >= 3.71.0)
+      aws-sigv4 (~> 1.1)
     aws-sdk-ses (1.28.0)
       aws-sdk-core (~> 3, >= 3.71.0)
       aws-sigv4 (~> 1.1)
@@ -361,6 +364,7 @@ DEPENDENCIES
   aws-sdk-cognitoidentityprovider
   aws-sdk-rails
   aws-sdk-s3
+  aws-sdk-secretsmanager
   bootsnap
   brakeman
   bundler-audit

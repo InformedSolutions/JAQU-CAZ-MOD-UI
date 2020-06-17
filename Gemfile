@@ -11,6 +11,7 @@ gem 'activerecord-nulldb-adapter'
 gem 'aws-sdk-cognitoidentityprovider'
 gem 'aws-sdk-rails'
 gem 'aws-sdk-s3'
+gem 'aws-sdk-secretsmanager'
 gem 'bootsnap', require: false
 gem 'devise'
 gem 'haml'
