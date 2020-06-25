@@ -1000,7 +1000,6 @@ steps:
       - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
       - sh build_utils/check_build_number.sh
-
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
