@@ -997,10 +997,9 @@ steps:
       - mkdir ~/.aws
       - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
       - TASKDEF=`aws ecs describe-services --profile target_acc --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
-      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - export build_id=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
       - sh build_utils/check_build_number.sh
-
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -1204,7 +1203,7 @@ steps:
       - mkdir ~/.aws
       - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
       - TASKDEF=`aws ecs describe-services --profile target_acc --cluster mod-cluster-preprod --services mod-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
-      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - export build_id=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
       - sh build_utils/check_build_number.sh
 
