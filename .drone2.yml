@@ -857,10 +857,6 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_staging_aws_secret_access_key
-      TF_VAR_s3_aws_access_key_id:
-        from_secret: jaqu_staging_service_aws_access_key_id
-      TF_VAR_s3_aws_secret_access_key:
-        from_secret: jaqu_staging_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
@@ -929,10 +925,6 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_staging_aws_secret_access_key
-      TF_VAR_s3_aws_access_key_id:
-        from_secret: jaqu_staging_service_aws_access_key_id
-      TF_VAR_s3_aws_secret_access_key:
-        from_secret: jaqu_staging_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
@@ -1063,10 +1055,6 @@ steps:
         from_secret: jaqu_prod_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_prod_aws_secret_access_key
-      TF_VAR_s3_aws_access_key_id:
-        from_secret: jaqu_prod_service_aws_access_key_id
-      TF_VAR_s3_aws_secret_access_key:
-        from_secret: jaqu_prod_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
@@ -1135,10 +1123,6 @@ steps:
         from_secret: jaqu_prod_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_prod_aws_secret_access_key
-      TF_VAR_s3_aws_access_key_id:
-        from_secret: jaqu_prod_service_aws_access_key_id
-      TF_VAR_s3_aws_secret_access_key:
-        from_secret: jaqu_prod_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
@@ -1297,20 +1281,6 @@ get:
 
 ---
 kind: secret
-name: jaqu_staging_service_aws_access_key_id
-get:
-  path: /build-tools/drone
-  name: awsStagingServiceAccessKeyId
-
----
-kind: secret
-name: jaqu_staging_service_aws_secret_access_key
-get:
-  path: /build-tools/drone
-  name: awsStagingServiceSecretAccessKey
-
----
-kind: secret
 name: jaqu_prod_aws_access_key_id
 get:
   path: /build-tools/drone
@@ -1323,20 +1293,6 @@ get:
   path: /build-tools/drone
   name: awsProdSecretAccessKey
 
-
----
-kind: secret
-name: jaqu_prod_service_aws_access_key_id
-get:
-  path: /build-tools/drone
-  name: awsProdServiceAccessKeyId
-
----
-kind: secret
-name: jaqu_prod_service_aws_secret_access_key
-get:
-  path: /build-tools/drone
-  name: awsProdServiceSecretAccessKey
 
 ---
 kind: secret
