@@ -22,7 +22,7 @@ Feature: Password reset
     Given I am on the forgotten password page
     When I enter invalid email
     Then I remain on the update password page
-      And I should see "The email is in an invalid format"
+      And I should see "Enter your email address in a valid format"
 
   Scenario: Filling only confirmation code
     Given I am on the forgotten password page
