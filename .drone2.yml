@@ -1077,7 +1077,8 @@ steps:
       dockerfile: Dockerfile.build
       region: eu-west-2
       tags:
-        - latest
+        - release
+        - hotfix
         - ${DRONE_BUILD_NUMBER}
       build_args:
         - secret_key_base=${DRONE_COMMIT}
