@@ -19,17 +19,6 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:3.11.6
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
@@ -254,18 +243,6 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:3.11.6
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
-
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
     image: docker:19.03.11-git
@@ -1017,16 +994,102 @@ trigger:
 concurrency:
   limit: 1
 
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
 steps:
+  # Clean agent images and containers to prevent disk space overuse
+  - name: clean agent
+    image: docker:19.03.11-git
+    commands:
+    - docker system prune -f
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Build docker images
+  - name: build
+    image: docker:19.03.11-git
+    commands:
+    - docker build -f Dockerfile.test -t test-mod-frontend:latest .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Trigger unit tests
+  - name: unit tests
+    image: test-mod-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - yarn install
+      - rspec -f d
+
+  # Execute integration/scenario tests
+  - name: integration tests
+    image: test-mod-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - cucumber
+
+  # Invoke static code analysis through Ruby libraries
+  - name: static code analysis (Ruby)
+    image: test-mod-frontend
+    pull: never
+    commands:
+      - rubocop
+      - scss-lint app/javascript
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # # Invoke security analysis through Ruby libraries
+  # - name: security tests (Ruby)
+  #   image: test-mod-frontend
+  #   pull: never
+  #   commands:
+  #      - bundle audit check --update
+  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - brakeman
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
+
+
+  # Push built image to ECR registry
+  - name: publish image to ecr
+    image: plugins/ecr
+    settings:
+      access_key:
+        from_secret: jaqu_staging_service_aws_access_key_id
+      secret_key:
+        from_secret: jaqu_staging_service_aws_secret_access_key
+      repo: 311075478274.dkr.ecr.eu-west-2.amazonaws.com/mod-web
+      registry: 311075478274.dkr.ecr.eu-west-2.amazonaws.com
+      dockerfile: Dockerfile.build
+      region: eu-west-2
+      tags:
+        - latest
+        - ${DRONE_BUILD_NUMBER}
+      build_args:
+        - secret_key_base=${DRONE_COMMIT}
+    when:
+      event:
+        - push
+
+
   - name: plan updates into uat
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk add --update bash python python-dev py-pip build-base jq
-      - pip install awscli
-      - mkdir ~/.aws
-      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
-      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
-      - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - apk update && apk add bash
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -1055,6 +1118,10 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_service_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
@@ -1063,9 +1130,9 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: jaqu_staging_aws_secret_access_key
-      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_DEFAULT_REGION: eu-west-2
       AWS_ACCOUNT_NAME: jaqu-staging
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
       TF_VAR_secret_key_base:
@@ -1089,12 +1156,7 @@ steps:
   - name: deploy to uat
     image: hashicorp/terraform:0.12.3
     commands:
-      - apk add --update bash python python-dev py-pip build-base jq
-      - pip install awscli
-      - mkdir ~/.aws
-      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
-      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
-      - export TF_VAR_build_number=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - apk update && apk add bash
       - mkdir ~/.ssh
       - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
       - chmod 600 ~/.ssh/id_rsa
@@ -1123,6 +1185,10 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_service_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
@@ -1131,9 +1197,9 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
         from_secret: jaqu_staging_aws_secret_access_key
-      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_DEFAULT_REGION: eu-west-2
       AWS_ACCOUNT_NAME: jaqu-staging
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
       GIT_PRIVATE_SSH:
         from_secret: jaqu_lower_github_private_key
       TF_VAR_secret_key_base:
@@ -1146,7 +1212,7 @@ steps:
         - push
 
   - name: codedeploy ui uat
-    image: golang:alpine
+    image: alpine:3.11.6
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
       - pip install awscli
@@ -1175,19 +1241,8 @@ steps:
     image: alpine:3.11.6
     environment:
       build_id_url: https://uat2.partner.datauploadportal.co.uk/build_id
-      SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
-      AWS_ACCESS_KEY_ID:
-        from_secret: jaqu_controlled_aws_access_key_id
-      AWS_SECRET_ACCESS_KEY:
-        from_secret: jaqu_controlled_aws_secret_access_key
-      AWS_DEFAULT_REGION: eu-west-2
+      build_id: ${DRONE_BUILD_NUMBER}
     commands:
-      - apk add --update bash python python-dev py-pip build-base jq
-      - pip install awscli
-      - mkdir ~/.aws
-      - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
-      - TASKDEF=`aws ecs describe-services --profile target_acc --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
-      - export build_id=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
       - sh build_utils/check_build_number.sh
     volumes:
@@ -1196,6 +1251,7 @@ steps:
     when:
       event:
         - push
+
   ################################################# End of UAT Environment Steps #######################################################
 
 ---
