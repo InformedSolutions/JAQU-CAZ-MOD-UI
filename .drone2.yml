@@ -1531,6 +1531,19 @@ get:
   path: /build-tools/drone
   name: awsStagingSecretAccessKey
 
+---
+kind: secret
+name: jaqu_staging_service_aws_access_key_id
+get:
+  path: /build-tools/drone
+  name: awsStagingServiceAccessKeyId
+
+---
+kind: secret
+name: jaqu_staging_service_aws_secret_access_key
+get:
+  path: /build-tools/drone
+  name: awsStagingServiceSecretAccessKey
 
 ---
 kind: secret
