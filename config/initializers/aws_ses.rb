@@ -11,10 +11,14 @@ secret_key = ENV.fetch('SES_SECRET_ACCESS_KEY') do
   ENV.fetch('AWS_SECRET_ACCESS_KEY', 'example_key')
 end
 
-creds = Aws::Credentials.new(access_id, secret_key)
+credentials = if ENV['S3_AWS_ACCESS_KEY_ID']
+                Aws::Credentials.new(access_id, secret_key)
+              else
+                Aws::ECSCredentials.new({ ip_address: '169.254.170.2' })
+              end
 
 # default to Ireland, as SES is not supported in London
 region = ENV.fetch('SES_REGION', 'eu-west-1')
 
-Aws::Rails.add_action_mailer_delivery_method(:aws_sdk, credentials: creds, region: region)
+Aws::Rails.add_action_mailer_delivery_method(:aws_sdk, credentials: credentials, region: region)
 # :nocov:
