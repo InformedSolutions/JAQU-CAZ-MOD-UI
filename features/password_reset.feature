@@ -30,4 +30,4 @@ Feature: Password reset
     When I enter my username
       And I should see "Update your password"
     Then I enter only confirmation code
-      And I should see "Password is required"
+      And I should see "Enter your password"
