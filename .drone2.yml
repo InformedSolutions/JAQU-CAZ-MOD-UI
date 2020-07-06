@@ -19,17 +19,6 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:3.11.6
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
 
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
@@ -254,18 +243,6 @@ volumes:
     path: /var/run/docker.sock
 
 steps:
-  - name: secret test
-    image: alpine:3.11.6
-    commands:
-      - echo ${JAQU_NEXUS_URL}
-    environment:
-      JAQU_NEXUS_URL:
-        from_secret: jaqu_lower_nexus_url
-      JAQU_NEXUS_USER:
-        from_secret: jaqu_lower_nexus_username
-      JAQU_NEXUS_PASSWORD:
-        from_secret: jaqu_lower_nexus_password
-
   # Clean agent images and containers to prevent disk space overuse
   - name: clean agent
     image: docker:19.03.11-git
@@ -857,10 +834,6 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_staging_aws_secret_access_key
-      TF_VAR_s3_aws_access_key_id:
-        from_secret: jaqu_staging_service_aws_access_key_id
-      TF_VAR_s3_aws_secret_access_key:
-        from_secret: jaqu_staging_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
@@ -929,10 +902,6 @@ steps:
         from_secret: jaqu_staging_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_staging_aws_secret_access_key
-      TF_VAR_s3_aws_access_key_id:
-        from_secret: jaqu_staging_service_aws_access_key_id
-      TF_VAR_s3_aws_secret_access_key:
-        from_secret: jaqu_staging_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
@@ -987,9 +956,9 @@ steps:
       build_id_url: https://preprod2.partner.datauploadportal.co.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_ACCESS_KEY_ID:
-        from_secret: jaqu_staging_aws_access_key_id
+        from_secret: jaqu_controlled_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
-        from_secret: jaqu_staging_aws_secret_access_key
+        from_secret: jaqu_controlled_aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
@@ -997,10 +966,9 @@ steps:
       - mkdir ~/.aws
       - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
       - TASKDEF=`aws ecs describe-services --profile target_acc --cluster mod-cluster-sit --services mod-sit-ecs-service | jq --raw-output '.services[0].taskDefinition'`
-      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - export build_id=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
       - sh build_utils/check_build_number.sh
-
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -1011,6 +979,283 @@ steps:
 
 ---
 
+
+################################################### UAT Environment Steps ########################################################
+kind: pipeline
+type: docker
+name: mod-web-uat
+
+trigger:
+  branch:
+    - iac_restructure_staging_uat
+  event:
+    - pull_request
+    - push
+concurrency:
+  limit: 1
+
+volumes:
+- name: docker_sock
+  host:
+    path: /var/run/docker.sock
+
+steps:
+  # Clean agent images and containers to prevent disk space overuse
+  - name: clean agent
+    image: docker:19.03.11-git
+    commands:
+    - docker system prune -f
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Build docker images
+  - name: build
+    image: docker:19.03.11-git
+    commands:
+    - docker build -f Dockerfile.test -t test-mod-frontend:latest .
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # Trigger unit tests
+  - name: unit tests
+    image: test-mod-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - yarn install
+      - rspec -f d
+
+  # Execute integration/scenario tests
+  - name: integration tests
+    image: test-mod-frontend
+    pull: never
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    commands:
+      - cucumber
+
+  # Invoke static code analysis through Ruby libraries
+  - name: static code analysis (Ruby)
+    image: test-mod-frontend
+    pull: never
+    commands:
+      - rubocop
+      - scss-lint app/javascript
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+
+  # # Invoke security analysis through Ruby libraries
+  # - name: security tests (Ruby)
+  #   image: test-mod-frontend
+  #   pull: never
+  #   commands:
+  #      - bundle audit check --update
+  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - brakeman
+  #   volumes:
+  #     - name: docker_sock
+  #       path: /var/run/docker.sock
+
+
+  # Push built image to ECR registry
+  - name: publish image to ecr
+    image: plugins/ecr
+    settings:
+      access_key:
+        from_secret: jaqu_staging_service_aws_access_key_id
+      secret_key:
+        from_secret: jaqu_staging_service_aws_secret_access_key
+      repo: 311075478274.dkr.ecr.eu-west-2.amazonaws.com/mod-web
+      registry: 311075478274.dkr.ecr.eu-west-2.amazonaws.com
+      dockerfile: Dockerfile.build
+      region: eu-west-2
+      tags:
+        - release
+        - hotfix
+        - ${DRONE_BUILD_NUMBER}
+      build_args:
+        - secret_key_base=${DRONE_COMMIT}
+    when:
+      event:
+        - push
+
+
+  - name: plan updates into uat
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout iac_restructure_staging
+      - cd terraform-iac/projects/mod/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf plan
+      - cd ../02.backends
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf plan
+      - cd ../04.web
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf plan
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_service_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_service_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-staging
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+      TF_VAR_secret_key_base:
+        from_secret: mod_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-3
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+    when:
+      event:
+        - pull_request
+
+  - name: provisioning warning
+    image: docker:19.03.11-git
+    commands:
+      - echo "Pipeline failed. If a deployment is being made for the first time into an environment terraform backends will not yet exist which means this is to be expected. If not terraform related, please see logs for further details"
+    when:
+      status:
+        - failure
+
+  # Invoke terraform scripts with tagged image number
+  - name: deploy to uat
+    image: hashicorp/terraform:0.12.3
+    commands:
+      - apk update && apk add bash
+      - mkdir ~/.ssh
+      - echo -e "$GIT_PRIVATE_SSH" > ~/.ssh/id_rsa
+      - chmod 600 ~/.ssh/id_rsa
+      - touch ~/.ssh/known_hosts
+      - chmod 600 ~/.ssh/known_hosts
+      - ssh-keyscan -H github.com > /etc/ssh/ssh_known_hosts 2> /dev/null
+      - git clone git@github.com:InformedSolutions/JAQU-CAZ-IAC.git
+      - cd JAQU-CAZ-IAC
+      - git checkout iac_restructure_staging
+      - cd terraform-iac/projects/mod/layers/01.networking
+      - PATH=$PATH:../../../../bin/
+      - chmod +x ../../../../bin/tf
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf apply -auto-approve
+      - cd ../02.backends
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf apply -auto-approve
+      - cd ../04.web
+      - tf init
+      - tf workspace select uat || tf workspace new uat
+      - tf apply -auto-approve
+    environment:
+      TF_VAR_access_key:
+        from_secret: jaqu_staging_aws_access_key_id
+      TF_VAR_secret_key:
+        from_secret: jaqu_staging_aws_secret_access_key
+      TF_VAR_s3_aws_access_key_id:
+        from_secret: jaqu_staging_service_aws_access_key_id
+      TF_VAR_s3_aws_secret_access_key:
+        from_secret: jaqu_staging_service_aws_secret_access_key
+      TF_VAR_master_access_key:
+        from_secret: jaqu_master_aws_access_key_id
+      TF_VAR_master_secret_key:
+        from_secret: jaqu_master_aws_secret_access_key
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      AWS_ACCOUNT_NAME: jaqu-staging
+      TF_VAR_build_number: ${DRONE_BUILD_NUMBER}
+      GIT_PRIVATE_SSH:
+        from_secret: jaqu_lower_github_private_key
+      TF_VAR_secret_key_base:
+        from_secret: mod_ruby_secret
+      TF_VAR_google_analytics_id: UA-144774549-3
+      TF_VAR_session_timeout: 15
+      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+    when:
+      event:
+        - push
+
+  - name: codedeploy ui uat
+    image: alpine:3.11.6
+    commands:
+      - apk add --update bash python python-dev py-pip build-base jq
+      - pip install awscli
+      - mkdir ~/.aws
+      - echo -e "[profile target_acc]\nrole_arn = $AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
+      - aws s3 cp s3://$LAMBDA_BUCKET/$PROJECT/$DEPLOY_ENVIRONMENT/wait_deploy.sh . --profile target_acc
+      - bash wait_deploy.sh $APPLICATION_NAME $DEPLOYMENT_GROUP
+      - aws deploy create-deployment --application-name $APPLICATION_NAME --deployment-config-name CodeDeployDefault.ECSAllAtOnce --deployment-group-name $DEPLOYMENT_GROUP --description "Deployment ECS" --s3-location bucket=$LAMBDA_BUCKET,bundleType=yaml,key=$PROJECT/$DEPLOY_ENVIRONMENT/appspec.yaml --profile target_acc
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: jaqu_staging_aws_access_key_id
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: jaqu_staging_aws_secret_access_key
+      AWS_DEFAULT_REGION: eu-west-2
+      APPLICATION_NAME: mod-codedeploy-service-uat
+      DEPLOYMENT_GROUP: mod-codedeploy-service-uat
+      AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
+      PROJECT: mod
+      DEPLOY_ENVIRONMENT: uat
+      LAMBDA_BUCKET: jaqu-shared-project-lambda-bucket
+    when:
+      event:
+        - push
+
+  - name: await ecs rollout
+    image: alpine:3.11.6
+    environment:
+      build_id_url: https://uat2.partner.datauploadportal.co.uk/build_id
+      build_id: ${DRONE_BUILD_NUMBER}
+    commands:
+      - apk add curl
+      - sh build_utils/check_build_number.sh
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
+    when:
+      event:
+        - push
+
+  ################################################# End of UAT Environment Steps #######################################################
+
+---
 
 ################################################### Prod Environment Steps ########################################################
 kind: pipeline
@@ -1064,10 +1309,6 @@ steps:
         from_secret: jaqu_prod_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_prod_aws_secret_access_key
-      TF_VAR_s3_aws_access_key_id:
-        from_secret: jaqu_prod_service_aws_access_key_id
-      TF_VAR_s3_aws_secret_access_key:
-        from_secret: jaqu_prod_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
@@ -1136,10 +1377,6 @@ steps:
         from_secret: jaqu_prod_aws_access_key_id
       TF_VAR_secret_key:
         from_secret: jaqu_prod_aws_secret_access_key
-      TF_VAR_s3_aws_access_key_id:
-        from_secret: jaqu_prod_service_aws_access_key_id
-      TF_VAR_s3_aws_secret_access_key:
-        from_secret: jaqu_prod_service_aws_secret_access_key
       TF_VAR_master_access_key:
         from_secret: jaqu_master_aws_access_key_id
       TF_VAR_master_secret_key:
@@ -1194,9 +1431,9 @@ steps:
       build_id_url: https://prod2.partner.datauploadportal.co.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       AWS_ACCESS_KEY_ID:
-        from_secret: jaqu_prod_aws_access_key_id
+        from_secret: jaqu_staging_aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
-        from_secret: jaqu_prod_aws_secret_access_key
+        from_secret: jaqu_staging_aws_secret_access_key
       AWS_DEFAULT_REGION: eu-west-2
     commands:
       - apk add --update bash python python-dev py-pip build-base jq
@@ -1204,7 +1441,7 @@ steps:
       - mkdir ~/.aws
       - echo -e "[profile target_acc]\nrole_arn = $SRC_AWS_ACCOUNT_ROLE\ncredential_source = Environment\nrole_session_name = AWSACCOUNT" > ~/.aws/config
       - TASKDEF=`aws ecs describe-services --profile target_acc --cluster mod-cluster-preprod --services mod-preprod-ecs-service | jq --raw-output '.services[0].taskDefinition'`
-      - export build_id=`aws ecs describe-task-definition --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
+      - export build_id=`aws ecs describe-task-definition --profile target_acc --task-definition $TASKDEF | jq --raw-output '.taskDefinition.containerDefinitions[0].image' | cut -f 2 -d ':'`
       - apk add curl
       - sh build_utils/check_build_number.sh
 
@@ -1295,7 +1532,6 @@ get:
   path: /build-tools/drone
   name: awsStagingSecretAccessKey
 
-
 ---
 kind: secret
 name: jaqu_staging_service_aws_access_key_id
@@ -1324,20 +1560,6 @@ get:
   path: /build-tools/drone
   name: awsProdSecretAccessKey
 
-
----
-kind: secret
-name: jaqu_prod_service_aws_access_key_id
-get:
-  path: /build-tools/drone
-  name: awsProdServiceAccessKeyId
-
----
-kind: secret
-name: jaqu_prod_service_aws_secret_access_key
-get:
-  path: /build-tools/drone
-  name: awsProdServiceSecretAccessKey
 
 ---
 kind: secret
