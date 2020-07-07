@@ -7,7 +7,7 @@ echo "Checking build number on remote host"
 until [ $check = "true" ]
 do
 
-if curl -s "$build_id_url" | grep "$build_id";
+if curl -s "$build_id_url" | grep -w "$build_id";
 then
     echo "Build id found"
     exit

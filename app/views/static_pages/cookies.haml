@@ -19,7 +19,8 @@
           %p temporarily store the answers you give
       %p
         Find out more about
-        = external_link_to('how to manage cookies', 'https://www.aboutcookies.org', id: 'manage-cookies-link')
+        = succeed '.' do
+          = external_link_to('how to manage cookies', 'https://www.aboutcookies.org', id: 'manage-cookies-link')
       = render 'ga'
       = render 'session'
       = render 'cookie_control'
