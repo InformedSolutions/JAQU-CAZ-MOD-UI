@@ -87,9 +87,8 @@ module Cognito
       # Returns hash, error message.
       def password_complexity_error
         {
-          base_message: I18n.t('password.errors.complexity'),
-          link: true,
-          password: I18n.t('password.errors.complexity')
+          password: I18n.t('password.errors.invalid_format'),
+          password_confirmation: I18n.t('password.errors.confirmation_invalid_format')
         }
       end
     end

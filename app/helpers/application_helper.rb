@@ -28,4 +28,19 @@ module ApplicationHelper
 
     link_to "#{text} (#{I18n.t('external_link')})", url, html_options
   end
+
+  # Transform hash of flat errors:
+  # {
+  #   :password=>"Password is required",
+  #   :password_confirmation=>"Password and password confirmation must be the same"
+  # }
+  # to array:
+  # [
+  #   ["Password is required", :password],
+  #   ["Password and password confirmation must be the same", :password_confirmation]
+  # ]
+  #
+  def transformed_flat_errors(errors)
+    errors.map { |error| [error.second, error.first] }.uniq(&:first)
+  end
 end

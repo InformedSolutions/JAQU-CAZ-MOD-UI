@@ -34,9 +34,7 @@ Feature: Sign In
     Given I am on the Sign in page
     When I enter invalid credentials
     Then I remain on the current page
-      And I should see "The email or password you entered is incorrect"
-      And I should see "Enter your email"
-      And I should see "Enter your password"
+      And I should see "Enter a valid email address and password"
 
   Scenario: Sign out
     Given I am signed in
@@ -50,7 +48,7 @@ Feature: Sign In
     Given I am on the Sign in page
     When I enter invalid email format
     Then I remain on the current page
-      And I should see "The email is in an invalid format"
+      And I should see "Enter your email address in a valid format"
       And I should see "Enter your email"
       And I should see "Enter your password"
 
@@ -59,5 +57,3 @@ Feature: Sign In
     When I enter valid credentials but with invalid authorized user type
     Then I remain on the current page
       And I should see "Invalid authorized list type"
-      And I should see "Enter your email"
-      And I should see "Enter your password"

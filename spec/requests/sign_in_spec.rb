@@ -14,15 +14,6 @@ describe 'User singing in', type: :request do
     }
   end
 
-  describe 'requesting sign in page' do
-    subject(:http_request) { post user_session_path }
-
-    it 'redirects to login page' do
-      http_request
-      expect(response).to have_http_status(:ok)
-    end
-  end
-
   describe 'signing in' do
     subject(:http_request) { post user_session_path(params) }
 
