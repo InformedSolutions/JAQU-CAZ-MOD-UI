@@ -74,7 +74,7 @@ steps:
         from_secret: browserstack_username
       BS_AUTHKEY:
         from_secret: browserstack_auth_key
-      BASEURL_MOD: 'https://dev2.partner.datauploadportal.co.uk/'
+      BASEURL_MOD: 'https://dev.partner.datauploadportal.co.uk/'
       WHITE_MOD_VALID_USERNAME: 'Edmond.Chhung@informed.com'
       WHITE_MOD_VALID_PASSWORD: 'Tester123..'
       VALID_USERNAME: 'tester@informed.com'
@@ -166,18 +166,18 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # # Invoke security analysis through Ruby libraries
-  # - name: security tests (Ruby)
-  #   image: test-mod-frontend
-  #   pull: never
-  #   commands:
-  #      - bundle audit check --update
-  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
-  #      - brakeman
-  #   volumes:
-  #     - name: docker_sock
-  #       path: /var/run/docker.sock
+  # Invoke security analysis through Ruby libraries
+  - name: security tests (Ruby)
+    image: test-mod-frontend
+    pull: never
+    commands:
+       - bundle audit check --update
+       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - brakeman
+    volumes:
+      - name: docker_sock
+        path: /var/run/docker.sock
 
 
   # Push built image to ECR registry
@@ -305,7 +305,7 @@ steps:
   - name: await ecs rollout
     image: docker:19.03.11-git
     environment:
-      build_id_url: https://dev2.partner.datauploadportal.co.uk/build_id
+      build_id_url: https://dev.partner.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
