@@ -271,7 +271,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - push
@@ -478,7 +478,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - pull_request
@@ -545,7 +545,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - push
@@ -759,7 +759,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - pull_request
@@ -826,7 +826,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - push
@@ -947,7 +947,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - pull_request
@@ -1015,7 +1015,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - push
@@ -1236,7 +1236,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - pull_request
@@ -1303,7 +1303,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - push
