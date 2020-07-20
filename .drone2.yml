@@ -579,7 +579,7 @@ steps:
   - name: await ecs rollout
     image: docker:19.03.11-git
     environment:
-      build_id_url: https://st2.partner.datauploadportal.co.uk/build_id
+      build_id_url: https://st.partner.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
