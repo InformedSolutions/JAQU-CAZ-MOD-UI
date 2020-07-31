@@ -58,7 +58,7 @@ module Cognito
     # Performs the call to Cognito. Returns Cognito response.
     def auth_user
       log_action 'Authenticating user'
-      auth_response = COGNITO_CLIENT.initiate_auth(
+      auth_response = client.initiate_auth(
         client_id: ENV.fetch('AWS_COGNITO_CLIENT_ID', 'AWS_COGNITO_CLIENT_ID'),
         auth_flow: 'USER_PASSWORD_AUTH',
         auth_parameters: { 'USERNAME' => username, 'PASSWORD' => password }

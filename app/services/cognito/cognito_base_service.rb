@@ -22,5 +22,11 @@ module Cognito
     def user_pool_id
       ENV['AWS_COGNITO_USER_POOL_ID'].split('/').last
     end
+
+    private
+
+    def client
+      Cognito::Client.instance
+    end
   end
 end
