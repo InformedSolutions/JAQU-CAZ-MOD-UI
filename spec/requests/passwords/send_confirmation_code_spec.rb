@@ -45,7 +45,7 @@ describe 'PasswordsController - POST #send_confirmation_code', type: :request do
 
     context 'when service raises `UserNotFoundException` exception' do
       before do
-        allow(COGNITO_CLIENT).to receive(:forgot_password).and_raise(
+        allow(Cognito::Client.instance).to receive(:forgot_password).and_raise(
           Aws::CognitoIdentityProvider::Errors::UserNotFoundException.new('', '')
         )
         http_request

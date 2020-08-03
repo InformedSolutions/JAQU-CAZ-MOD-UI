@@ -32,7 +32,7 @@ module Cognito
 
       # Perform the call to Cognito service to get user attributes
       def admin_get_user
-        COGNITO_CLIENT.admin_get_user({ user_pool_id: user_pool_id, username: username })
+        client.admin_get_user({ user_pool_id: user_pool_id, username: username })
       rescue AWS_ERROR::ServiceError
         raise Cognito::CallException.new('', forgot_password_error_path)
       end
