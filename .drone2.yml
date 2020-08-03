@@ -173,7 +173,7 @@ steps:
     commands:
        - bundle audit check --update
        # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - brakeman
     volumes:
       - name: docker_sock
@@ -396,7 +396,7 @@ steps:
   #   commands:
   #      - bundle audit check --update
   #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - yarn run improved-yarn-audit --retry-on-network-failure
   #      - brakeman
   #   volumes:
   #     - name: docker_sock
@@ -677,7 +677,7 @@ steps:
   #   commands:
   #      - bundle audit check --update
   #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - yarn run improved-yarn-audit --retry-on-network-failure
   #      - brakeman
   #   volumes:
   #     - name: docker_sock
@@ -860,7 +860,7 @@ steps:
   - name: await ecs rollout
     image: docker:19.03.11-git
     environment:
-      build_id_url: https://sit2.partner.datauploadportal.co.uk/build_id
+      build_id_url: https://sit.partner.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -1049,7 +1049,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://preprod2.partner.datauploadportal.co.uk/build_id
+      build_id_url: https://preprod.partner.datauploadportal.co.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::072187228077:role/jaqu-controlledServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_controlled_aws_access_key_id
@@ -1153,7 +1153,7 @@ steps:
   #   commands:
   #      - bundle audit check --update
   #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - yarn run improved-yarn-audit --retry-on-network-failure
   #      - brakeman
   #   volumes:
   #     - name: docker_sock
@@ -1337,7 +1337,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://uat2.partner.datauploadportal.co.uk/build_id
+      build_id_url: https://uat.partner.datauploadportal.co.uk/build_id
       build_id: ${DRONE_BUILD_NUMBER}
     commands:
       - apk add curl
@@ -1524,7 +1524,7 @@ steps:
   - name: await ecs rollout
     image: alpine:3.11.6
     environment:
-      build_id_url: https://prod2.partner.datauploadportal.co.uk/build_id
+      build_id_url: https://partner.drive-clean-air-zone.service.gov.uk/build_id
       SRC_AWS_ACCOUNT_ROLE: arn:aws:iam::360470905865:role/jaqu-stagingServiceRole
       AWS_ACCESS_KEY_ID:
         from_secret: jaqu_staging_aws_access_key_id
