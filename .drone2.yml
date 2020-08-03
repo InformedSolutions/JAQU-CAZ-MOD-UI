@@ -173,7 +173,7 @@ steps:
     commands:
        - bundle audit check --update
        # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - brakeman
     volumes:
       - name: docker_sock
@@ -396,7 +396,7 @@ steps:
   #   commands:
   #      - bundle audit check --update
   #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - yarn run improved-yarn-audit --retry-on-network-failure
   #      - brakeman
   #   volumes:
   #     - name: docker_sock
@@ -677,7 +677,7 @@ steps:
   #   commands:
   #      - bundle audit check --update
   #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - yarn run improved-yarn-audit --retry-on-network-failure
   #      - brakeman
   #   volumes:
   #     - name: docker_sock
@@ -1153,7 +1153,7 @@ steps:
   #   commands:
   #      - bundle audit check --update
   #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+  #      - yarn run improved-yarn-audit --retry-on-network-failure
   #      - brakeman
   #   volumes:
   #     - name: docker_sock
