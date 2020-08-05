@@ -40,6 +40,11 @@ Feature: Upload
     When I upload a csv file whose format that is not .csv or .CSV
     Then I should see "The selected file must be a CSV"
 
+  Scenario: Upload a csv file whose size is too big
+    Given I am on the Upload page
+    When I upload a csv file whose size is too big
+    Then I should see "The CSV must be smaller than 50MB"
+
   Scenario: Upload a valid csv file during error is encountered writing to S3
     Given I am on the Upload page
     When I upload a csv file during error on S3
@@ -50,8 +55,8 @@ Feature: Upload
     When I want go to processing page
     Then I am redirected to the root page
 
-Scenario: User wants to upload CSV using different IP address
-  Given I am on the Upload page
-  Then I change my IP
-    And I upload a valid csv file
-  Then I should be on the login page
+  Scenario: User wants to upload CSV using different IP address
+    Given I am on the Upload page
+    Then I change my IP
+      And I upload a valid csv file
+    Then I should be on the login page

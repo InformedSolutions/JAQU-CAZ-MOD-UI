@@ -20,7 +20,7 @@ RUN apk add --no-cache --update build-base \
 RUN mkdir -p /home/app
 WORKDIR /home/app
 COPY Gemfile Gemfile.lock package.json yarn.lock /home/app/
-RUN gem install bundler -v 2.0.2 && bundle config force_ruby_platform true \
+RUN gem install bundler && bundle config force_ruby_platform true \
  && bundle install && yarn install --frozen-lockfile --non-interactive
 
 # Install node packages and precompile assets

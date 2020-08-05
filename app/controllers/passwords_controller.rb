@@ -85,7 +85,7 @@ class PasswordsController < ApplicationController
     Cognito::ForgotPassword::Reset.call(username: username)
     redirect_to confirm_reset_passwords_path
   rescue Cognito::CallException => e
-    redirect_to e.path, alert: (e.message.present? ? e.message : nil)
+    redirect_to e.path, alert: e.message.presence
   end
 
   ##
