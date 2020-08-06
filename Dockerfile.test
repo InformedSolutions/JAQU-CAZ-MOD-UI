@@ -26,9 +26,4 @@ RUN gem install bundler && bundle config force_ruby_platform true \
 # Install node packages and precompile assets
 COPY . /home/app
 
-ENV S3_AWS_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL
-ENV S3_AWS_SECRET_ACCESS_KEY=STUB_FOR_YARN_INSTALL
-ENV SES_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL
-ENV SES_SECRET_ACCESS_KEY=STUB_FOR_YARN_INSTALL
-
 CMD ["rspec"]
