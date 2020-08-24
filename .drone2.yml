@@ -39,7 +39,7 @@ steps:
       - docker build -t test-tools-image .
     environment:
       GIT_PRIVATE_SSH:
-        from_secret: github_private_key
+        from_secret: jaqu_lower_github_private_key 
 
   - name: run owasp zap tests
     image: test-tools-image
