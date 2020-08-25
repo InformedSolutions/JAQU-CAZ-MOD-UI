@@ -43,8 +43,14 @@ module Cognito
     # which is raised if password or username doesn't match.
     #
     def call
+      return false if user_locked_out?
+
       update_user(auth_user)
       user
+    rescue AWS_ERROR::NotAuthorizedException => e
+      log_error e
+      Cognito::Lockout::VerifyInvalidLogins.call(username: username)
+      false
     rescue AWS_ERROR::ServiceError => e
       log_error e
       false
@@ -107,6 +113,13 @@ module Cognito
     # Returns a string.
     def parsed_attr(challenge_parameters, attr)
       JSON.parse(challenge_parameters['userAttributes'])[attr]
+    end
+
+    # Attempts to unlock user and returns information if user is locked out
+    # Returns a boolean.
+    def user_locked_out?
+      Cognito::Lockout::AttemptUserUnlock.call(username: username)
+      Cognito::Lockout::IsUserLocked.call(username: username)
     end
   end
 end

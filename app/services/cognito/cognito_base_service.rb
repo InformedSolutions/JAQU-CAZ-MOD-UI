@@ -7,6 +7,9 @@ module Cognito
   class CognitoBaseService < BaseService
     # Symbolizes base class for all Aws::CognitoIdentityProvider errors.
     AWS_ERROR = Aws::CognitoIdentityProvider::Errors
+    # Names of the custom Cognito attributes
+    FAILED_LOGINS_ATTR = 'custom:failed-logins'
+    LOCKOUT_TIME_ATTR = 'custom:lockout-time'
 
     # Logs success message on +info+ level
     def log_successful_call

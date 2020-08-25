@@ -35,6 +35,9 @@ describe 'PasswordsController - POST #change', type: :request do
       allow(Cognito::ForgotPassword::UpdateUser)
         .to receive(:call).with(reset_counter: 1, username: username)
                           .and_return(true)
+      allow(Cognito::Lockout::UpdateUser)
+        .to receive(:call).with(username: username, failed_logins: 0)
+                          .and_return(true)
     end
 
     it 'returns redirect to success page' do
@@ -52,6 +55,12 @@ describe 'PasswordsController - POST #change', type: :request do
       expect(session[:password_reset_username]).to be_nil
     end
 
+    it 'updates user lockout data' do
+      http_request
+      expect(Cognito::Lockout::UpdateUser).to have_received(:call)
+        .with(username: username, failed_logins: 0)
+    end
+
     context 'when service raises exception' do
       before do
         allow(Cognito::ForgotPassword::Confirm)
@@ -62,6 +71,11 @@ describe 'PasswordsController - POST #change', type: :request do
       it 'returns redirect to confirm_reset_passwords_path' do
         http_request
         expect(response).to redirect_to(confirm_reset_passwords_path)
+      end
+
+      it 'does not update user lockout data' do
+        http_request
+        expect(Cognito::Lockout::UpdateUser).not_to have_received(:call)
       end
     end
 
@@ -75,6 +89,11 @@ describe 'PasswordsController - POST #change', type: :request do
       it 'returns redirect to confirm_reset_passwords_path' do
         http_request
         expect(response).to redirect_to(confirm_reset_passwords_path)
+      end
+
+      it 'does not update user lockout data' do
+        http_request
+        expect(Cognito::Lockout::UpdateUser).not_to have_received(:call)
       end
     end
   end
