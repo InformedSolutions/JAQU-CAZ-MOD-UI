@@ -8,8 +8,6 @@ en:
     errors:
       required: Enter your password
       complexity: Password must be at least 12 characters long, include at least one upper case letter, a number, and a special character
-      invalid_format: Enter your password in a valid format
-      confirmation_invalid_format: Enter your password confirmation in a valid format
       code_mismatch: The confirmation code does not match or has expired
       code_required: Enter your confirmation code
       passwords_required: Password and password confirmation are required
