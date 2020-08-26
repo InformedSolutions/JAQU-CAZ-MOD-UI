@@ -10,6 +10,9 @@ module Cognito
     # Names of the custom Cognito attributes
     FAILED_LOGINS_ATTR = 'custom:failed-logins'
     LOCKOUT_TIME_ATTR = 'custom:lockout-time'
+    # Env variables associated with the lockout mechanism
+    LOCKOUT_LOGIN_ATTEMPTS = ENV.fetch('LOCKOUT_LOGIN_ATTEMPTS', 5).to_i
+    LOCKOUT_TIMEOUT = ENV.fetch('LOCKOUT_TIMEOUT', 30).to_i
 
     # Logs success message on +info+ level
     def log_successful_call

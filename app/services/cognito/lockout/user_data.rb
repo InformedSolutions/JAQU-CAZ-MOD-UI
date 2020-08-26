@@ -65,15 +65,10 @@ module Cognito
         user_data.user_attributes.find { |attr| attr.name == name }&.value
       end
 
-      # Fetches lockout time value from ENV variable
-      def lockout_timeout
-        ENV['LOCKOUT_TIMEOUT'].to_i
-      end
-
       # Verifies if set lockout time exceeded lockout timeout.
       # Returns boolean.
       def lockout_time_exceeded?
-        lockout_time < lockout_timeout.minutes.ago
+        lockout_time < LOCKOUT_TIMEOUT.minutes.ago
       end
     end
   end
