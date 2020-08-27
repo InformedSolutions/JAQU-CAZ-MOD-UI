@@ -102,7 +102,7 @@ Rails.application.configure do
 
   # Use custom logging formatter so that IP any other PII can be removed.
   config.log_formatter = CustomLogger.new
-  logger               = ActiveSupport::Logger.new(STDOUT)
+  logger               = ActiveSupport::Logger.new($stdout)
   logger.formatter     = config.log_formatter
   config.logger        = ActiveSupport::TaggedLogging.new(logger)
 

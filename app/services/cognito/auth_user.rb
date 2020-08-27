@@ -80,7 +80,7 @@ module Cognito
     #
     # Sets user's :aws_status to 'FORCE_NEW_PASSWORD' to force the password changing process.
     # Sets user's :authorized_list_type
-    def update_challenged_user(auth_response)
+    def update_challenged_user(auth_response) # rubocop:disable Metrics/AbcSize
       challenge_parameters = auth_response.challenge_parameters
 
       user.tap do |u|
