@@ -2,7 +2,7 @@
   %fieldset.govuk-fieldset
     %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
       %h1.govuk-heading-l Setup your new password
-      - if @error
+      - if @error.present?
         .govuk-error-summary{'aria-labelledby': 'error-summary-title',
                              'data-module': 'govuk-error-summary',
                              role: '@error',
@@ -11,12 +11,10 @@
             There was a problem
           .govuk-error-summary__body
             %ul.govuk-list.govuk-error-summary__list
-              - if @error[:link]
-                %li
-                  = link_to(@error[:base_message], '#govuk-error-message')
-              - else
-                %li.custom-csv-error
-                  = @error[:base_message]
+              %li
+                - transformed_flat_errors(@error).each_with_index do |error, index|
+                  %li.custom-csv-error
+                    = link_to(error.first, "##{error.second}-error", id: "#{error.second}-#{index}")
 
       %p
         You are logging in for the first time. For security reasons please update your password.
