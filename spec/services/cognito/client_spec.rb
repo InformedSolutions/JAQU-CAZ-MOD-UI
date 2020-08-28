@@ -26,8 +26,7 @@ RSpec.describe Cognito::Client do
       expect(aws_cognito_client).to receive(:list_users).twice
       begin
         service.instance.list_users
-      rescue Aws::CognitoIdentityProvider::Errors::ResourceNotFoundException
-        Rails.logger.info 'Servive raises exception'
+      rescue Aws::CognitoIdentityProvider::Errors::ResourceNotFoundException # rubocop:disable Lint/SuppressedException
       end
     end
   end
@@ -43,8 +42,7 @@ RSpec.describe Cognito::Client do
       expect(aws_cognito_client).to receive(:list_users).twice
       begin
         service.instance.list_users
-      rescue Aws::CognitoIdentityProvider::Errors::UnrecognizedClientException
-        Rails.logger.info 'Servive raises exception'
+      rescue Aws::CognitoIdentityProvider::Errors::UnrecognizedClientException # rubocop:disable Lint/SuppressedException
       end
     end
   end
@@ -60,8 +58,7 @@ RSpec.describe Cognito::Client do
       expect(aws_cognito_client).to receive(:list_users).once
       begin
         service.instance.list_users
-      rescue Aws::CognitoIdentityProvider::Errors::UserNotFoundException
-        Rails.logger.info 'Servive raises exception'
+      rescue Aws::CognitoIdentityProvider::Errors::UserNotFoundException # rubocop:disable Lint/SuppressedException
       end
     end
   end
