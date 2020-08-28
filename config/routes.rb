@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: { sessions: 'sessions' }
 
   authenticated(:user) { root 'upload#index', as: :authenticated_root }
   devise_scope(:user) { root to: 'devise/sessions#new' }

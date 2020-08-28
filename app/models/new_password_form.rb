@@ -3,6 +3,8 @@
 ##
 # This class is used to validate user data filled in +app/views/passwords/new.html.haml+.
 class NewPasswordForm
+  PASSWORD_EQUALITY_ERROR = I18n.t('password.errors.password_equality')
+
   # Submitted password
   attr_reader :password
   # Submitted password confirmation
@@ -30,27 +32,66 @@ class NewPasswordForm
 
   ##
   # Validate user data.
+  # 1. Check if at least one input is filled.
+  # 2. Check if password is filled.
+  # 3. Check if confirmation is filled.
+  # 4. Check if new password is different than the old one.
+  # 5. Check if password and confirmation are the same.
   #
   # Returns a boolean.
   def valid?
-    passwords_filled? && password_changed? && correct_password_confirmation?
+    any_input_filled? &&
+      filled_password? &&
+      filled_confirmation? &&
+      password_changed? &&
+      correct_password_confirmation?
   end
 
-  private
-
-  # Checks if +password+ and +confirmation+ was entered.
-  # If not, add error messages to +error_object+.
+  # Checks if +password+ or +confirmation+ was entered.
+  # If not (neither passwords are filled), add error message to +error_object+.
   #
   # Returns a boolean.
-  def passwords_filled?
-    return true if password.present? && confirmation.present?
+  def any_input_filled?
+    return true if password.present? || confirmation.present?
 
     @error_object = {
-      base_message: I18n.t('password.errors.passwords_required'),
-      link: true,
       password: I18n.t('password.errors.password_required'),
       password_confirmation: I18n.t('password.errors.confirmation_required')
     }
+    false
+  end
+
+  # Checks if +password+ was entered.
+  # If not, add error message to +error_objects+.
+  #
+  # Returns a boolean
+  def filled_password?
+    return true if password.present?
+
+    password_required = I18n.t('password.errors.password_required')
+
+    @error_object = {
+      password: password_required,
+      password_confirmation: PASSWORD_EQUALITY_ERROR
+    }
+
+    false
+  end
+
+  # Checks if +confirmation+ was entered.
+  # If not, add error message to +error_object+.
+  #
+  # Returns a boolean.
+  def filled_confirmation?
+    return true if confirmation.present?
+
+    confirmation_required = I18n.t('password.errors.confirmation_required')
+
+    @error_object = {
+      password: PASSWORD_EQUALITY_ERROR,
+      password_confirmation: confirmation_required
+    }
+
     false
   end
 
@@ -62,8 +103,7 @@ class NewPasswordForm
     return true if old_password_hash && Digest::MD5.hexdigest(password) != old_password_hash
 
     @error_object = {
-      base_message: I18n.t('password.errors.password_unchanged'),
-      link: false
+      base_message: I18n.t('password.errors.password_unchanged')
     }
     false
   end
@@ -75,10 +115,8 @@ class NewPasswordForm
   def correct_password_confirmation?
     return true if password == confirmation
 
-    password_equality = I18n.t('password.errors.password_equality')
+    password_equality = PASSWORD_EQUALITY_ERROR
     @error_object = {
-      base_message: password_equality,
-      link: true,
       password: password_equality,
       password_confirmation: password_equality
     }
