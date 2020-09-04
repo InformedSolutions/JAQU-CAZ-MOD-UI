@@ -1,18 +1,21 @@
 en:
   email:
     errors:
-      invalid_format: The email is in an invalid format
-      required: Email is required
+      invalid_format: Enter your email address in a valid format
+      required: Enter your email address
       too_long: The email exceeds the limit of 45 characters
   password:
     errors:
-      complexity: Password must be at least 8 characters long, include at least one upper case letter and a number
-      code_mismatch: Provided confirmation code does not match or is expired
-      code_required: Confirmation code is required
+      required: Enter your password
+      complexity: Enter a password at least 8 characters long, including 1 uppercase letter and 1 number
+      invalid_format: Enter your password in a valid format
+      confirmation_invalid_format: Enter your password confirmation in a valid format
+      code_mismatch: The confirmation code does not match or has expired
+      code_required: Enter your confirmation code
       passwords_required: Password and password confirmation are required
-      confirmation_required: Password confirmation is required'
-      password_required: Password is required
-      password_equality: Password and password confirmation must be the same
+      confirmation_required: Enter your password confirmation
+      password_required: Enter your password
+      password_equality: Enter a password and password confirmation that are the same
       password_unchanged: New password must be different than your temporary one
   expired_session: Your session has expired
   csv:

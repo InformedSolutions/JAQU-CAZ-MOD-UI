@@ -17,6 +17,7 @@ if Rails.env.production?
     policy.script_src(*defaults, :unsafe_inline)
     policy.style_src(*defaults, :unsafe_inline)
     policy.connect_src(*defaults)
+    policy.frame_src('https://www.googletagmanager.com')
     policy.frame_ancestors(:none)
   end
 end

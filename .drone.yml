@@ -175,7 +175,7 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - brakeman
     volumes:
       - name: docker_sock
@@ -289,7 +289,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - push
@@ -419,7 +419,7 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - brakeman
     volumes:
       - name: docker_sock
@@ -491,7 +491,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
       environment: st
     when:
       event:
@@ -550,7 +550,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
       environment: st
     when:
       event:
@@ -729,7 +729,7 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - brakeman
     volumes:
       - name: docker_sock
@@ -799,7 +799,7 @@ steps:
       TF_VAR_secret_key_base: ${DRONE_COMMIT}
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - pull_request
@@ -856,7 +856,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
     when:
       event:
         - push
@@ -988,7 +988,7 @@ steps:
     pull: never
     commands:
        - bundle audit check --update
-       - yarn run improved-yarn-audit --exclude '1486' --retry-on-network-failure
+       - yarn run improved-yarn-audit --retry-on-network-failure
        - brakeman
     volumes:
       - name: docker_sock
@@ -1061,7 +1061,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-1
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/2T8BX2D
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
       environment: uat
     when:
       event:
@@ -1120,7 +1120,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
       environment: uat
     when:
       event:
@@ -1246,7 +1246,7 @@ steps:
       TF_VAR_secret_key_base: ${DRONE_COMMIT}
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
@@ -1312,7 +1312,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
@@ -1447,7 +1447,7 @@ steps:
       TF_VAR_secret_key_base: ${DRONE_COMMIT}
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_4PfilARSG6GueX3
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:
@@ -1513,7 +1513,7 @@ steps:
         from_secret: mod_ruby_secret
       TF_VAR_google_analytics_id: UA-144774549-3
       TF_VAR_session_timeout: 15
-      TF_VAR_feedback_url: https://www.surveymonkey.co.uk/r/HJ9FKJC
+      TF_VAR_feedback_url: https://defragroup.eu.qualtrics.com/jfe/form/SV_4PfilARSG6GueX3
       AWS_ACCESS_KEY_ID:
         from_secret: aws_access_key_id
       AWS_SECRET_ACCESS_KEY:

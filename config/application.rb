@@ -20,7 +20,7 @@ module CsvUploader
     # timeout the user session without activity.
     config.x.session_timeout_in_min = ENV.fetch('SESSION_TIMEOUT', 15).to_i
     # link to feedback page.
-    config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://www.surveymonkey.co.uk/r/NXXPW3G')
+    config.x.feedback_url = ENV.fetch('FEEDBACK_URL', 'https://defragroup.eu.qualtrics.com/jfe/form/SV_86QDmHfHSDfjxwV')
     # name of service
     config.x.service_name = 'Ministry of Defence Data Portal'
     default_email = 'Useraccount.Query@defra.gov.uk'
