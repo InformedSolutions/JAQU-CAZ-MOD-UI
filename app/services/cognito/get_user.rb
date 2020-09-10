@@ -15,7 +15,7 @@ module Cognito
     # * +access_token+ - UUID , eg. '8d414417-2bbe-4e70-a145-e108f45d33d3'
     # * +user+ - instance of {User class}[rdoc-ref:User]
     # * +username+ - string, user email address
-    def initialize(access_token:, user: User.new, username:)
+    def initialize(access_token:, username:, user: User.new)
       @access_token = access_token
       @user = user
       @username = username&.downcase
