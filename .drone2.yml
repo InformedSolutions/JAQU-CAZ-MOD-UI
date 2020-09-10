@@ -48,9 +48,9 @@ steps:
     environment:
       ZAP: true
       ZAP_PROXY_URL: 'zap'
-      BASEURL_MOD: 'http://mod-alb-dev-334909968.eu-west-2.elb.amazonaws.com/'
+      BASEURL_MOD: 'https://dev.partner.datauploadportal.co.uk/'
       VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
+      VALID_PASSWORD: 'Tester123...'
       SCREENSHOT_TYPE: 'base'
       LOCATION: local
     commands:
@@ -78,7 +78,7 @@ steps:
       WHITE_MOD_VALID_USERNAME: 'Edmond.Chhung@informed.com'
       WHITE_MOD_VALID_PASSWORD: 'Tester123..'
       VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
+      VALID_PASSWORD: 'Tester123...'
       BROWSER_SET: 'min'
       SCREENSHOT_TYPE: 'base'
       VCCS_USER: 'vccsservice'
