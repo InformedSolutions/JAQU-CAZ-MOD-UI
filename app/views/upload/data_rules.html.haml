@@ -2,8 +2,11 @@
 
 %main.govuk-main-wrapper#main-content{role: 'main'}
   .govuk-grid-row
+    .govuk-grid-column-full
+      %h1.govuk-heading-xl= service_name
+
+  .govuk-grid-row
     .govuk-grid-column-two-thirds
-      %h1.govuk-heading-xl Ministry of Defence Data Portal
       %h2.govuk-heading-m File naming rules
       %p
         The file must be named according to the following format:
