@@ -1,7 +1,10 @@
 %main.govuk-main-wrapper#main-content{role: 'main'}
   .govuk-grid-row
-    .govuk-grid-column-two-thirds
+    .govuk-grid-column-full
       %h1.govuk-heading-xl= service_name
+
+  .govuk-grid-row
+    .govuk-grid-column-two-thirds
       %p Use this page to upload data about MOD vehicles.
       - if @job_errors
         = render 'upload/job_errors'
