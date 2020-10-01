@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::RespondToAuthChallenge do
+describe Cognito::RespondToAuthChallenge do
   subject(:service_call) do
     described_class.call(user: user, password: password, confirmation: password_confirmation)
   end

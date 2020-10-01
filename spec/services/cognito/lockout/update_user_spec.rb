@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::Lockout::UpdateUser do
+describe Cognito::Lockout::UpdateUser do
   subject do
     described_class.call(
       username: username,
