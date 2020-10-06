@@ -29,7 +29,7 @@ Feature: Sign In
     When I navigate to a Upload page
       And I should not see "Upload" link
     Then I am redirected to the unauthenticated root page
-      And I should see "Sign In"
+      And I should see "Sign in"
 
   Scenario: Sign in with invalid credentials
     Given I am on the Sign in page
@@ -43,7 +43,7 @@ Feature: Sign In
     Then I am redirected to the Sign in page
     When I navigate to a Upload page
     Then I am redirected to the unauthenticated root page
-      And I should see "Sign In"
+      And I should see "Sign in"
 
   Scenario: Sign in with invalid email format
     Given I am on the Sign in page
