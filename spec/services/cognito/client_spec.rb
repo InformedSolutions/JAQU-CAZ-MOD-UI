@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::Client do
+describe Cognito::Client do
   subject(:service) do
     Class.new described_class
   end

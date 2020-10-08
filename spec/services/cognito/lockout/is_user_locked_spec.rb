@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::Lockout::IsUserLocked do
+describe Cognito::Lockout::IsUserLocked do
   subject { described_class.call(username: username) }
 
   let(:username) { 'user@example.com' }

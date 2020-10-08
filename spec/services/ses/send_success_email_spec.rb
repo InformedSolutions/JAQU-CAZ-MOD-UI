@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Ses::SendSuccessEmail do
+describe Ses::SendSuccessEmail do
   subject(:service_call) { described_class.call(user: user, job_data: job_data) }
 
   let(:user) { new_user(email: email) }

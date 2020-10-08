@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::GetUser do
+describe Cognito::GetUser do
   subject(:service_call) { described_class.call(access_token: token, username: username) }
 
   let(:token) { SecureRandom.uuid }

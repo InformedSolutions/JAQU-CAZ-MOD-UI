@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ConfirmResetPasswordForm, type: :model do
+describe ConfirmResetPasswordForm, type: :model do
   subject(:form) do
     described_class.new(
       password: password, confirmation: password_confirmation, code: confirmation_code

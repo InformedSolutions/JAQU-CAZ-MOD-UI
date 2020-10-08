@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::AuthUser do
+describe Cognito::AuthUser do
   subject(:service_call) do
     described_class.call(username: username, password: password, login_ip: remote_ip)
   end

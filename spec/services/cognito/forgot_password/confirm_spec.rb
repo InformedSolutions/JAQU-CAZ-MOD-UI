@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::ForgotPassword::Confirm do
+describe Cognito::ForgotPassword::Confirm do
   subject(:service_call) do
     described_class.call(username: username, password: password,
                          code: code, password_confirmation: password)
