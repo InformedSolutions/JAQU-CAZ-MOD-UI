@@ -398,7 +398,7 @@ DEPENDENCIES
   httparty
   listen
   puma
-  rails (~> 6.0.3.3)
+  rails (~> 6.0.3.4)
   rails-controller-testing
   rspec-rails
   rubocop-rails
