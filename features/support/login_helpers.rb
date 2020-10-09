@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Sign in methods used in feature tests
 module LoginHelpers
   def sign_in_user
     allow(Cognito::AuthUser).to receive(:call).and_return(unchallenged_cognito_user)

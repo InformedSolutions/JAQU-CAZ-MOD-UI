@@ -2,11 +2,11 @@ require: rubocop-rails
 inherit_from: ./lib/rubocop/blacklist.yml
 
 AllCops:
-  TargetRubyVersion: 2.7.1
+  TargetRubyVersion: 2.7.2
   NewCops: enable
 
 Layout/LineLength:
-  Max: 99
+  Max: 110
   IgnoredPatterns: ['(\A|\s)#']
 
 Metrics/BlockLength:
@@ -18,9 +18,6 @@ Metrics/BlockLength:
 Style/MixinUsage:
   Exclude:
     - 'features/step_definitions/*.rb'
-
-Style/Documentation:
-  Enabled: false
 
 Style/GuardClause:
   Enabled: false
