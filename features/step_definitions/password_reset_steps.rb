@@ -62,3 +62,14 @@ And('I enter only confirmation code') do
   fill_in('user[confirmation_code]', with: code)
   click_button 'Update password'
 end
+
+And('I enter passwords that does not comply with Cognito setup password policy') do
+  service = Cognito::ForgotPassword::Confirm
+  allow(service).to receive(:call).and_raise(
+    Cognito::CallException,
+    I18n.t('password.errors.complexity')
+  )
+  fill_in('user[confirmation_code]', with: '123456')
+  fill_in('user[password]', with: 'password')
+  fill_in('user[password_confirmation]', with: 'password')
+end

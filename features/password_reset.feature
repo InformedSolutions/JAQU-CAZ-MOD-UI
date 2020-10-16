@@ -1,7 +1,7 @@
 Feature: Password reset
   As a Licensing Authority
   I want to be able to reset my password
-  So that I may still upload to the National Taxi register, even if I forget my password
+  So that I may still upload to the Ministry of Defence Data Portal, even if I forget my password
 
   Scenario: Go to forgotten password page
     Given I am on the Sign in page
@@ -31,3 +31,9 @@ Feature: Password reset
       And I should see "Update your password"
     Then I enter only confirmation code
       And I should see "Enter your password"
+
+  Scenario: Filling invalid passwords
+    Given I am on the 'Reset link sent' page
+    When I enter passwords that does not comply with Cognito setup password policy
+      And I press 'Update password' button
+      And I should see 'Password must be at least 12 characters long, include at least one upper case letter, a number, and a special character' 3 times

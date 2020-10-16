@@ -35,7 +35,7 @@ module Cognito
 
     ##
     # Method which check if Cognito Client respond to the missing method.
-    def respond_to_missing?(method, include_private = false)
+    def respond_to_missing?(method, include_private = false) # rubocop:disable Style/OptionalBooleanParameter
       client.respond_to?(method) || super
     end
 

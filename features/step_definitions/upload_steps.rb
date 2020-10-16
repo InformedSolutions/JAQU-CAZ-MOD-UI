@@ -55,6 +55,14 @@ When('I upload a csv file whose format that is not .csv or .CSV') do
   click_button 'Upload'
 end
 
+# Scenario: Upload a csv file whose size is too big
+When('I upload a csv file whose size is too big') do
+  attach_file(:file, csv_file('CAZ-2020-01-08.csv'))
+  allow_any_instance_of(ActionDispatch::Http::UploadedFile).to receive(:size)
+    .and_return(52_428_801)
+  click_button 'Upload'
+end
+
 # Upload a valid csv file during error is encountered writing to S3
 When('I upload a csv file during error on S3') do
   allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(false)

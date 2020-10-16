@@ -19,7 +19,8 @@
       %p
         You are logging in for the first time. For security reasons please update your password.
       %p
-        Please enter new password below. It should be at least 8 characters long, include at least one upper case letter and a number.
+        Please enter new password below.
+        It should be at least 12 characters long, include at least one upper case letter, a number, and a special character.
 
       = form_for(current_user, url: passwords_path, method: :post) do |f|
         - %i[password password_confirmation].each do |field|
