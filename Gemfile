@@ -22,10 +22,11 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 gem 'webpacker'
 
 group :development, :test do
-  gem 'byebug'
   gem 'dotenv-rails'
   gem 'haml-rails'
   gem 'rspec-rails'
+  gem 'ruby_jard'
+  gem 'yard'
 end
 
 group :development do

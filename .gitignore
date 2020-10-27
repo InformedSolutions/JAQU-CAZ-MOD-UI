@@ -49,5 +49,11 @@ config/ssl/
 # Ignore envs
 .env
 
+# Vagrant files
 .vagrant/
+
+# RDoc HTML files
 /doc/app
+
+# YARD files
+.yardoc
