@@ -3,33 +3,42 @@
 require 'rails_helper'
 
 describe CsvUploadService do
-  subject(:service_call) { described_class.call(file: file, user: User.new) }
+  subject { described_class.call(file: file, user: user) }
 
   let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08.csv')) }
+  let(:user) { new_user(authorized_list_type: 'green') }
 
   describe '#call' do
     context 'with valid params' do
-      before do
-        allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(true)
-      end
+      before { allow_any_instance_of(Aws::S3::Object).to receive(:upload_file).and_return(true) }
 
-      it 'returns true' do
-        expect(service_call).to be true
-      end
-
-      context 'lowercase extension format' do
-        let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08.csv')) }
-
+      context 'and user on the green list' do
         it 'returns true' do
-          expect(service_call).to be true
+          expect(subject).to be true
+        end
+
+        context 'lowercase extension format' do
+          let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08.csv')) }
+
+          it 'returns true' do
+            expect(subject).to be true
+          end
+        end
+
+        context 'uppercase extension format' do
+          let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08.CSV')) }
+
+          it 'returns true' do
+            expect(subject).to be true
+          end
         end
       end
 
-      context 'uppercase extension format' do
-        let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08.CSV')) }
+      context 'and user on the white list' do
+        let(:user) { new_user(authorized_list_type: 'white') }
 
         it 'returns true' do
-          expect(service_call).to be true
+          expect(subject).to be true
         end
       end
     end
@@ -39,7 +48,7 @@ describe CsvUploadService do
         let(:file) { nil }
 
         it 'raises exception' do
-          expect { service_call }.to raise_exception(CsvUploadFailureException)
+          expect { subject }.to raise_exception(CsvUploadFailureException)
         end
       end
 
@@ -49,7 +58,7 @@ describe CsvUploadService do
         end
 
         it 'raises exception' do
-          expect { service_call }.to raise_exception(CsvUploadFailureException)
+          expect { subject }.to raise_exception(CsvUploadFailureException)
         end
       end
 
@@ -61,7 +70,7 @@ describe CsvUploadService do
         end
 
         it 'raises a proper exception' do
-          expect { service_call }.to raise_exception(CsvUploadFailureException)
+          expect { subject }.to raise_exception(CsvUploadFailureException)
         end
       end
 
@@ -69,7 +78,7 @@ describe CsvUploadService do
         let(:file) { fixture_file_upload(empty_csv_file('CAZ-2020-01-08.xlsx')) }
 
         it 'raises exception' do
-          expect { service_call }.to raise_exception(CsvUploadFailureException)
+          expect { subject }.to raise_exception(CsvUploadFailureException)
         end
       end
 
@@ -79,7 +88,7 @@ describe CsvUploadService do
         before { allow(file).to receive(:size).and_return(52_428_801) }
 
         it 'raises exception' do
-          expect { service_call }.to raise_exception(CsvUploadFailureException)
+          expect { subject }.to raise_exception(CsvUploadFailureException)
         end
       end
     end

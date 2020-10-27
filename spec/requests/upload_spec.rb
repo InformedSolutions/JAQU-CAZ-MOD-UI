@@ -196,24 +196,64 @@ describe UploadController, type: :request do
         }
       end
 
-      before do
-        inject_session(job: job_data)
-        allow(Ses::SendSuccessEmail).to receive(:call).and_return(true)
+      before { inject_session(job: job_data) }
+
+      context 'with successful call to Ses::SendSuccessEmail' do
+        before { allow(Ses::SendSuccessEmail).to receive(:call).and_return(true) }
+
+        it 'returns a 200 OK status' do
+          subject
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'calls Ses::SendSuccessEmail' do
+          expect(Ses::SendSuccessEmail).to receive(:call).with(user: user, job_data: job_data)
+          subject
+        end
+
+        it 'clears job data from the session' do
+          subject
+          expect(session[:job]).to be_nil
+        end
+
+        it 'deos not render the warning' do
+          subject
+          expect(response.body).not_to include(I18n.t('upload.delivery_error'))
+        end
       end
 
-      it 'returns 200' do
-        subject
-        expect(response).to be_successful
-      end
+      context 'with unsuccessful call to Ses::SendSuccessEmail' do
+        before do
+          allow(Ses::SendSuccessEmail).to receive(:call).and_return(false)
+          subject
+        end
 
-      it 'calls Ses::SendSuccessEmail' do
-        expect(Ses::SendSuccessEmail).to receive(:call).with(user: user, job_data: job_data)
-        subject
-      end
+        it 'returns a 200 OK status' do
+          expect(response).to have_http_status(:ok)
+        end
 
-      it 'clears job data from the session' do
-        subject
-        expect(session[:job]).to be_nil
+        it 'clears job data from the session' do
+          expect(session[:job]).to be_nil
+        end
+
+        it 'renders the warning' do
+          expect(response.body).to include(I18n.t('upload.delivery_error'))
+        end
+      end
+    end
+  end
+
+  describe '#force_new_password' do
+    subject { get authenticated_root_path }
+
+    before do
+      sign_in new_user(aws_status: 'FORCE_NEW_PASSWORD')
+      subject
+    end
+
+    context 'when user aws_status is FORCE_NEW_PASSWORD' do
+      it 'redirects to new password path' do
+        expect(response).to redirect_to(new_password_path)
       end
     end
   end
