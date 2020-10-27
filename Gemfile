@@ -41,6 +41,7 @@ group :test do
   gem 'bundler-audit'
   gem 'capybara'
   gem 'cucumber-rails', require: false
+  gem 'i18n-tasks'
   gem 'rails-controller-testing'
   gem 'rubocop-rails'
   gem 'scss_lint-govuk', require: false
