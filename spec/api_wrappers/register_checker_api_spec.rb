@@ -16,8 +16,8 @@ describe RegisterCheckerApi do
         .with(
           headers: { 'Content-Type' => 'application/json', 'X-Correlation-ID' => correlation_id },
           body: {
-            "filename": filename,
-            "s3Bucket": ENV.fetch('S3_AWS_BUCKET', 'S3_AWS_BUCKET')
+            'filename': filename,
+            's3Bucket': ENV.fetch('S3_AWS_BUCKET', 'S3_AWS_BUCKET')
           }.to_json
         ).to_return(status: 201, body: { jobName: job_name }.to_json)
     end

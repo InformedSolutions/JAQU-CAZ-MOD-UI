@@ -216,7 +216,7 @@ describe UploadController, type: :request do
           expect(session[:job]).to be_nil
         end
 
-        it 'deos not render the warning' do
+        it 'does not render the warning' do
           subject
           expect(response.body).not_to include(I18n.t('upload.delivery_error'))
         end

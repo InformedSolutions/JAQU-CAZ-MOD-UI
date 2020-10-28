@@ -34,17 +34,6 @@ describe 'User singing in' do
       end
     end
 
-    context 'when email and password are empty' do
-      before { subject }
-
-      let(:email) { '' }
-      let(:password) { '' }
-
-      it 'redirects to the sign in page' do
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
     context 'when incorrect credentials given' do
       before do
         allow(Cognito::AuthUser).to receive(:call).and_return(false)
@@ -53,6 +42,17 @@ describe 'User singing in' do
 
       it 'shows `The username or password you entered is incorrect` message' do
         expect(response.body).to include(I18n.t('devise.failure.invalid'))
+      end
+    end
+
+    context 'when email and password are empty' do
+      before { subject }
+
+      let(:email) { '' }
+      let(:password) { '' }
+
+      it 'redirects to the sign in page' do
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
 
