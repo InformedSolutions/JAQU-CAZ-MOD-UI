@@ -43,8 +43,14 @@ module Cognito
     # which is raised if password or username doesn't match.
     #
     def call
+      return false if user_locked_out?
+
       update_user(auth_user)
       user
+    rescue AWS_ERROR::NotAuthorizedException => e
+      log_error e
+      Cognito::Lockout::VerifyInvalidLogins.call(username: username)
+      false
     rescue AWS_ERROR::ServiceError => e
       log_error e
       false
@@ -63,6 +69,7 @@ module Cognito
         auth_flow: 'USER_PASSWORD_AUTH',
         auth_parameters: { 'USERNAME' => username, 'PASSWORD' => password }
       )
+      Cognito::Lockout::UpdateUser.call(username: username, failed_logins: 0)
       log_successful_call
       auth_response
     end
@@ -80,7 +87,7 @@ module Cognito
     #
     # Sets user's :aws_status to 'FORCE_NEW_PASSWORD' to force the password changing process.
     # Sets user's :authorized_list_type
-    def update_challenged_user(auth_response)
+    def update_challenged_user(auth_response) # rubocop:disable Metrics/AbcSize
       challenge_parameters = auth_response.challenge_parameters
 
       user.tap do |u|
@@ -107,6 +114,13 @@ module Cognito
     # Returns a string.
     def parsed_attr(challenge_parameters, attr)
       JSON.parse(challenge_parameters['userAttributes'])[attr]
+    end
+
+    # Attempts to unlock user and returns information if user is locked out
+    # Returns a boolean.
+    def user_locked_out?
+      Cognito::Lockout::AttemptUserUnlock.call(username: username)
+      Cognito::Lockout::IsUserLocked.call(username: username)
     end
   end
 end

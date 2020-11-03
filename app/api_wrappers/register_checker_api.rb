@@ -9,7 +9,7 @@
 # All methods are on the class level, so there is no initializer method.
 class RegisterCheckerApi < BaseApi
   API_URL = ENV.fetch('MOD_API_URL', 'localhost:3001').freeze
-  base_uri API_URL + '/v1/mod/register-csv-from-s3'
+  base_uri "#{API_URL}/v1/mod/register-csv-from-s3"
 
   class << self
     ##

@@ -16,11 +16,13 @@
         Your password should:
       %ul.govuk-list-govuk-list--bullet
         %li
-          %p Be at least 8 characters long
+          %p Be at least 12 characters long
         %li
           %p Include at least one upper case letter
         %li
           %p Include at least one number
+        %li
+          %p Include at least one special character
       = form_for(User.new, url: change_passwords_path, method: :post, html: {autocomplete: 'off'}) do |f|
         =f.hidden_field(:username, value: @username)
         .govuk-form-group{class: ('govuk-form-group--error' if alert&.downcase&.include?('code'))}

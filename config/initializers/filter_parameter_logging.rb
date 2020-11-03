@@ -8,4 +8,5 @@ Rails.application.config.filter_parameters += %i[
   confirmation_code
   email
   username
+  authenticity_token
 ]

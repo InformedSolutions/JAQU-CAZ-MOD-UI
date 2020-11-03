@@ -72,6 +72,16 @@ RSpec.describe CsvUploadService do
           expect { service_call }.to raise_exception(CsvUploadFailureException)
         end
       end
+
+      context 'when file size is too big' do
+        let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08.csv')) }
+
+        before { allow(file).to receive(:size).and_return(52_428_801) }
+
+        it 'raises exception' do
+          expect { service_call }.to raise_exception(CsvUploadFailureException)
+        end
+      end
     end
   end
 

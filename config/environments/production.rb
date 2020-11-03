@@ -64,7 +64,7 @@ Rails.application.configure do
     # custom
     'Strict-Transport-Security' => 'max-age=31536000',
     'Pragma' => 'no-cache',
-    'Cache-Control' => 'public, s-maxage=31536000, max-age=15552000',
+    'Cache-Control' => 'no-store',
     'Expires' => 1.year.from_now.to_formatted_s(:rfc822).to_s,
     'Feature-Policy' => features.map { |f| "#{f} 'none'" }.join('; ')
   }
@@ -102,7 +102,7 @@ Rails.application.configure do
 
   # Use custom logging formatter so that IP any other PII can be removed.
   config.log_formatter = CustomLogger.new
-  logger               = ActiveSupport::Logger.new(STDOUT)
+  logger               = ActiveSupport::Logger.new($stdout)
   logger.formatter     = config.log_formatter
   config.logger        = ActiveSupport::TaggedLogging.new(logger)
 
