@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::ForgotPassword::GetUser do
+describe Cognito::ForgotPassword::GetUser do
   subject(:service_call) { described_class.call(username: username) }
 
   let(:username) { 'user@example.com' }

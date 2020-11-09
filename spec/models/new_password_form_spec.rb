@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe NewPasswordForm, type: :model do
+describe NewPasswordForm, type: :model do
   subject(:form) do
     described_class.new(
       password: password, confirmation: confirmation, old_password_hash: old_password_hash

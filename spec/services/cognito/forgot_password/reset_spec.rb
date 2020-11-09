@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::ForgotPassword::Reset do
+describe Cognito::ForgotPassword::Reset do
   subject(:service_call) { described_class.call(username: username) }
 
   let(:username) { 'wojtek@email.com' }

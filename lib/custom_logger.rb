@@ -4,8 +4,10 @@
 class CustomLogger < Logger::Formatter
   # https://www.oreilly.com/library/view/regular-expressions-cookbook/9780596802837/ch07s16.html
   IP_REGEX = /\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b/.freeze
+  # Replace the sensitive string to '[REDACTED]'
   FILTERED_STRING = '[REDACTED]'
 
+  # Override call method used in Logger::Formatter
   def call(severity, time, progname, msg)
     formatted_severity = format('%<sev>-5s', sev: severity.to_s)
     formatted_time = time.strftime('%Y-%m-%d %H:%M:%S')

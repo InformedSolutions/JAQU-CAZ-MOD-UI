@@ -3,7 +3,9 @@
 %main.govuk-main-wrapper#main-content{role: 'main'}
   %fieldset.govuk-fieldset
     %legend.govuk-fieldset__legend.govuk-fieldset__legend--xl
-      %h1.govuk-heading-l Sign In
+      %h1.govuk-heading-xl= service_name
+
+      %h2.govuk-heading-l Sign in
 
       - if @errors
         .govuk-error-summary{'aria-labelledby': 'error-summary-title',
@@ -19,7 +21,7 @@
                   = link_to(value, '#govuk-error-message', id: 'error-message')
 
       %p
-        If you do not have an account, please email us at
+        If you want to set up an account or need support email us at
         = mail_to Rails.configuration.x.contact_email
 
       = form_for(resource, as: resource_name, url: session_path(resource_name), html: {novalidate: 'novalidate'}) do |f|

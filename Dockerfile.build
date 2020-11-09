@@ -1,11 +1,10 @@
-FROM ruby:2.6.6-alpine3.12
+FROM ruby:2.7.1-alpine3.12
 
 # Set correct environment variables.
 ENV RAILS_ENV production
 ENV RAILS_SERVE_STATIC_FILES true
 ENV NODE_ENV production
 ENV AWS_REGION=eu-west-2
-ENV S3_AWS_REGION=eu-west-2
 ARG secret_key_base
 ENV SECRET_KEY_BASE=$secret_key_base
 
@@ -26,16 +25,16 @@ RUN gem install bundler && bundle config force_ruby_platform true \
 # Install node packages and precompile assets
 COPY . /home/app
 
-RUN export S3_AWS_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL && \
-    export S3_AWS_SECRET_ACCESS_KEY=STUB_FOR_YARN_INSTALL && \
+RUN export AWS_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL && \
+    export AWS_SECRET_ACCESS_KEY=STUB_FOR_YARN_INSTALL && \
     export SES_ACCESS_KEY_ID=STUB_FOR_YARN_INSTALL && \
     export SES_SECRET_ACCESS_KEY=STUB_FOR_YARN_INSTALL && \
     yarn install --frozen-lockfile --non-interactive && \
     bundle exec rails assets:precompile && \
     yarn cache clean && \
     rm -rf /home/app/node_modules && \
-    unset S3_AWS_ACCESS_KEY_ID && \
-    unset S3_AWS_SECRET_ACCESS_KEY && \
+    unset AWS_ACCESS_KEY_ID && \
+    unset AWS_SECRET_ACCESS_KEY && \
     unset SES_ACCESS_KEY_ID && \
     unset SES_SECRET_ACCESS_KEY
 

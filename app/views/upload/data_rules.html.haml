@@ -2,8 +2,11 @@
 
 %main.govuk-main-wrapper#main-content{role: 'main'}
   .govuk-grid-row
+    .govuk-grid-column-full
+      %h1.govuk-heading-xl= service_name
+
+  .govuk-grid-row
     .govuk-grid-column-two-thirds
-      %h1.govuk-heading-l MOD Vehicles Data Rules
       %h2.govuk-heading-m File naming rules
       %p
         The file must be named according to the following format:
@@ -37,7 +40,7 @@
         %li
           %p Each record is separated by a newline (ASCII carriage return)
         %li
-          %p Optional fields with no values with be separated by a comma
+          %p Optional fields with no values will be separated by a comma
       %h2.govuk-heading-m
         Data values for your CSV.
       %table.govuk-table

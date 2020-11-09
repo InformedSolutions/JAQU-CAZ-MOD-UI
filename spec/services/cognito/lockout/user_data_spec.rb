@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::Lockout::UserData do
+describe Cognito::Lockout::UserData do
   subject { described_class.new(username: username) }
 
   let(:username) { 'user@example.com' }

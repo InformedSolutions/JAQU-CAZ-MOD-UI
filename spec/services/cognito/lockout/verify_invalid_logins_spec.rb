@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::Lockout::VerifyInvalidLogins do
+describe Cognito::Lockout::VerifyInvalidLogins do
   subject { described_class.call(username: username) }
 
   let(:username) { 'user@example.com' }

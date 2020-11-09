@@ -1,8 +1,8 @@
 ## MOD Vehicles Uploader
 
 ### Dependencies
-* Ruby 2.6.6
-* Ruby on Rails 6.0
+* Ruby 2.7
+* Ruby on Rails 6
 * [GOV.UK Frontend](https://github.com/alphagov/govuk-frontend)
 * Other packages listed in Gemfile and package.json files.
 

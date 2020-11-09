@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe CsvUploadService do
+describe CsvUploadService do
   subject(:service_call) { described_class.call(file: file, user: User.new) }
 
   let(:file) { fixture_file_upload(csv_file('CAZ-2020-01-08.csv')) }

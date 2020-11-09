@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe ResetPasswordForm, type: :model do
+describe ResetPasswordForm, type: :model do
   subject(:form) { described_class.new(username) }
 
   let(:username) { 'wojtek@email.com' }

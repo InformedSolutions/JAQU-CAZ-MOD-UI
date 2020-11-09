@@ -14,11 +14,7 @@
             %span.govuk-warning-text__assistive Warning
             = @warning
       %h2.govuk-heading-m What happens next
-      %p
-        We have saved your data to the
-        = succeed '.' do
-          = service_name
-      %p You will need to reupload updated document regularly.
+      %p You can update your data whenever you need to by uploading a new file.
       %p
         = external_link_to('What did you think of this service?',
                            Rails.configuration.x.feedback_url,
