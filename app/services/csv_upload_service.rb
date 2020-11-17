@@ -107,7 +107,7 @@ class CsvUploadService < BaseService
 
   # Returns a hash.
   def file_metadata
-    { 'uploader-id': user.sub, 'csv-content-type': adjusted_list_type }
+    { 'uploader-id': user.preferred_username, 'csv-content-type': adjusted_list_type }
   end
 
   # Returns a string.
