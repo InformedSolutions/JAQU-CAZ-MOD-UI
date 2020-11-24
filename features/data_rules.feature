@@ -6,4 +6,4 @@ Feature: Data Rules
   Scenario: See Data rules
     Given I am on the Upload page
     When I press Data rules button
-    Then I should see "MOD Vehicles Data Rules"
+    Then I should see "Ministry of Defence Data Portal" 1 times

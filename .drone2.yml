@@ -48,9 +48,9 @@ steps:
     environment:
       ZAP: true
       ZAP_PROXY_URL: 'zap'
-      BASEURL_MOD: 'http://mod-alb-dev-334909968.eu-west-2.elb.amazonaws.com/'
+      BASEURL_MOD: 'https://dev.partner.datauploadportal.co.uk/'
       VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
+      VALID_PASSWORD: 'Tester123...'
       SCREENSHOT_TYPE: 'base'
       LOCATION: local
     commands:
@@ -76,9 +76,9 @@ steps:
         from_secret: browserstack_auth_key
       BASEURL_MOD: 'https://dev.partner.datauploadportal.co.uk/'
       WHITE_MOD_VALID_USERNAME: 'Edmond.Chhung@informed.com'
-      WHITE_MOD_VALID_PASSWORD: 'Tester123..'
+      WHITE_MOD_VALID_PASSWORD: 'Tester123...'
       VALID_USERNAME: 'tester@informed.com'
-      VALID_PASSWORD: 'Tester123..'
+      VALID_PASSWORD: 'Tester123...'
       BROWSER_SET: 'min'
       SCREENSHOT_TYPE: 'base'
       VCCS_USER: 'vccsservice'
@@ -171,10 +171,10 @@ steps:
     image: test-mod-frontend
     pull: never
     commands:
-       - bundle audit check --update
-       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-       - yarn run improved-yarn-audit --retry-on-network-failure
-       - brakeman
+      - bundle audit check --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+      - yarn run improved-yarn-audit --retry-on-network-failure
+      - brakeman
     volumes:
       - name: docker_sock
         path: /var/run/docker.sock
@@ -390,18 +390,18 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # # Invoke security analysis through Ruby libraries
-  # - name: security tests (Ruby)
-  #   image: test-mod-frontend
-  #   pull: never
-  #   commands:
-  #      - bundle audit check --update
-  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --retry-on-network-failure
-  #      - brakeman
-  #   volumes:
-  #     - name: docker_sock
-  #       path: /var/run/docker.sock
+  # Invoke security analysis through Ruby libraries
+  - name: security tests (Ruby)
+    image: test-mod-frontend
+    pull: never
+    commands:
+      - bundle audit check --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+      - yarn run improved-yarn-audit --retry-on-network-failure
+      - brakeman
+    volumes:
+     - name: docker_sock
+       path: /var/run/docker.sock
 
 
   # Push built image to ECR registry
@@ -673,18 +673,18 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # # Invoke security analysis through Ruby libraries
-  # - name: security tests (Ruby)
-  #   image: test-mod-frontend
-  #   pull: never
-  #   commands:
-  #      - bundle audit check --update
-  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --retry-on-network-failure
-  #      - brakeman
-  #   volumes:
-  #     - name: docker_sock
-  #       path: /var/run/docker.sock
+  # Invoke security analysis through Ruby libraries
+  - name: security tests (Ruby)
+    image: test-mod-frontend
+    pull: never
+    commands:
+      - bundle audit check --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+      - yarn run improved-yarn-audit --retry-on-network-failure
+      - brakeman
+    volumes:
+     - name: docker_sock
+       path: /var/run/docker.sock
 
 
   # Push built image to ECR registry
@@ -1151,18 +1151,18 @@ steps:
       - name: docker_sock
         path: /var/run/docker.sock
 
-  # # Invoke security analysis through Ruby libraries
-  # - name: security tests (Ruby)
-  #   image: test-mod-frontend
-  #   pull: never
-  #   commands:
-  #      - bundle audit check --update
-  #      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
-  #      - yarn run improved-yarn-audit --retry-on-network-failure
-  #      - brakeman
-  #   volumes:
-  #     - name: docker_sock
-  #       path: /var/run/docker.sock
+  # Invoke security analysis through Ruby libraries
+  - name: security tests (Ruby)
+    image: test-mod-frontend
+    pull: never
+    commands:
+      - bundle audit check --update
+      # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
+      - yarn run improved-yarn-audit --retry-on-network-failure
+      - brakeman
+    volumes:
+     - name: docker_sock
+       path: /var/run/docker.sock
 
 
   # Push built image to ECR registry

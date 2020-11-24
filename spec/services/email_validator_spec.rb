@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe EmailValidator do
+describe EmailValidator do
   subject(:service_call) { described_class.call(email: email) }
 
   let(:email) { 'user@example.com' }

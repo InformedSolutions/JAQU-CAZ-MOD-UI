@@ -5,7 +5,6 @@
 # Generated every time Webpacker::Compiler#compile is called on non stale compiled packs
 # TO DO: Remove when changes will be introduced
 # https://github.com/rails/webpacker/issues/2392
-# :nocov:
 Webpacker::Compiler.class_eval do
   def compile
     if stale?
@@ -17,4 +16,3 @@ Webpacker::Compiler.class_eval do
     end
   end
 end
-# :nocov:

@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Cognito::ForgotPassword::UpdateUser do
+describe Cognito::ForgotPassword::UpdateUser do
   subject(:service_call) do
     described_class.call(
       reset_counter: reset_counter,

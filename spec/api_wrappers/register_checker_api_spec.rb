@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe RegisterCheckerApi do
+describe RegisterCheckerApi do
   let(:correlation_id) { SecureRandom.uuid }
 
   describe '.register_job' do

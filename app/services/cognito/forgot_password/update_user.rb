@@ -17,7 +17,7 @@ module Cognito
       # * +reset_counter+ - integer, password reset counter
       # * +username+ - string, user email address
       # * +current_date_time+ - integer, current datetime converted to integer
-      def initialize(reset_counter: 0, username:)
+      def initialize(username:, reset_counter: 0)
         @reset_counter = reset_counter
         @username = username
         @current_date_time = DateTime.current.to_i
