@@ -3,6 +3,7 @@
 ##
 # This class is used to validate user data filled in +app/views/passwords/new.html.haml+.
 class NewPasswordForm
+  # Error message
   PASSWORD_EQUALITY_ERROR = I18n.t('password.errors.password_equality')
 
   # Submitted password

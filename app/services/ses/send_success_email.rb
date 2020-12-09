@@ -61,11 +61,6 @@ module Ses
       log_action 'Email sent successfully'
     end
 
-    # Helper used to display params in logs
-    def display_params
-      "email: #{user.email}, filename: #{filename}, time: #{submission_time}"
-    end
-
     # User instance
     attr_reader :user
     # Name of the submitted file

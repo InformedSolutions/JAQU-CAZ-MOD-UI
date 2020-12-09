@@ -14,10 +14,18 @@ Dir[Rails.root.join('spec/support/**/*.rb')].sort.each { |f| require f }
 Aws.config.update(stub_responses: true)
 
 RSpec.configure do |config|
-  config.include RequestSpecHelper, type: :request
-  config.include InjectSession, type: :request
-  config.include MockUser
-  config.include CsvHelper
+  # load request helpers
+  [RequestSpecHelper, InjectSession].each do |h|
+    config.include h, type: :request
+  end
+
+  # load helpers
+  [
+    MockUser,
+    CsvHelper
+  ].each do |h|
+    config.include h
+  end
 
   config.before(:each) do
     @remote_ip = '1.2.3.4'

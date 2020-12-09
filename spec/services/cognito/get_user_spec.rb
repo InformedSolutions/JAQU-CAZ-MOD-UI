@@ -10,6 +10,7 @@ describe Cognito::GetUser do
     OpenStruct.new(username: username, user_attributes: [
                      OpenStruct.new(name: 'email', value: email),
                      OpenStruct.new(name: 'sub', value: sub),
+                     OpenStruct.new(name: 'preferred_username', value: preferred_username),
                      OpenStruct.new(
                        name: 'custom:authorized-list-type',
                        value: authorized_list_type
@@ -19,12 +20,14 @@ describe Cognito::GetUser do
   let(:email) { 'test@example.com' }
   let(:username) { 'wojtek' }
   let(:sub) { SecureRandom.uuid }
+  let(:preferred_username) { SecureRandom.uuid }
   let(:authorized_list_type) { 'green' }
 
   before do
     allow(Cognito::Client.instance).to receive(:get_user)
       .with(access_token: token)
       .and_return(cognito_response)
+    allow(Cognito::UpdatePreferredUsername).to receive(:call).and_return(true)
   end
 
   it 'returns an instance of the user class' do
@@ -53,6 +56,27 @@ describe Cognito::GetUser do
 
   it 'sets authorized_list_type' do
     expect(service_call.authorized_list_type).to eq(authorized_list_type)
+  end
+
+  it 'calls Cognito::UpdatePreferredUsername service' do
+    service_call
+    expect(Cognito::UpdatePreferredUsername).to have_received(:call)
+  end
+
+  describe '.preferred_username' do
+    context 'when preferred_username not nil' do
+      it 'returns a proper value' do
+        expect(service_call.preferred_username).to eq(preferred_username)
+      end
+    end
+
+    context 'when preferred_username is nil' do
+      let(:preferred_username) { nil }
+
+      it 'returns a proper value' do
+        expect(service_call.preferred_username).to eq(sub)
+      end
+    end
   end
 
   context 'when the initial user is given' do

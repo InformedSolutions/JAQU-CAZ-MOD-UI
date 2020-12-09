@@ -40,4 +40,32 @@ describe ErrorsController, type: :request do
       expect(response).to render_template(:internal_server_error)
     end
   end
+
+  describe '#server_unavailable' do
+    subject { get '/503.html' }
+
+    it 'returns a :service_unavailable response' do
+      expect(response).to have_http_status(:service_unavailable)
+    end
+
+    it 'renders the view' do
+      expect(response).to render_template(:service_unavailable)
+    end
+
+    context 'when format is JSON' do
+      subject { get '/503.json' }
+
+      it 'renders the view' do
+        expect(response).to render_template(:service_unavailable)
+      end
+    end
+
+    context 'when format is XML' do
+      subject { get '/503.xml' }
+
+      it 'renders the view' do
+        expect(response).to render_template(:service_unavailable)
+      end
+    end
+  end
 end

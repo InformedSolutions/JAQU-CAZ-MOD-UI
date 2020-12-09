@@ -23,6 +23,14 @@ class ErrorsController < ApplicationController
     render(status: :internal_server_error)
   end
 
+  ##
+  # Renders 503 error page
+  #
+  # The view is based on {this pattern}[https://design-system.service.gov.uk/patterns/service-unavailable-pages/] from Design System.
+  def service_unavailable
+    render(status: :service_unavailable)
+  end
+
   private
 
   # Changes the request format to HTML to always display the error pages
