@@ -3,6 +3,7 @@
 module Aws
   module Plugins
     class Logging < Seahorse::Client::Plugin
+      # monkey patch for class in `aws-sdk-cognitoidentityprovider` gem
       class Handler < Seahorse::Client::Handler
         private
 

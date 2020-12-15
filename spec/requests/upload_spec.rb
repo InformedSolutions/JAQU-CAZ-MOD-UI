@@ -3,22 +3,16 @@
 require 'rails_helper'
 
 describe UploadController, type: :request do
-  let(:file_path) do
-    File.join(
-      'spec',
-      'fixtures', 'files', 'csv', 'CAZ-2020-01-08.csv'
-    )
-  end
-
+  let(:file_path) { File.join('spec', 'fixtures', 'files', 'csv', 'CAZ-2020-01-08.csv') }
   let(:user) { new_user(email: 'test@example.com', authorized_list_type: 'green') }
 
   before { sign_in user }
 
   describe 'GET #index' do
-    subject(:http_request) { get authenticated_root_path }
+    subject { get authenticated_root_path }
 
     it 'returns a success response' do
-      http_request
+      subject
       expect(response).to have_http_status(:success)
     end
 
@@ -33,11 +27,11 @@ describe UploadController, type: :request do
 
       it 'calls RegisterCheckerApi.job_errors' do
         expect(RegisterCheckerApi).to receive(:job_errors).with(job_name, correlation_id)
-        http_request
+        subject
       end
 
       it 'clears job from session' do
-        http_request
+        subject
         expect(session[:job]).to be_nil
       end
     end
@@ -46,42 +40,55 @@ describe UploadController, type: :request do
       let(:user) { new_user(login_ip: '0.0.0.0') }
 
       it 'returns a redirect to login page' do
-        http_request
-        expect(response).to redirect_to(new_user_session_path)
+        expect(subject).to redirect_to(new_user_session_path)
       end
 
       it 'logs out the user' do
-        http_request
+        subject
         expect(controller.current_user).to be_nil
       end
     end
   end
 
   describe 'POST #import' do
-    subject(:http_request) do
-      post import_upload_index_path, params: { file: csv_file }
-    end
+    subject { post import_upload_index_path, params: { file: csv_file } }
 
     let(:csv_file) { fixture_file_upload(file_path) }
 
     context 'with valid params' do
-      let(:job_name) { 'name' }
-      before do
-        allow(CsvUploadService).to receive(:call).and_return(true)
-        allow(RegisterCheckerApi).to receive(:register_job).and_return(job_name)
-        http_request
+      before { allow(CsvUploadService).to receive(:call).and_return(true) }
+
+      context 'and api returns 200 status' do
+        before do
+          allow(RegisterCheckerApi).to receive(:register_job).and_return(job_name)
+          subject
+        end
+
+        let(:job_name) { 'name' }
+
+        it 'returns a success response' do
+          expect(response).to have_http_status(:found)
+        end
+
+        it 'sets job name in session' do
+          expect(session[:job][:name]).to eq(job_name)
+        end
+
+        it 'sets filename in session' do
+          expect(session[:job][:filename]).to eq(file_path.split('/').last)
+        end
       end
 
-      it 'returns a success response' do
-        expect(response).to have_http_status(:found)
-      end
+      context 'and api returns 400 status' do
+        before do
+          allow(RegisterCheckerApi).to receive(:register_job).and_raise(
+            BaseApi::Error400Exception.new(400, '', {})
+          )
+        end
 
-      it 'sets job name in session' do
-        expect(session[:job][:name]).to eq(job_name)
-      end
-
-      it 'sets filename in session' do
-        expect(session[:job][:filename]).to eq(file_path.split('/').last)
+        it 'renders the service unavailable page' do
+          expect(subject).to render_template('errors/service_unavailable')
+        end
       end
     end
 
@@ -91,7 +98,7 @@ describe UploadController, type: :request do
       end
 
       it 'returns error' do
-        http_request
+        subject
         follow_redirect!
         expect(response.body).to include('The selected file must be named correctly')
       end
@@ -108,7 +115,7 @@ describe UploadController, type: :request do
   end
 
   describe 'GET #processing' do
-    subject(:http_request) { get processing_upload_index_path }
+    subject { get processing_upload_index_path }
 
     let(:job_status) { 'SUCCESS' }
     let(:correlation_id) { SecureRandom.uuid }
@@ -119,7 +126,7 @@ describe UploadController, type: :request do
       before do
         inject_session(job: job_data)
         allow(RegisterCheckerApi).to receive(:job_status).and_return(job_status)
-        http_request
+        subject
       end
 
       context 'when job status is SUCCESS' do
@@ -136,7 +143,6 @@ describe UploadController, type: :request do
         end
 
         it 'does not clear job from session' do
-          http_request
           expect(session[:job]).to eq(job_data)
         end
       end
@@ -149,7 +155,7 @@ describe UploadController, type: :request do
         end
 
         it 'does not clear job from session' do
-          http_request
+          subject
           expect(session[:job]).to eq(job_data)
         end
       end
@@ -157,24 +163,24 @@ describe UploadController, type: :request do
 
     context 'with missing job data' do
       it 'returns a redirect to root page' do
-        http_request
+        subject
         expect(response).to redirect_to(root_path)
       end
     end
   end
 
   describe 'GET #success' do
-    subject(:http_request) { get success_upload_index_path }
+    subject { get success_upload_index_path }
 
     context 'with empty session' do
       it 'returns 200' do
-        http_request
+        subject
         expect(response).to be_successful
       end
 
       it 'does not call Ses::SendSuccessEmail' do
         expect(Ses::SendSuccessEmail).not_to receive(:call)
-        http_request
+        subject
       end
     end
 
@@ -190,24 +196,64 @@ describe UploadController, type: :request do
         }
       end
 
-      before do
-        inject_session(job: job_data)
-        allow(Ses::SendSuccessEmail).to receive(:call).and_return(true)
+      before { inject_session(job: job_data) }
+
+      context 'with successful call to Ses::SendSuccessEmail' do
+        before { allow(Ses::SendSuccessEmail).to receive(:call).and_return(true) }
+
+        it 'returns a 200 OK status' do
+          subject
+          expect(response).to have_http_status(:ok)
+        end
+
+        it 'calls Ses::SendSuccessEmail' do
+          expect(Ses::SendSuccessEmail).to receive(:call).with(user: user, job_data: job_data)
+          subject
+        end
+
+        it 'clears job data from the session' do
+          subject
+          expect(session[:job]).to be_nil
+        end
+
+        it 'does not render the warning' do
+          subject
+          expect(response.body).not_to include(I18n.t('upload.delivery_error'))
+        end
       end
 
-      it 'returns 200' do
-        http_request
-        expect(response).to be_successful
-      end
+      context 'with unsuccessful call to Ses::SendSuccessEmail' do
+        before do
+          allow(Ses::SendSuccessEmail).to receive(:call).and_return(false)
+          subject
+        end
 
-      it 'calls Ses::SendSuccessEmail' do
-        expect(Ses::SendSuccessEmail).to receive(:call).with(user: user, job_data: job_data)
-        http_request
-      end
+        it 'returns a 200 OK status' do
+          expect(response).to have_http_status(:ok)
+        end
 
-      it 'clears job data from the session' do
-        http_request
-        expect(session[:job]).to be_nil
+        it 'clears job data from the session' do
+          expect(session[:job]).to be_nil
+        end
+
+        it 'renders the warning' do
+          expect(response.body).to include(I18n.t('upload.delivery_error'))
+        end
+      end
+    end
+  end
+
+  describe '#force_new_password' do
+    subject { get authenticated_root_path }
+
+    before do
+      sign_in new_user(aws_status: 'FORCE_NEW_PASSWORD')
+      subject
+    end
+
+    context 'when user aws_status is FORCE_NEW_PASSWORD' do
+      it 'redirects to new password path' do
+        expect(response).to redirect_to(new_password_path)
       end
     end
   end

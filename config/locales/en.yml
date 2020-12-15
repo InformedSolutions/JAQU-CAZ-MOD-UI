@@ -1,27 +1,29 @@
+---
 en:
+  csv:
+    errors:
+      base: The selected file could not be uploaded – try again
+      invalid_ext: The selected file must be a CSV
+      invalid_name: The selected file must be named correctly
+      no_file: Select a CSV file to upload
   email:
     errors:
       invalid_format: Enter your email address in a valid format
       required: Enter your email address
       too_long: The email exceeds the limit of 45 characters
+  expired_session: Your session has expired
+  external_link: opens in a new window
   password:
     errors:
-      required: Enter your password
-      complexity: Password must be at least 12 characters long, include at least one upper case letter, a number, and a special character
       code_mismatch: The confirmation code does not match or has expired
       code_required: Enter your confirmation code
-      passwords_required: Password and password confirmation are required
+      complexity: Password must be at least 12 characters long, include at least one
+        upper case letter, a number, and a special character
       confirmation_required: Enter your password confirmation
-      password_required: Enter your password
       password_equality: Enter a password and password confirmation that are the same
+      password_required: Enter your password
       password_unchanged: New password must be different than your temporary one
-  expired_session: Your session has expired
-  csv:
-    errors:
-      base: The selected file could not be uploaded – try again
-      no_file: Select a CSV file to upload
-      invalid_ext: The selected file must be a CSV
-      invalid_name: The selected file must be named correctly
+      required: Enter your password
   upload:
-    delivery_error: There was an error sending your confirmation email. Your data has still been saved.
-  external_link: opens in a new window
+    delivery_error: There was an error sending your confirmation email. Your data
+      has still been saved.

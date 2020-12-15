@@ -2,48 +2,13 @@
 
 require 'rails_helper'
 
-describe 'User singing in', type: :request do
+describe 'User singing in' do
   let(:email) { 'user@example.com' }
   let(:password) { '12345678' }
-  let(:params) do
-    {
-      user: {
-        username: email,
-        password: password
-      }
-    }
-  end
+  let(:params) { { user: { username: email, password: password } } }
 
   describe 'signing in' do
-    subject(:http_request) { post user_session_path(params) }
-
-    context 'when incorrect credentials given' do
-      before do
-        expect(Cognito::Client.instance).to receive(:initiate_auth)
-          .and_raise(
-            Aws::CognitoIdentityProvider::Errors::NotAuthorizedException.new('', 'error')
-          )
-      end
-
-      it 'shows `The username or password you entered is incorrect` message' do
-        http_request
-        expect(response.body).to include(I18n.t('devise.failure.invalid'))
-      end
-    end
-
-    context 'when another error occurs' do
-      before do
-        allow(Cognito::Client.instance).to receive(:initiate_auth)
-          .and_raise(
-            Aws::CognitoIdentityProvider::Errors::InternalErrorException.new('', 'error')
-          )
-      end
-
-      it 'shows `The username or password you entered is incorrect` message' do
-        http_request
-        expect(response.body).to include(I18n.t('devise.failure.invalid'))
-      end
-    end
+    subject { post user_session_path(params) }
 
     context 'when correct credentials given' do
       before do
@@ -52,12 +17,12 @@ describe 'User singing in', type: :request do
       end
 
       it 'logs user in' do
-        http_request
+        subject
         expect(controller.current_user).not_to be(nil)
       end
 
       it 'redirects to root' do
-        http_request
+        subject
         expect(response).to redirect_to(root_path)
       end
 
@@ -65,7 +30,44 @@ describe 'User singing in', type: :request do
         expect(Cognito::AuthUser)
           .to receive(:call)
           .with(username: email, password: password, login_ip: @remote_ip)
-        http_request
+        subject
+      end
+    end
+
+    context 'when incorrect credentials given' do
+      before do
+        allow(Cognito::AuthUser).to receive(:call).and_return(false)
+        subject
+      end
+
+      it 'shows `The username or password you entered is incorrect` message' do
+        expect(response.body).to include(I18n.t('devise.failure.invalid'))
+      end
+    end
+
+    context 'when email and password are empty' do
+      before { subject }
+
+      let(:email) { '' }
+      let(:password) { '' }
+
+      it 'redirects to the sign in page' do
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context 'when email is an invalid format' do
+      let(:email) { 'invalid_email_format' }
+
+      before { subject }
+
+      it 'provides proper error messages' do
+        errors = { email: 'Enter your email address in a valid format', password: 'Enter your password' }
+        expect(flash[:errors]).to eq(errors)
+      end
+
+      it 'redirects to the sign in page' do
+        expect(response).to redirect_to(new_user_session_path)
       end
     end
   end

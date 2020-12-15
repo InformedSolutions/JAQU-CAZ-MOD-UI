@@ -2,6 +2,7 @@
 
 module Devise
   module Models
+    # custom module to allow use remote authentication with `devise` gem
     module RemoteAuthenticatable
       extend ActiveSupport::Concern
       # Here you do the request to the external webservice
@@ -17,7 +18,7 @@ module Devise
           login_ip: params[:login_ip]
         )
       end
-
+      # Devise module Devise::Models:ClassMethods
       module ClassMethods
         # Overridden methods from Devise::Models::Authenticatable
         #

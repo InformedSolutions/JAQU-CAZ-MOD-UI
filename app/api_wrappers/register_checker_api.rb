@@ -8,6 +8,7 @@
 #
 # All methods are on the class level, so there is no initializer method.
 class RegisterCheckerApi < BaseApi
+  # Url is needed for submit vehicles
   API_URL = ENV.fetch('MOD_API_URL', 'localhost:3001').freeze
   base_uri "#{API_URL}/v1/mod/register-csv-from-s3"
 
@@ -34,10 +35,9 @@ class RegisterCheckerApi < BaseApi
     #
     def register_job(file_name, correlation_id)
       log_call("Registering job with file name: #{file_name}")
-      response = request(:post, '/jobs',
-                         body: register_body(file_name),
-                         headers: custom_headers(correlation_id))
-      response['jobName']
+      request(:post, '/jobs',
+              body: register_body(file_name),
+              headers: custom_headers(correlation_id))['jobName']
     end
 
     ##
@@ -62,9 +62,7 @@ class RegisterCheckerApi < BaseApi
     #
     def job_status(job_uuid, correlation_id)
       log_call("Getting job status with job uuid: #{job_uuid}")
-      response = request(:get, "/jobs/#{job_uuid}",
-                         headers: custom_headers(correlation_id))
-      response['status']
+      request(:get, "/jobs/#{job_uuid}", headers: custom_headers(correlation_id))['status']
     end
 
     ##
@@ -137,17 +135,6 @@ class RegisterCheckerApi < BaseApi
         'Content-Type' => 'application/json',
         'X-Correlation-ID' => correlation_id
       }
-    end
-
-    ##
-    # Logs given message at +info+ level with a proper tag.
-    #
-    # ==== Attributes
-    #
-    # * +msg+ - string, log message
-    #
-    def log_call(msg)
-      Rails.logger.info "[RegisterCheckerApi] #{msg}"
     end
   end
 end

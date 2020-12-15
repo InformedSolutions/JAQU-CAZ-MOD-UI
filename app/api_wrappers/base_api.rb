@@ -7,6 +7,19 @@
 class BaseApi
   include HTTParty
 
+  ##
+  # Class representing 500 HTTP response code (Internal Server Error) returned by API
+  class Error500Exception < ApiException; end
+  ##
+  # Class representing 422 HTTP response code (Unprocessable Entity) returned by API
+  class Error422Exception < ApiException; end
+  ##
+  # Class representing 404 HTTP response code (Not Found) returned by API
+  class Error404Exception < ApiException; end
+  ##
+  # Class representing 400 HTTP response code (Bad Request) returned by API
+  class Error400Exception < ApiException; end
+
   class << self
     ##
     # Performs a HTTP request and returns a hash with parsed body.
@@ -41,7 +54,30 @@ class BaseApi
       return parsed_body unless status.between?(400, 599)
 
       status_message = response_struct.msg
-      raise ApiException.new(status, status_message, parsed_body)
+      exception = error_klass(status).new(status, status_message, parsed_body)
+      log_exception(exception)
+      raise exception
+    end
+
+    ##
+    # Logs given message at +info+ level with a proper tag.
+    #
+    # ==== Attributes
+    # * +message+ - string, log message
+    #
+    def log_call(message)
+      Rails.logger.info "[#{name}] #{message}"
+    end
+
+    ##
+    # Logs given exception at +error+ level with a proper tag
+    #
+    # ==== Attributes
+    #
+    # * +exception+ - exception
+    #
+    def log_exception(exception)
+      Rails.logger.error "[#{name}] #{exception.message}"
     end
 
     ##
@@ -51,8 +87,20 @@ class BaseApi
     def parse_body(body)
       JSON.parse(body.presence || '{}')
     rescue JSON::ParserError
-      Rails.logger.error "Error during parsing: #{body}"
-      raise ApiException.new(500, 'Parse error', {})
+      exception = Error500Exception.new(500, 'Response body parsing failed', body)
+      log_exception(exception)
+      raise exception
+    end
+
+    ##
+    # Matches error status with a proper exception class.
+    # Returns an error class.
+    def error_klass(status)
+      if status.in?([400, 401, 404, 422])
+        "BaseApi::Error#{status}Exception".constantize
+      else
+        Error500Exception
+      end
     end
   end
 end

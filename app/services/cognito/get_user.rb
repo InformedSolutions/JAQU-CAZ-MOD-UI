@@ -25,17 +25,19 @@ module Cognito
     # Sets the details of current user using Cognito response.
     def call
       update_user
+      update_preferred_username
       user
     end
 
     private
 
     # Sets the details of current user using Cognito response.
-    def update_user
+    def update_user # rubocop:disable Metrics/AbcSize
       user.username = user_data.username
       user.email = extract_attr('email')
       user.sub = extract_attr('sub')
       user.authorized_list_type = extract_attr('custom:authorized-list-type')&.downcase
+      user.preferred_username = preferred_username || sub
       user.aws_status = 'OK'
     end
 
@@ -56,6 +58,25 @@ module Cognito
       end
 
       @user_data
+    end
+
+    # Requesting a Cognito service to update `preferred_username` attribute
+    def update_preferred_username
+      Cognito::UpdatePreferredUsername.call(
+        username: username,
+        preferred_username: preferred_username,
+        sub: sub
+      )
+    end
+
+    # `preferred_username` on Cognito
+    def preferred_username
+      @preferred_username ||= extract_attr('preferred_username')
+    end
+
+    # `sub` on Cognito
+    def sub
+      @sub ||= extract_attr('sub')
     end
   end
 end
