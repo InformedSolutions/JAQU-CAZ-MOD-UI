@@ -171,7 +171,7 @@ steps:
     image: test-mod-frontend
     pull: never
     commands:
-      - bundle audit check --update
+      - bundle audit check --ignore CVE-2020-26247 --update
       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
       - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
@@ -395,7 +395,7 @@ steps:
     image: test-mod-frontend
     pull: never
     commands:
-      - bundle audit check --update
+      - bundle audit check --ignore CVE-2020-26247 --update
       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
       - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
@@ -678,7 +678,7 @@ steps:
     image: test-mod-frontend
     pull: never
     commands:
-      - bundle audit check --update
+      - bundle audit check --ignore CVE-2020-26247 --update
       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
       - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
@@ -1156,7 +1156,7 @@ steps:
     image: test-mod-frontend
     pull: never
     commands:
-      - bundle audit check --update
+      - bundle audit check --ignore CVE-2020-26247 --update
       # to exclude id's from audit(e.g. '1488, 1179') just add `--exclude '1488, 1179'`
       - yarn run improved-yarn-audit --retry-on-network-failure
       - brakeman
