@@ -3297,9 +3297,9 @@ globule@^1.0.0:
     minimatch "~3.0.2"
 
 govuk-frontend@^3.9.1:
-  version "3.9.1"
-  resolved "https://registry.yarnpkg.com/govuk-frontend/-/govuk-frontend-3.9.1.tgz#731aa62f5d956aa9999726027a1e25c8b7e52fc4"
-  integrity sha512-ouOoDUj0QwDA4uCHIBkGCFMpORuTRcSuDscOrz7V1PBcOecntLglxJAZAuNm+j2sPo7anoScHU0ZSeE2QIoeAg==
+  version "3.11.0"
+  resolved "https://registry.yarnpkg.com/govuk-frontend/-/govuk-frontend-3.11.0.tgz#5bc38629ec8b290220c2c389dcd664114a045db1"
+  integrity sha512-1hW/3etYBtKPM+PNdWVOijvWVI3mpYL8eb7WLTtlh/Qxf2mCp6LkCsZk9I034n4EJBYQ5jlUWsUlTOOIypftpg==
 
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2:
   version "4.2.4"
